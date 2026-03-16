@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Portfolio | Nom Prénom</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">MonPortfolio</div>
+            <ul>
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#projets">Projets</a></li>
+                <li><a href="#competences">Compétences</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="accueil">
+            <h1>Bonjour, je suis <span>[Ton Nom]</span></h1>
+            <p>Développeur Full-Stack / Designer / Créatif passionné par [Ton Domaine].</p>
+            <a href="#projets" class="btn">Voir mes travaux</a>
+        </section>
+
+        <section id="projets">
+            <h2>Mes Projets</h2>
+            <div class="grid-projets">
+                <article class="card">
+                    <img src="https://via.placeholder.com/300x200" alt="Capture d'écran Projet 1">
+                    <h3>Nom du Projet 1</h3>
+                    <p>Une brève description de ce que tu as accompli avec ce projet.</p>
+                    <a href="#">Voir le lien</a>
+                </article>
+
+                <article class="card">
+                    <img src="https://via.placeholder.com/300x200" alt="Capture d'écran Projet 2">
+                    <h3>Nom du Projet 2</h3>
+                    <p>Technologies utilisées : HTML, CSS, JavaScript.</p>
+                    <a href="#">Voir le lien</a>
+                </article>
+            </div>
+        </section>
+
+        <section id="competences">
+            <h2>Mes Compétences</h2>
+            <ul>
+                <li>HTML5 / CSS3 / JavaScript</li>
+                <li>React / Vue.js</li>
+                <li>UI/UX Design (Figma)</li>
+                <li>Gestion de projet</li>
+            </ul>
+        </section>
+
+        <section id="contact">
+            <h2>Me contacter</h2>
+            <p>Une idée de projet ? N'hésitez pas à m'envoyer un message !</p>
+            <form action="#">
+                <input type="text" name="nom" placeholder="Votre Nom" required>
+                <input type="email" name="email" placeholder="Votre Email" required>
+                <textarea name="message" placeholder="Votre message..."></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 [Ton Nom] - Tous droits réservés.</p>
+        <div class="socials">
+            <a href="#">LinkedIn</a> | <a href="#">GitHub</a>
+        </div>
+    </footer>
+
+</body>
+</html>
