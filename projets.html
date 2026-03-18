@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projets — Eliot Fiette</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.8rem; max-width: 1100px; }
+    .project-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 1rem; transition: all 0.2s; }
+    .project-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(44,36,22,0.12); border-color: var(--accent); }
+    .proj-cat { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; }
+    .proj-title { font-family: var(--display); font-size: 1.4rem; font-weight: 700; }
+    .proj-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.7; flex: 1; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .proj-arrow { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); margin-top: auto; }
+    .wip { display: inline-block; font-family: var(--mono); font-size: 0.62rem; padding: 0.25rem 0.6rem; border-radius: 20px; background: rgba(196,127,58,0.12); color: var(--accent3); border: 1px solid rgba(196,127,58,0.25); text-transform: uppercase; letter-spacing: 0.1em; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Eliot Fiette</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="about.html">À propos</a></li>
+    <li><a href="competences.html">Compétences</a></li>
+    <li><a href="projets.html" class="active">Projets</a></li>
+    <li><a href="ecole.html">École</a></li>
+    <li><a href="entreprise.html">Entreprise</a></li>
+    <li><a href="veille.html">Veille</a></li>
+    <li><a href="synthese.html">Synthèse CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+<main>
+  <div class="page-header fade-up">
+    <div class="page-tag">Projets</div>
+    <h1>Mes réalisations</h1>
+    <p>Projets scolaires et professionnels en administration systèmes & réseaux.</p>
+  </div>
+  <div class="content-full fade-up-2">
+    <div class="projects-grid">
+      <a href="ecole.html" class="project-card">
+        <div class="proj-cat" style="color:var(--accent2)">📚 Projets École</div>
+        <div class="proj-title">Projet GSB</div>
+        <p class="proj-desc">Infrastructure réseau et système pour Galaxy Swiss Bourdin. Administration des services, gestion des utilisateurs, sécurisation.</p>
+        <div class="proj-tags">
+          <span class="tag tag-brown">Windows Server</span>
+          <span class="tag tag-green">Active Directory</span>
+          <span class="tag tag-orange">GPO</span>
+        </div>
+        <div class="proj-arrow">Voir le projet →</div>
+      </a>
+      <a href="ecole.html" class="project-card">
+        <div class="proj-cat" style="color:var(--accent2)">📚 Projets École</div>
+        <div class="proj-title">Projet M2L</div>
+        <p class="proj-desc">Administration et sécurisation du réseau de la Maison des Ligues de Lorraine. VLANs, Cisco, services réseau.</p>
+        <div class="proj-tags">
+          <span class="tag tag-brown">Cisco</span>
+          <span class="tag tag-green">VLAN</span>
+          <span class="tag tag-orange">Firewall</span>
+        </div>
+        <div class="proj-arrow">Voir le projet →</div>
+      </a>
+      <a href="entreprise.html" class="project-card">
+        <div class="proj-cat" style="color:var(--accent3)">🏢 Entreprise <span class="wip">À venir</span></div>
+        <div class="proj-title">Projets entreprise</div>
+        <p class="proj-desc">Mes projets réalisés en milieu professionnel seront ajoutés ici prochainement.</p>
+        <div class="proj-tags">
+          <span class="tag">Coming soon</span>
+        </div>
+        <div class="proj-arrow">Découvrir →</div>
+      </a>
+    </div>
+  </div>
+</main>
+<footer>
+  <span>© 2025 Eliot Fiette</span>
+  <span>Administrateur Systèmes & Réseaux</span>
+</footer>
+</body>
+</html>

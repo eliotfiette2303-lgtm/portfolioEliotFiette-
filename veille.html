@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veille Technologique — Eliot Fiette</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .veille-intro { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem; }
+    .veille-intro p { color: var(--text2); font-size: 0.95rem; }
+    .veille-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; }
+    .veille-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.8rem; }
+    .veille-topic { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
+    .veille-topic-icon { font-size: 1.4rem; }
+    .veille-topic-title { font-family: var(--display); font-size: 1rem; font-weight: 700; }
+    .veille-items { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+    .veille-items li { display: flex; gap: 0.7rem; font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
+    .veille-items li::before { content: '◆'; color: var(--accent2); font-size: 0.5rem; flex-shrink: 0; margin-top: 6px; }
+    .sources { margin-top: 2.5rem; }
+    .sources-title { font-family: var(--display); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+    .sources-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .source-chip { font-family: var(--mono); font-size: 0.75rem; padding: 0.4rem 1rem; border-radius: 20px; background: var(--bg2); border: 1px solid var(--border2); color: var(--text2); text-decoration: none; transition: all 0.2s; }
+    .source-chip:hover { background: var(--bg3); color: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Eliot Fiette</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="about.html">À propos</a></li>
+    <li><a href="competences.html">Compétences</a></li>
+    <li><a href="projets.html">Projets</a></li>
+    <li><a href="ecole.html">École</a></li>
+    <li><a href="entreprise.html">Entreprise</a></li>
+    <li><a href="veille.html" class="active">Veille</a></li>
+    <li><a href="synthese.html">Synthèse CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+<main>
+  <div class="page-header fade-up">
+    <div class="page-tag">Veille Technologique</div>
+    <h1>Actualités & tendances IT</h1>
+    <p>Je réalise une veille régulière sur les évolutions du secteur des systèmes, réseaux et cybersécurité.</p>
+  </div>
+  <div class="content fade-up-2" style="max-width:1000px">
+    <div class="veille-intro">
+      <p>La veille technologique est essentielle dans le domaine de l'IT, notamment en cybersécurité où les menaces évoluent constamment. Je consulte régulièrement des sources spécialisées pour rester à jour sur les vulnérabilités, les nouvelles pratiques et les outils émergents.</p>
+    </div>
+    <div class="veille-grid">
+      <div class="veille-card">
+        <div class="veille-topic"><div class="veille-topic-icon">🔐</div><div class="veille-topic-title">Cybersécurité</div></div>
+        <ul class="veille-items">
+          <li>Évolution des ransomwares et nouvelles techniques d'attaque</li>
+          <li>Zero Trust Architecture : adoption croissante en entreprise</li>
+          <li>Vulnérabilités CVE et correctifs des éditeurs</li>
+          <li>Réglementations NIS2 et impact sur les entreprises européennes</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic"><div class="veille-topic-icon">🌐</div><div class="veille-topic-title">Réseaux & Infrastructure</div></div>
+        <ul class="veille-items">
+          <li>SD-WAN : simplification des réseaux d'entreprise</li>
+          <li>IPv6 : progression lente mais inévitable</li>
+          <li>Wi-Fi 7 : performances et cas d'usage professionnels</li>
+          <li>SASE (Secure Access Service Edge) et convergence réseau/sécu</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic"><div class="veille-topic-icon">☁️</div><div class="veille-topic-title">Cloud & Virtualisation</div></div>
+        <ul class="veille-items">
+          <li>Multi-cloud : stratégies et défis de gestion</li>
+          <li>Conteneurisation (Docker, Kubernetes) en expansion</li>
+          <li>Infrastructure as Code : Terraform, Ansible</li>
+          <li>Edge computing : traitement de données en périphérie</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic"><div class="veille-topic-icon">🤖</div><div class="veille-topic-title">IA & Automatisation</div></div>
+        <ul class="veille-items">
+          <li>IA appliquée à la détection d'intrusions (SIEM/SOAR)</li>
+          <li>Automatisation des tâches d'administration réseau</li>
+          <li>Deepfakes et nouvelles menaces sociales pour les SI</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources-title">Sources consultées régulièrement</div>
+      <div class="sources-grid">
+        <span class="source-chip">ANSSI</span>
+        <span class="source-chip">Cisco Blog</span>
+        <span class="source-chip">The Hacker News</span>
+        <span class="source-chip">LeMagIT</span>
+        <span class="source-chip">CVE Database</span>
+        <span class="source-chip">ZDNet France</span>
+        <span class="source-chip">Korben.info</span>
+        <span class="source-chip">CERT-FR</span>
+        <span class="source-chip">SecurityWeek</span>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <span>© 2025 Eliot Fiette</span>
+  <span>Administrateur Systèmes & Réseaux</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projets École — Eliot Fiette</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .proj-detail { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; margin-bottom: 2rem; }
+    .proj-num { font-family: var(--mono); font-size: 0.68rem; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .proj-title { font-family: var(--display); font-size: 1.8rem; font-weight: 900; margin-bottom: 0.8rem; }
+    .proj-body { color: var(--text2); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
+    .proj-section-title { font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); font-family: var(--mono); margin-bottom: 0.8rem; }
+    .obj-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .obj-list li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.9rem; color: var(--text2); }
+    .obj-list li::before { content: '→'; color: var(--accent2); font-family: var(--mono); flex-shrink: 0; margin-top: 1px; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Eliot Fiette</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="about.html">À propos</a></li>
+    <li><a href="competences.html">Compétences</a></li>
+    <li><a href="projets.html">Projets</a></li>
+    <li><a href="ecole.html" class="active">École</a></li>
+    <li><a href="entreprise.html">Entreprise</a></li>
+    <li><a href="veille.html">Veille</a></li>
+    <li><a href="synthese.html">Synthèse CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+<main>
+  <div class="page-header fade-up">
+    <div class="page-tag">Projets École</div>
+    <h1>Réalisations scolaires</h1>
+    <p>Projets techniques réalisés dans le cadre de ma formation en BTS SIO.</p>
+  </div>
+  <div class="content fade-up-2" style="max-width:900px">
+
+    <div class="proj-detail">
+      <div class="proj-num">PROJET 01 — BTS SIO</div>
+      <div class="proj-title">Projet GSB</div>
+      <p class="proj-body">
+        Galaxy Swiss Bourdin (GSB) est un laboratoire pharmaceutique fictif utilisé comme cadre pédagogique.
+        Ce projet consistait à mettre en place et administrer l'ensemble de l'infrastructure réseau et système
+        de l'entreprise, de la gestion des utilisateurs à la sécurisation des accès.
+      </p>
+      <div class="proj-section-title">Objectifs réalisés</div>
+      <ul class="obj-list">
+        <li>Installation et configuration d'un serveur Windows Server avec Active Directory</li>
+        <li>Mise en place des comptes utilisateurs, groupes et unités organisationnelles</li>
+        <li>Configuration des stratégies de groupe (GPO) pour la gestion des postes</li>
+        <li>Déploiement des services DNS et DHCP</li>
+        <li>Sécurisation des accès et des partages réseau</li>
+      </ul>
+      <div class="proj-section-title">Technologies utilisées</div>
+      <div class="proj-tags">
+        <span class="tag tag-brown">Windows Server</span>
+        <span class="tag tag-green">Active Directory</span>
+        <span class="tag tag-orange">DNS / DHCP</span>
+        <span class="tag tag-brown">GPO</span>
+        <span class="tag tag-green">PowerShell</span>
+      </div>
+    </div>
+
+    <div class="proj-detail">
+      <div class="proj-num">PROJET 02 — BTS SIO</div>
+      <div class="proj-title">Projet M2L</div>
+      <p class="proj-body">
+        La Maison des Ligues de Lorraine (M2L) héberge de nombreuses associations sportives régionales.
+        Ce projet portait sur l'administration et la sécurisation de son infrastructure réseau,
+        en mettant en place une segmentation par VLANs et en configurant les équipements Cisco.
+      </p>
+      <div class="proj-section-title">Objectifs réalisés</div>
+      <ul class="obj-list">
+        <li>Conception et mise en place d'une architecture réseau segmentée par VLANs</li>
+        <li>Configuration des switches et routeurs Cisco (IOS)</li>
+        <li>Mise en place d'un VPN pour les accès distants sécurisés</li>
+        <li>Configuration du pare-feu et des règles ACL</li>
+        <li>Administration des serveurs Linux (services réseau)</li>
+        <li>Documentation de l'infrastructure et des procédures</li>
+      </ul>
+      <div class="proj-section-title">Technologies utilisées</div>
+      <div class="proj-tags">
+        <span class="tag tag-brown">Cisco IOS</span>
+        <span class="tag tag-green">VLAN</span>
+        <span class="tag tag-orange">VPN IPSec</span>
+        <span class="tag tag-brown">Firewall / ACL</span>
+        <span class="tag tag-green">Linux</span>
+        <span class="tag tag-orange">Packet Tracer</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+<footer>
+  <span>© 2025 Eliot Fiette</span>
+  <span>Administrateur Systèmes & Réseaux</span>
+</footer>
+</body>
+</html>
