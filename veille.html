@@ -3,12 +3,30 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Veille Technologique — Eliot Fiette</title>
+  <title>Veille — Cybersécurité dans les infrastructures réseau — Eliot Fiette</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
     .veille-intro { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem; }
-    .veille-intro p { color: var(--text2); font-size: 0.95rem; }
-    .veille-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; }
+    .veille-intro p { color: var(--text2); font-size: 0.95rem; line-height: 1.7; }
+ 
+    /* Thème de la veille */
+    .theme-banner {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      background: linear-gradient(135deg, var(--bg2) 0%, var(--card) 100%);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .theme-icon { font-size: 2.2rem; }
+    .theme-label { font-family: var(--mono); font-size: 0.72rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+    .theme-title { font-family: var(--display); font-size: 1.2rem; font-weight: 700; color: var(--text); }
+ 
+    /* Grille de sujets */
+    .veille-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
     .veille-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.8rem; }
     .veille-topic { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
     .veille-topic-icon { font-size: 1.4rem; }
@@ -16,11 +34,50 @@
     .veille-items { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
     .veille-items li { display: flex; gap: 0.7rem; font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
     .veille-items li::before { content: '◆'; color: var(--accent2); font-size: 0.5rem; flex-shrink: 0; margin-top: 6px; }
-    .sources { margin-top: 2.5rem; }
-    .sources-title { font-family: var(--display); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+ 
+    /* Sources principales */
+    .sources-section { margin-bottom: 2.5rem; }
+    .section-title { font-family: var(--display); font-size: 1.15rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--text); }
+ 
+    .source-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
+    .source-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+    }
+    .source-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px rgba(44,36,22,0.1); transform: translateY(-2px); }
+    .source-card-header { display: flex; align-items: center; gap: 0.8rem; }
+    .source-card-icon { font-size: 1.5rem; }
+    .source-card-name { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--text); }
+    .source-card-tag { font-family: var(--mono); font-size: 0.7rem; color: var(--accent2); background: var(--bg2); border: 1px solid var(--border2); padding: 0.2rem 0.6rem; border-radius: 10px; }
+    .source-card-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.6; }
+    .source-card-url { font-family: var(--mono); font-size: 0.72rem; color: var(--text3); word-break: break-all; }
+ 
+    /* Sources secondaires */
     .sources-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
     .source-chip { font-family: var(--mono); font-size: 0.75rem; padding: 0.4rem 1rem; border-radius: 20px; background: var(--bg2); border: 1px solid var(--border2); color: var(--text2); text-decoration: none; transition: all 0.2s; }
     .source-chip:hover { background: var(--bg3); color: var(--accent); border-color: var(--accent); }
+ 
+    /* Fil de retour */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text2);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -38,69 +95,172 @@
     <li><a href="contact.html">Contact</a></li>
   </ul>
 </nav>
+ 
 <main>
   <div class="page-header fade-up">
     <div class="page-tag">Veille Technologique</div>
-    <h1>Actualités & tendances IT</h1>
-    <p>Je réalise une veille régulière sur les évolutions du secteur des systèmes, réseaux et cybersécurité.</p>
+    <h1>Cybersécurité dans les infrastructures réseau</h1>
+    <p>Suivi des menaces, vulnérabilités et bonnes pratiques de sécurisation des réseaux d'entreprise.</p>
   </div>
+ 
   <div class="content fade-up-2" style="max-width:1000px">
+ 
+    <a href="veille.html" class="back-link">← Retour à la veille générale</a>
+ 
+    <!-- Bannière thème -->
+    <div class="theme-banner">
+      <div class="theme-icon">🛡️</div>
+      <div>
+        <div class="theme-label">Thème de veille</div>
+        <div class="theme-title">La cybersécurité dans les infrastructures réseau</div>
+      </div>
+    </div>
+ 
+    <!-- Introduction -->
     <div class="veille-intro">
-      <p>La veille technologique est essentielle dans le domaine de l'IT, notamment en cybersécurité où les menaces évoluent constamment. Je consulte régulièrement des sources spécialisées pour rester à jour sur les vulnérabilités, les nouvelles pratiques et les outils émergents.</p>
+      <p>
+        Les infrastructures réseau constituent le système nerveux de toute organisation. Pare-feux, routeurs, commutateurs, VPN, systèmes de détection d'intrusion — chacun de ces composants est une surface d'attaque potentielle. Je surveille en continu les nouvelles vulnérabilités, les techniques d'attaque émergentes et les recommandations des organismes spécialisés (ANSSI, CERT-FR) pour anticiper les risques et appliquer les bonnes pratiques de sécurisation.
+      </p>
     </div>
+ 
+    <!-- Sujets surveillés -->
+    <div class="section-title">Sujets surveillés</div>
     <div class="veille-grid">
+ 
       <div class="veille-card">
-        <div class="veille-topic"><div class="veille-topic-icon">🔐</div><div class="veille-topic-title">Cybersécurité</div></div>
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🔥</div>
+          <div class="veille-topic-title">Menaces & Attaques réseau</div>
+        </div>
         <ul class="veille-items">
-          <li>Évolution des ransomwares et nouvelles techniques d'attaque</li>
-          <li>Zero Trust Architecture : adoption croissante en entreprise</li>
-          <li>Vulnérabilités CVE et correctifs des éditeurs</li>
-          <li>Réglementations NIS2 et impact sur les entreprises européennes</li>
+          <li>Attaques DDoS et nouvelles techniques d'amplification (DNS, NTP)</li>
+          <li>Man-in-the-Middle (MitM) sur les réseaux d'entreprise</li>
+          <li>Intrusions via équipements réseau (CVE Cisco, Fortinet, Juniper…)</li>
+          <li>Lateral movement et pivoting post-compromission</li>
         </ul>
       </div>
+ 
       <div class="veille-card">
-        <div class="veille-topic"><div class="veille-topic-icon">🌐</div><div class="veille-topic-title">Réseaux & Infrastructure</div></div>
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🔒</div>
+          <div class="veille-topic-title">Sécurisation & Bonnes pratiques</div>
+        </div>
         <ul class="veille-items">
-          <li>SD-WAN : simplification des réseaux d'entreprise</li>
-          <li>IPv6 : progression lente mais inévitable</li>
-          <li>Wi-Fi 7 : performances et cas d'usage professionnels</li>
-          <li>SASE (Secure Access Service Edge) et convergence réseau/sécu</li>
+          <li>Zero Trust Network Access (ZTNA) : mise en œuvre en entreprise</li>
+          <li>Segmentation réseau et micro-segmentation</li>
+          <li>Durcissement des équipements (hardening Cisco, guides ANSSI)</li>
+          <li>Chiffrement des flux : TLS 1.3, MACsec, IPsec</li>
         </ul>
       </div>
+ 
       <div class="veille-card">
-        <div class="veille-topic"><div class="veille-topic-icon">☁️</div><div class="veille-topic-title">Cloud & Virtualisation</div></div>
+        <div class="veille-topic">
+          <div class="veille-topic-icon">📡</div>
+          <div class="veille-topic-title">Détection & Supervision</div>
+        </div>
         <ul class="veille-items">
-          <li>Multi-cloud : stratégies et défis de gestion</li>
-          <li>Conteneurisation (Docker, Kubernetes) en expansion</li>
-          <li>Infrastructure as Code : Terraform, Ansible</li>
-          <li>Edge computing : traitement de données en périphérie</li>
+          <li>IDS/IPS : évolution des signatures et détection comportementale</li>
+          <li>SIEM et corrélation d'événements réseau</li>
+          <li>NDR (Network Detection & Response) et analyse de flux</li>
+          <li>Threat Intelligence appliquée aux IOC réseau</li>
         </ul>
       </div>
+ 
       <div class="veille-card">
-        <div class="veille-topic"><div class="veille-topic-icon">🤖</div><div class="veille-topic-title">IA & Automatisation</div></div>
+        <div class="veille-topic">
+          <div class="veille-topic-icon">⚠️</div>
+          <div class="veille-topic-title">Vulnérabilités & CVE</div>
+        </div>
         <ul class="veille-items">
-          <li>IA appliquée à la détection d'intrusions (SIEM/SOAR)</li>
-          <li>Automatisation des tâches d'administration réseau</li>
-          <li>Deepfakes et nouvelles menaces sociales pour les SI</li>
+          <li>Suivi des CVE critiques affectant les équipements réseau</li>
+          <li>Bulletins de sécurité CERT-FR et alertes ANSSI</li>
+          <li>Correctifs et contournements pour les failles zero-day</li>
+          <li>Exploitation active de vulnérabilités dans la nature</li>
         </ul>
+      </div>
+ 
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🏛️</div>
+          <div class="veille-topic-title">Réglementations & Conformité</div>
+        </div>
+        <ul class="veille-items">
+          <li>Directive NIS2 : obligations pour les opérateurs critiques</li>
+          <li>Référentiel PRIS et qualification ANSSI</li>
+          <li>RGPD et sécurité des données en transit</li>
+          <li>ISO 27001 / IEC 62443 pour les environnements industriels</li>
+        </ul>
+      </div>
+ 
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🌐</div>
+          <div class="veille-topic-title">Tendances émergentes</div>
+        </div>
+        <ul class="veille-items">
+          <li>SASE (Secure Access Service Edge) : convergence réseau & sécurité</li>
+          <li>SD-WAN sécurisé et chiffrement des liens WAN</li>
+          <li>Sécurité des réseaux OT/IoT industriels</li>
+          <li>BGP hijacking et sécurisation du routage Internet</li>
+        </ul>
+      </div>
+ 
+    </div>
+ 
+    <!-- Sources principales -->
+    <div class="sources-section">
+      <div class="section-title">Sources principales</div>
+      <div class="source-cards">
+ 
+        <a href="https://feedly.com/i/threatLandscape" target="_blank" rel="noopener noreferrer" class="source-card">
+          <div class="source-card-header">
+            <div class="source-card-icon">📰</div>
+            <div>
+              <div class="source-card-name">Feedly Threat Intelligence</div>
+              <span class="source-card-tag">Flux RSS & Threat Intel</span>
+            </div>
+          </div>
+          <div class="source-card-desc">
+            Agrégateur de flux spécialisé en cybersécurité. Suivi en temps réel des menaces, IOC, rapports de threat intelligence et actualités sécurité provenant de centaines de sources expertes.
+          </div>
+          <div class="source-card-url">feedly.com/i/threatLandscape</div>
+        </a>
+ 
+        <a href="https://www.cert.ssi.gouv.fr/" target="_blank" rel="noopener noreferrer" class="source-card">
+          <div class="source-card-header">
+            <div class="source-card-icon">🏛️</div>
+            <div>
+              <div class="source-card-name">CERT-FR / ANSSI</div>
+              <span class="source-card-tag">Alertes officielles</span>
+            </div>
+          </div>
+          <div class="source-card-desc">
+            Centre Gouvernemental de Veille, d'Alerte et de Réponse aux Attaques Informatiques. Bulletins de vulnérabilités, avis de sécurité et recommandations officielles pour la France.
+          </div>
+          <div class="source-card-url">cert.ssi.gouv.fr</div>
+        </a>
+ 
       </div>
     </div>
-    <div class="sources">
-      <div class="sources-title">Sources consultées régulièrement</div>
+ 
+    <!-- Sources secondaires -->
+    <div class="sources-section">
+      <div class="section-title">Autres sources consultées</div>
       <div class="sources-grid">
-        <span class="source-chip">ANSSI</span>
-        <span class="source-chip">Cisco Blog</span>
-        <span class="source-chip">The Hacker News</span>
-        <span class="source-chip">LeMagIT</span>
-        <span class="source-chip">CVE Database</span>
-        <span class="source-chip">ZDNet France</span>
-        <span class="source-chip">Korben.info</span>
-        <span class="source-chip">CERT-FR</span>
-        <span class="source-chip">SecurityWeek</span>
+        <a href="https://www.anssi.gouv.fr" target="_blank" rel="noopener noreferrer" class="source-chip">ANSSI</a>
+        <a href="https://nvd.nist.gov" target="_blank" rel="noopener noreferrer" class="source-chip">NVD / CVE Database</a>
+        <a href="https://thehackernews.com" target="_blank" rel="noopener noreferrer" class="source-chip">The Hacker News</a>
+        <a href="https://www.securityweek.com" target="_blank" rel="noopener noreferrer" class="source-chip">SecurityWeek</a>
+        <a href="https://blog.cisco.com/security" target="_blank" rel="noopener noreferrer" class="source-chip">Cisco Security Blog</a>
+        <a href="https://www.bleepingcomputer.com" target="_blank" rel="noopener noreferrer" class="source-chip">BleepingComputer</a>
+        <a href="https://www.lemag-it.com" target="_blank" rel="noopener noreferrer" class="source-chip">LeMagIT</a>
+        <a href="https://www.zdnet.fr" target="_blank" rel="noopener noreferrer" class="source-chip">ZDNet France</a>
       </div>
     </div>
+ 
   </div>
 </main>
+ 
 <footer>
   <span>© 2025 Eliot Fiette</span>
   <span>Administrateur Systèmes & Réseaux</span>
