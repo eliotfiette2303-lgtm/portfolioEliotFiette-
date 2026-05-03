@@ -49,7 +49,9 @@ if (skillBars.length) {
 
 /* ── WOW : révélations au scroll (sections, cartes, blocs) ── */
 (() => {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !document.documentElement.classList.contains('portfolio-anim-force');
   const sel = [
     'main .expertise-header',
     'main .expertise-card',
