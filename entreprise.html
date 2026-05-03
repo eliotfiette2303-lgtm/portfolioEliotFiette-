@@ -65,8 +65,7 @@
       gap: 1.5rem;
       padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--border);
-      opacity: 0.3;
-      transition: opacity 0.2s;
+      scroll-margin-top: 5rem;
     }
 
     .tl-item:last-child { border-bottom: none; }
@@ -120,31 +119,33 @@
   </div>
 
   <div class="content fade-up-2">
-    <div class="empty-state">
-      <div class="empty-icon">🏢</div>
-      <div class="empty-title">Projets à venir</div>
-      <p class="empty-text">Cette section sera enrichie avec mes prochaines expériences en entreprise. Revenez bientôt !</p>
-      <a href="contact.html" class="btn btn-primary">Me contacter</a>
-    </div>
+    <p style="color:var(--text2);max-width:640px;margin-bottom:2.5rem;line-height:1.8;font-size:0.95rem;">
+      Projets menés en entreprise : migrations applicatives et opérations d'infrastructure (déménagement, transfert de site).
+    </p>
 
     <div class="timeline-placeholder">
-      <div class="tl-item">
+      <div class="tl-item" id="migration-erp">
         <div class="tl-dot"></div>
         <div>
-          <div class="tl-label">Projet entreprise — À venir</div>
-          <div class="tl-title">Votre prochain projet</div>
-          <div class="tl-desc">Description de la mission, contexte, objectifs...</div>
+          <div class="tl-label">Projet entreprise — ERP</div>
+          <div class="tl-title">Migration d'ERP (MAX → SAP)</div>
+          <div class="tl-desc">Participation à la migration depuis l'environnement MAX vers SAP : préparation des environnements, contrôle des flux et des données, phases de test, bascule et support utilisateurs pour limiter l'impact sur l'activité.</div>
         </div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item" id="demenagement-jacquemus">
         <div class="tl-dot"></div>
         <div>
-          <div class="tl-label">Stage / Alternance — À venir</div>
-          <div class="tl-title">Expérience professionnelle</div>
-          <div class="tl-desc">Entreprise, durée, missions réalisées...</div>
+          <div class="tl-label">Projet entreprise — Infrastructure</div>
+          <div class="tl-title">Déménagement Jacquemus</div>
+          <div class="tl-desc">Mission de déménagement IT : inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services et vérification des accès sur le nouveau site.</div>
         </div>
       </div>
     </div>
+
+    <p style="margin-top:2rem;">
+      <a href="projets.html" class="btn btn-outline">← Tous les projets</a>
+      <a href="contact.html" class="btn btn-primary" style="margin-left:0.75rem;">Me contacter</a>
+    </p>
   </div>
 </main>
 
