@@ -63,8 +63,6 @@ if (skillBars.length) {
     'main .veille-card',
     'main .sources-section',
     'main .source-card',
-    'main .cv-grid',
-    'main .print-btn',
     'main .contact-layout',
     'main .skill-card',
     'main .quick-card',
@@ -122,11 +120,21 @@ window.addEventListener('resize', () => {
     'ecole',
     'entreprise',
     'veille',
-    'cv',
     'contact',
   ];
 
-  function currentNavId() {
+  let lastSyncedId = '';
+
+  function currentNavIdFromScroll() {
+    const html = document.documentElement;
+    const scrollY = window.scrollY || html.scrollTop;
+    const maxScroll = Math.max(0, html.scrollHeight - html.clientHeight);
+    if (maxScroll > 0 && scrollY >= maxScroll - 6) {
+      for (let i = SECTION_ORDER.length - 1; i >= 0; i -= 1) {
+        if (document.getElementById(SECTION_ORDER[i])) return SECTION_ORDER[i];
+      }
+    }
+
     let id = 'hero';
     for (const sid of SECTION_ORDER) {
       const el = document.getElementById(sid);
@@ -137,12 +145,13 @@ window.addEventListener('resize', () => {
   }
 
   function syncNavActive() {
-    const id = currentNavId();
-    const setActive = (a) => {
+    const id = currentNavIdFromScroll();
+    if (id === lastSyncedId) return;
+    lastSyncedId = id;
+    navTabs.querySelectorAll('a[href^="#"]').forEach((a) => {
       const href = a.getAttribute('href') || '';
       a.classList.toggle('active', href === `#${id}`);
-    };
-    navTabs.querySelectorAll('a[href^="#"]').forEach(setActive);
+    });
   }
 
   let scrollScheduled = false;
@@ -159,6 +168,21 @@ window.addEventListener('resize', () => {
     { passive: true },
   );
 
-  window.addEventListener('hashchange', syncNavActive);
+  window.addEventListener('hashchange', () => {
+    lastSyncedId = '';
+    syncNavActive();
+  });
+
+  let resizeScheduled = false;
+  window.addEventListener('resize', () => {
+    if (resizeScheduled) return;
+    resizeScheduled = true;
+    requestAnimationFrame(() => {
+      lastSyncedId = '';
+      syncNavActive();
+      resizeScheduled = false;
+    });
+  });
+
   syncNavActive();
 })();
