@@ -20,7 +20,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=18"/>
+  <link rel="stylesheet" href="style.css?v=19"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -578,10 +578,35 @@
     }
     .hero h1 { filter: none !important; }
     .hero h1 em { filter: none !important; }
+    .site-intro { display: none !important; }
   }
   </style>
 </head>
 <body>
+<div id="site-intro" class="site-intro" aria-modal="true" role="dialog" aria-labelledby="intro-title" aria-describedby="intro-desc">
+  <div class="site-intro__aurora" aria-hidden="true"></div>
+  <div class="site-intro__grid" aria-hidden="true"></div>
+  <div class="site-intro__rings" aria-hidden="true">
+    <span class="site-intro__ring site-intro__ring--a"></span>
+    <span class="site-intro__ring site-intro__ring--b"></span>
+    <span class="site-intro__ring site-intro__ring--c"></span>
+  </div>
+  <canvas class="site-intro__spark" id="introSparkCanvas" width="800" height="800" aria-hidden="true"></canvas>
+  <div class="site-intro__scanlines" aria-hidden="true"></div>
+  <div class="site-intro__wrap">
+    <p id="intro-desc" class="site-intro__eyebrow"><span class="site-intro__pulse"></span>Séquence d'amorçage · Portfolio 2026</p>
+    <h2 id="intro-title" class="site-intro__title">
+      <span class="site-intro__title-glitch" data-text="Eliot">Eliot</span>
+      <span class="site-intro__title-accent">Fiette</span>
+    </h2>
+    <p class="site-intro__role">Administration systèmes &amp; réseaux · BTS SIO — SISR</p>
+    <ul class="site-intro__boot" id="introBootList" aria-hidden="true"></ul>
+    <div class="site-intro__track" aria-hidden="true"><div class="site-intro__bar"></div></div>
+    <p class="site-intro__hint">Connexion sécurisée au rendu principal…</p>
+  </div>
+  <button type="button" class="site-intro__skip" id="introSkip">Passer l'introduction</button>
+</div>
+
 <header class="site-nav">
   <div class="nav-top">
     <a href="#hero" class="nav-logo">Eliot Fiette</a>
@@ -1229,6 +1254,125 @@
 </footer>
 
 <script src="main.js?v=17"></script>
+<script>
+/* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
+(function () {
+  const intro = document.getElementById('site-intro');
+  if (!intro) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    intro.remove();
+    return;
+  }
+
+  const html = document.documentElement;
+  const main = document.querySelector('main');
+  const header = document.querySelector('header.site-nav');
+  const skip = document.getElementById('introSkip');
+  const list = document.getElementById('introBootList');
+  const cv = document.getElementById('introSparkCanvas');
+
+  function lock() {
+    html.classList.add('site-intro-lock');
+  }
+  function unlock() {
+    html.classList.remove('site-intro-lock');
+  }
+
+  var introDone = false;
+  var endTimer;
+  function cleanup() {
+    if (introDone) return;
+    introDone = true;
+    intro.remove();
+    unlock();
+    main?.removeAttribute('aria-hidden');
+    header?.removeAttribute('aria-hidden');
+  }
+
+  lock();
+  main?.setAttribute('aria-hidden', 'true');
+  header?.setAttribute('aria-hidden', 'true');
+
+  skip?.addEventListener('click', function onSkip() {
+    clearTimeout(endTimer);
+    intro.classList.add('site-intro--exit');
+    setTimeout(cleanup, 950);
+  });
+
+  const bootLines = [
+    '[t+000ms] INIT · surface=viewport · depth_buffer=on',
+    '[t+042ms] TLS · handshake · cipher=AES_256_GCM ✓',
+    '[t+086ms] ASSETS · style.css · main.js · resolved',
+    '[t+128ms] NET · route_cache · mtu=1500 · latency_ok',
+    '[t+168ms] PROFILE · Eliot_Fiette · SISR · verified',
+    '[t+210ms] PORTFOLIO · compositor · READY → render',
+  ];
+  let bi = 0;
+  function nextBoot() {
+    if (!list || bi >= bootLines.length) return;
+    var li = document.createElement('li');
+    li.textContent = bootLines[bi++];
+    list.appendChild(li);
+    setTimeout(nextBoot, 380 + Math.random() * 220);
+  }
+  setTimeout(nextBoot, 500);
+
+  if (cv && cv.getContext) {
+    var ctx = cv.getContext('2d');
+    var w = (cv.width = Math.min(900, window.innerWidth * 1.2));
+    var h = (cv.height = Math.min(900, window.innerHeight * 1.2));
+    var cx = w * 0.5;
+    var cy = h * 0.5;
+    var sparks = [];
+    for (var si = 0; si < 140; si++) {
+      var ang = Math.random() * Math.PI * 2;
+      var sp = 1.2 + Math.random() * 3.8;
+      sparks.push({
+        x: cx,
+        y: cy,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp,
+        life: 1,
+        r: 0.6 + Math.random() * 1.8,
+        hue: 200 + Math.random() * 80,
+      });
+    }
+    var t0 = performance.now();
+    function sparkFrame(now) {
+      var t = now - t0;
+      if (t > 2800) return;
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < sparks.length; i++) {
+        var p = sparks[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.life *= 0.987;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'hsla(' + p.hue + ',85%,62%,' + (p.life * 0.55) + ')';
+        ctx.fill();
+      }
+      requestAnimationFrame(sparkFrame);
+    }
+    requestAnimationFrame(sparkFrame);
+  }
+
+  var totalMs = 6400;
+  endTimer = setTimeout(function () {
+    if (introDone || !intro.parentNode) return;
+    intro.classList.add('site-intro--exit');
+    function onEnd(e) {
+      if (e.target !== intro || e.propertyName !== 'opacity') return;
+      intro.removeEventListener('transitionend', onEnd);
+      cleanup();
+    }
+    intro.addEventListener('transitionend', onEnd);
+    setTimeout(cleanup, 1200);
+  }, totalMs);
+})();
+</script>
 <script>
 /* ── CANVAS PARTICULES ── */
 (function(){
