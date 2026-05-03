@@ -83,11 +83,10 @@ window.addEventListener('resize', () => {
   if (!competencesSection || !navBarLinks) return;
 
   const OFFSET = 80;
-  const SECTION_ORDER = ['hero', 'stats', 'competences', 'projets', 'stack'];
+  const SECTION_ORDER = ['hero', 'stats', 'competences', 'projets'];
 
   function mapSectionToNavId(sectionId) {
     if (sectionId === 'stats') return 'hero';
-    if (sectionId === 'stack') return 'projets';
     return sectionId;
   }
 

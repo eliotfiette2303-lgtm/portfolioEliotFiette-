@@ -428,35 +428,6 @@
   .proj-link  { font-family:var(--mono); font-size:0.73rem; color:var(--accent); display:flex; align-items:center; gap:0.4rem; transition:color 0.2s, gap 0.2s; }
   .proj-featured-card:hover .proj-link { color:var(--accent2); gap:0.7rem; }
 
-  /* ── TECH STACK ── */
-  .tech-section { padding:6rem 3rem; border-top:1px solid var(--border); }
-  .tech-cloud { display:flex; flex-wrap:wrap; gap:0.7rem; justify-content:center; max-width:860px; margin:3rem auto 0; }
-  .tech-badge {
-    font-family:var(--mono);
-    font-size:0.75rem;
-    padding:0.48rem 1rem;
-    border-radius:7px;
-    background:var(--card);
-    border:1px solid var(--border);
-    color:var(--text2);
-    backdrop-filter:blur(8px);
-    transition:border-color 0.25s, color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
-    animation:floatBadge var(--dur,5s) var(--del,0s) ease-in-out infinite;
-    cursor:default;
-  }
-  .tech-badge:hover {
-    border-color:var(--accent);
-    color:var(--accent2);
-    background:var(--accent-dim);
-    transform:translateY(-3px) scale(1.04);
-    box-shadow:0 4px 16px rgba(59,130,246,0.15);
-    animation-play-state:paused;
-  }
-  @keyframes floatBadge {
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-7px);}
-  }
-
   /* ── CTA ── */
   .cta-section {
     padding:8rem 3rem;
@@ -492,7 +463,7 @@
   }
   @media (max-width:640px) {
     .hero-layout, .expertise-section, .projects-section,
-    .tech-section, .cta-section { padding-left:1.4rem; padding-right:1.4rem; }
+    .cta-section { padding-left:1.4rem; padding-right:1.4rem; }
     .hero-layout { padding-top:4rem; padding-bottom:4rem; }
     .stats-section { padding:2rem 1.4rem; }
     .expertise-grid      { grid-template-columns:1fr; }
@@ -716,35 +687,6 @@
   </div>
 </section>
 
-<!-- ══════════ TECH STACK ══════════ -->
-<section class="tech-section" id="stack">
-  <div class="container" style="text-align:center">
-    <div class="section-eyebrow center">Stack technique</div>
-    <h2 class="section-title">Technologies maîtrisées</h2>
-    <p class="section-desc" style="margin:0 auto">L'ensemble des outils et technologies que j'utilise au quotidien.</p>
-    <div class="tech-cloud">
-      <span class="tech-badge" style="--dur:5.2s;--del:0s">Cisco IOS</span>
-      <span class="tech-badge" style="--dur:6.1s;--del:.4s">Windows Server</span>
-      <span class="tech-badge" style="--dur:4.8s;--del:.8s">Linux / Debian</span>
-      <span class="tech-badge" style="--dur:5.8s;--del:.2s">Active Directory</span>
-      <span class="tech-badge" style="--dur:6.4s;--del:1.1s">VMware vSphere</span>
-      <span class="tech-badge" style="--dur:5.0s;--del:.6s">Hyper-V</span>
-      <span class="tech-badge" style="--dur:5.6s;--del:1.4s">VirtualBox</span>
-      <span class="tech-badge" style="--dur:4.5s;--del:.3s">VPN IPSec / SSL</span>
-      <span class="tech-badge" style="--dur:6.2s;--del:.9s">Firewall &amp; ACL</span>
-      <span class="tech-badge" style="--dur:5.3s;--del:1.6s">DNS / DHCP</span>
-      <span class="tech-badge" style="--dur:4.9s;--del:.1s">VLAN &amp; Trunk</span>
-      <span class="tech-badge" style="--dur:6.0s;--del:1.2s">PowerShell</span>
-      <span class="tech-badge" style="--dur:5.7s;--del:.7s">Bash / Shell</span>
-      <span class="tech-badge" style="--dur:4.7s;--del:1.8s">TCP / IP</span>
-      <span class="tech-badge" style="--dur:6.3s;--del:.5s">GPO</span>
-      <span class="tech-badge" style="--dur:5.1s;--del:1.0s">Packet Tracer</span>
-      <span class="tech-badge" style="--dur:5.5s;--del:1.3s">IDS / IPS</span>
-      <span class="tech-badge" style="--dur:4.6s;--del:.2s">ANSSI / CERT-FR</span>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ CTA ══════════ -->
 <section class="cta-section">
   <div class="cta-glow"></div>
@@ -770,7 +712,7 @@
 (function () {
   var s = document.createElement('script');
   s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=5';
+  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=6';
   document.body.appendChild(s);
 })();
 </script>
