@@ -111,7 +111,6 @@ window.addEventListener('resize', () => {
   const navTabs = document.querySelector('.nav-tabs');
   if (!navTabs) return;
 
-  const OFFSET = 104;
   const SECTION_ORDER = [
     'hero',
     'parcours',
@@ -125,27 +124,72 @@ window.addEventListener('resize', () => {
 
   let lastSyncedId = '';
 
-  function currentNavIdFromScroll() {
+  function navBottomPx() {
+    const nav = document.querySelector('.site-nav');
+    if (!nav) return 112;
+    return Math.min(Math.ceil(nav.getBoundingClientRect().bottom) + 8, 220);
+  }
+
+  function applyScrollOffsetCss(zTop) {
+    document.documentElement.style.setProperty('--nav-scroll-offset', `${zTop}px`);
+  }
+
+  function currentNavIdFromScroll(zTop) {
     const html = document.documentElement;
     const scrollY = window.scrollY || html.scrollTop;
     const maxScroll = Math.max(0, html.scrollHeight - html.clientHeight);
-    if (maxScroll > 0 && scrollY >= maxScroll - 6) {
+    const innerH = window.innerHeight;
+    const innerW = window.innerWidth;
+
+    if (maxScroll > 0 && scrollY >= maxScroll - 16) {
       for (let i = SECTION_ORDER.length - 1; i >= 0; i -= 1) {
-        if (document.getElementById(SECTION_ORDER[i])) return SECTION_ORDER[i];
+        const sid = SECTION_ORDER[i];
+        if (document.getElementById(sid)) return sid;
+      }
+    }
+    const zBot = Math.min(innerH * 0.66, innerH - 16);
+
+    let bestId = 'hero';
+    let bestVis = -1;
+
+    for (let idx = 0; idx < SECTION_ORDER.length; idx += 1) {
+      const sid = SECTION_ORDER[idx];
+      const el = document.getElementById(sid);
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      const vis = Math.max(0, Math.min(r.bottom, zBot) - Math.max(r.top, zTop));
+
+      if (vis > bestVis + 1.5) {
+        bestVis = vis;
+        bestId = sid;
+      } else if (vis > 0 && Math.abs(vis - bestVis) <= 1.5) {
+        const oldIdx = SECTION_ORDER.indexOf(bestId);
+        if (idx > oldIdx) {
+          bestVis = vis;
+          bestId = sid;
+        }
       }
     }
 
-    let id = 'hero';
-    for (const sid of SECTION_ORDER) {
-      const el = document.getElementById(sid);
-      if (!el) continue;
-      if (el.getBoundingClientRect().top <= OFFSET) id = sid;
+    if (bestVis > 4) return bestId;
+
+    const probeY = Math.min(zTop + (zBot - zTop) * 0.38, innerH - 8);
+    const probeX = innerW * 0.5;
+    try {
+      const hit = document.elementFromPoint(probeX, probeY);
+      const sec = hit && hit.closest && hit.closest('section[id]');
+      if (sec && sec.id && SECTION_ORDER.includes(sec.id)) return sec.id;
+    } catch (_) {
+      /* file:// or blocked */
     }
-    return id;
+
+    return bestId;
   }
 
   function syncNavActive() {
-    const id = currentNavIdFromScroll();
+    const zTop = navBottomPx();
+    applyScrollOffsetCss(zTop);
+    const id = currentNavIdFromScroll(zTop);
     if (id === lastSyncedId) return;
     lastSyncedId = id;
     navTabs.querySelectorAll('a[href^="#"]').forEach((a) => {
@@ -183,6 +227,36 @@ window.addEventListener('resize', () => {
       resizeScheduled = false;
     });
   });
+
+  window.addEventListener('pageshow', () => {
+    lastSyncedId = '';
+    syncNavActive();
+  });
+
+  navTabs.addEventListener(
+    'click',
+    (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href') || '';
+      const id = href.slice(1);
+      if (!SECTION_ORDER.includes(id)) return;
+      lastSyncedId = '';
+      requestAnimationFrame(() => {
+        lastSyncedId = '';
+        syncNavActive();
+      });
+      setTimeout(() => {
+        lastSyncedId = '';
+        syncNavActive();
+      }, 450);
+      setTimeout(() => {
+        lastSyncedId = '';
+        syncNavActive();
+      }, 1200);
+    },
+    true,
+  );
 
   syncNavActive();
 })();
