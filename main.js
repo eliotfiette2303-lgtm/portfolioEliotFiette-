@@ -83,21 +83,16 @@ window.addEventListener('resize', () => {
   if (!competencesSection || !navBarLinks) return;
 
   const OFFSET = 80;
-  const SECTION_ORDER = ['hero', 'stats', 'competences', 'projets'];
-
-  function mapSectionToNavId(sectionId) {
-    if (sectionId === 'stats') return 'hero';
-    return sectionId;
-  }
+  const SECTION_ORDER = ['hero', 'competences', 'projets'];
 
   function currentNavId() {
-    let raw = 'hero';
-    for (const id of SECTION_ORDER) {
-      const el = document.getElementById(id);
+    let id = 'hero';
+    for (const sid of SECTION_ORDER) {
+      const el = document.getElementById(sid);
       if (!el) continue;
-      if (el.getBoundingClientRect().top <= OFFSET) raw = id;
+      if (el.getBoundingClientRect().top <= OFFSET) id = sid;
     }
-    return mapSectionToNavId(raw);
+    return id;
   }
 
   function syncNavActive() {

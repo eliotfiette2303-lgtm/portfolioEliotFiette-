@@ -280,38 +280,6 @@
   .t-blue   { color:var(--accent2); padding-left:1rem; }
   .t-caret  { display:inline-block; width:7px; height:13px; background:var(--accent2); vertical-align:middle; animation:blink 1s step-end infinite; margin-left:2px; }
 
-  /* ── STATS ── */
-  .stats-section {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 2.8rem 3rem;
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .stat-item { text-align:center; padding:0.8rem 1rem; }
-  .stat-num {
-    font-family: var(--display);
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    color: var(--accent2);
-    line-height: 1;
-    margin-bottom: 0.4rem;
-    text-shadow: 0 0 20px rgba(96,165,250,0.3);
-  }
-  .stat-label {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-
   /* ── EXPERTISE CARDS (3D) ── */
   .expertise-section { padding: 6rem 3rem; }
   .expertise-header  { margin-bottom: 3.5rem; }
@@ -459,13 +427,11 @@
   @media (max-width:900px) {
     .hero-layout   { grid-template-columns:1fr; }
     .hero-terminal { display:none; }
-    .stats-grid    { grid-template-columns:repeat(2,1fr); }
   }
   @media (max-width:640px) {
     .hero-layout, .expertise-section, .projects-section,
     .cta-section { padding-left:1.4rem; padding-right:1.4rem; }
     .hero-layout { padding-top:4rem; padding-bottom:4rem; }
-    .stats-section { padding:2rem 1.4rem; }
     .expertise-grid      { grid-template-columns:1fr; }
     .proj-featured-grid  { grid-template-columns:1fr; }
   }
@@ -552,28 +518,6 @@
     <span>Découvrir</span>
     <div class="scroll-line"></div>
   </a>
-</section>
-
-<!-- ══════════ STATS ══════════ -->
-<section class="stats-section" id="stats">
-  <div class="stats-grid">
-    <div class="stat-item">
-      <div class="stat-num" data-count="2" data-suffix="+">0+</div>
-      <div class="stat-label">Années de formation</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" data-count="2">0</div>
-      <div class="stat-label">Projets majeurs</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" data-count="2">0</div>
-      <div class="stat-label">Certifications</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" style="font-size:1.5rem;font-family:var(--mono)">SISR</div>
-      <div class="stat-label">Option BTS SIO</div>
-    </div>
-  </div>
 </section>
 
 <!-- ══════════ EXPERTISE ══════════ -->
@@ -712,7 +656,7 @@
 (function () {
   var s = document.createElement('script');
   s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=6';
+  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=7';
   document.body.appendChild(s);
 })();
 </script>
@@ -790,27 +734,6 @@
     setTimeout(tick,del?42:78);
   }
   setTimeout(tick,900);
-})();
-
-/* ── COMPTEURS ── */
-(function(){
-  const els=document.querySelectorAll('[data-count]');
-  if(!els.length) return;
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(!e.isIntersecting) return;
-      const el=e.target, end=parseInt(el.dataset.count), suf=el.dataset.suffix||'';
-      let start=null;
-      requestAnimationFrame(function step(ts){
-        if(!start) start=ts;
-        const p=Math.min((ts-start)/1200,1);
-        el.textContent=Math.floor(p*end)+suf;
-        if(p<1) requestAnimationFrame(step);
-      });
-      obs.unobserve(el);
-    });
-  },{threshold:.5});
-  els.forEach(el=>obs.observe(el));
 })();
 
 /* ── 3D TILT ── */
