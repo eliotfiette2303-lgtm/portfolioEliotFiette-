@@ -903,7 +903,6 @@ html.site-intro-lock body {
   width: 100%;
   height: 100%;
   image-rendering: auto;
-  filter: saturate(1.06) contrast(1.02);
 }
 
 /* Avant passage du vaisseau : léger flou ; puis dissolution « fumée » (classes posées par intro-spaceship.js) */
@@ -916,6 +915,8 @@ html.site-intro-lock body {
 .site-intro--exit-ship.site-intro--ship-smoke .site-intro__wrap {
   animation: siteIntroSmokeDissolve 1.55s cubic-bezier(0.42, 0, 0.18, 1) forwards;
   pointer-events: none;
+  will-change: transform, opacity, filter;
+  contain: layout style;
 }
 
 .site-intro--exit-ship.site-intro--ship-smoke-peak .site-intro__wrap {
@@ -929,14 +930,14 @@ html.site-intro-lock body {
     transform: scale(1) translateY(0);
   }
   38% {
-    opacity: 0.42;
-    filter: blur(14px) brightness(1.35) contrast(1.08);
-    transform: scale(1.03) translateY(-1.8%);
+    opacity: 0.45;
+    filter: blur(10px) brightness(1.22) contrast(1.05);
+    transform: scale(1.025) translateY(-1.5%);
   }
   100% {
     opacity: 0;
-    filter: blur(36px) brightness(0.28) saturate(0) contrast(1.15);
-    transform: scale(1.12) translateY(-7%);
+    filter: blur(22px) brightness(0.35) saturate(0.15) contrast(1.08);
+    transform: scale(1.08) translateY(-5%);
   }
 }
 

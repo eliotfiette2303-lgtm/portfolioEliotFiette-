@@ -35,7 +35,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=39"/>
+  <link rel="stylesheet" href="style.css?v=40"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1448,9 +1448,9 @@
 </script>
 
 <script src="main.js?v=21"></script>
-<!-- Three.js UMD + vaisseau : scripts classiques (évite import() / import map bloqués sur certains PC) -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js" crossorigin="anonymous"></script>
-<script src="intro-spaceship.js?v=6"></script>
+<!-- Three.js UMD en local : depuis three@0.170 le paquet npm n’inclut plus build/three.min.js → l’ancienne URL CDN renvoyait 404 et THREE restait indéfini. -->
+<script src="vendor/three.min.js"></script>
+<script src="intro-spaceship.js?v=10"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
