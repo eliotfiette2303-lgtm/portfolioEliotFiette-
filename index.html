@@ -6,118 +6,208 @@
   <title>Eliot Fiette — Portfolio</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
+    /* ── HERO ── */
     .hero {
       min-height: calc(100vh - 62px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 5rem 3rem;
-      background: var(--bg);
       position: relative;
       overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 70% at 85% 10%, rgba(59,130,246,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 10% 90%, rgba(99,102,241,0.07) 0%, transparent 60%);
     }
+
+    /* Subtle grid overlay */
     .hero::before {
       content: '';
       position: absolute;
-      top: -100px; right: -100px;
-      width: 500px; height: 500px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(196,127,58,0.12) 0%, transparent 70%);
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.045) 1px, transparent 1px);
+      background-size: 60px 60px;
       pointer-events: none;
+      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 80%);
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 80%);
     }
+
+    /* Floating glow orb */
     .hero::after {
       content: '';
       position: absolute;
-      bottom: -80px; left: -80px;
-      width: 400px; height: 400px;
+      top: -150px; right: -150px;
+      width: 550px; height: 550px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(74,124,89,0.1) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
       pointer-events: none;
+      animation: floatOrb 12s ease-in-out infinite;
     }
+
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: #4ade80;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.22);
+      border-radius: 20px;
+      padding: 0.32rem 0.8rem;
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34,197,94,0.7);
+      animation: pulseGreenDot 2s ease-in-out infinite;
+    }
+
     .hero-eyebrow {
       font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--accent2);
+      font-size: 0.72rem;
+      color: var(--accent);
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.8rem;
+      position: relative;
+      z-index: 1;
     }
+
     .hero-eyebrow::before {
       content: '';
       display: block;
-      width: 32px; height: 1px;
-      background: var(--accent2);
+      width: 30px; height: 1px;
+      background: var(--accent);
     }
+
     .hero h1 {
       font-family: var(--display);
       font-size: clamp(3.5rem, 9vw, 7.5rem);
-      font-weight: 900;
+      font-weight: 700;
       line-height: 1.0;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.2rem;
       max-width: 900px;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
     }
+
     .hero h1 em {
-      font-style: italic;
-      color: var(--accent);
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent2) 0%, #a78bfa 60%, var(--accent2) 100%);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+
     .hero-desc {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--text2);
       max-width: 520px;
       margin-bottom: 2.5rem;
-      line-height: 1.8;
+      line-height: 1.85;
+      position: relative;
+      z-index: 1;
     }
-    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
     .hero-scroll {
       position: absolute;
       bottom: 2.5rem; right: 3rem;
       font-family: var(--mono);
-      font-size: 0.68rem;
+      font-size: 0.63rem;
       color: var(--text3);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      z-index: 1;
     }
+
+    /* ── QUICK NAV GRID ── */
     .hero-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.2rem;
-      padding: 3rem;
-      background: var(--bg2);
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      background: var(--border);
       border-top: 1px solid var(--border);
+      gap: 1px;
     }
+
     .quick-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
+      background: var(--bg2);
+      padding: 1.8rem;
       text-decoration: none;
       color: inherit;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      transition: all 0.2s;
+      transition: background 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
     }
-    .quick-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
+
+    .quick-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-dim), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
     }
-    .quick-card-icon { font-size: 1.4rem; }
+
+    .quick-card:hover { background: var(--bg3); }
+    .quick-card:hover::before { opacity: 1; }
+
+    .quick-card-icon { font-size: 1.25rem; position: relative; z-index: 1; }
+
     .quick-card-title {
       font-family: var(--display);
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: 0.95rem;
+      font-weight: 600;
       color: var(--text);
+      position: relative; z-index: 1;
     }
-    .quick-card-desc { font-size: 0.82rem; color: var(--text3); }
-    .quick-card-arrow { margin-top: auto; font-size: 0.78rem; color: var(--accent); font-family: var(--mono); }
+
+    .quick-card-desc {
+      font-size: 0.78rem;
+      color: var(--text3);
+      position: relative; z-index: 1;
+    }
+
+    .quick-card-arrow {
+      margin-top: auto;
+      font-size: 0.73rem;
+      color: var(--accent);
+      font-family: var(--mono);
+      position: relative; z-index: 1;
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 3rem 1.4rem; }
+      .hero-scroll { display: none; }
+      .hero-cards { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -134,37 +224,45 @@
     <li><a href="synthese.html">Synthèse CV</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
 <main>
   <section class="hero">
-    <div class="hero-eyebrow fade-up">Administrateur Systèmes & Réseaux</div>
+    <div class="hero-status fade-up">
+      <span class="status-dot"></span>
+      Disponible pour opportunités
+    </div>
+    <div class="hero-eyebrow fade-up">Administrateur Systèmes &amp; Réseaux</div>
     <h1 class="fade-up-2">Eliot<br/><em>Fiette</em></h1>
     <p class="hero-desc fade-up-3">
       Passionné par les infrastructures réseau, la cybersécurité et l'administration système.
-      Certifié Cisco & ANSSI, je construis des environnements IT robustes et sécurisés.
+      Certifié Cisco &amp; ANSSI, je construis des environnements IT robustes et sécurisés.
     </p>
     <div class="hero-ctas fade-up-3">
       <a href="projets.html" class="btn btn-primary">Voir mes projets</a>
       <a href="about.html" class="btn btn-outline">En savoir plus</a>
     </div>
-    <div class="hero-scroll">Découvrir ↓</div>
+    <div class="hero-scroll fade-up-4">Découvrir ↓</div>
   </section>
 
   <div class="hero-cards">
     <a href="about.html" class="quick-card">
-      <div class="quick-card-icon">🌿</div>
+      <div class="quick-card-icon">👤</div>
       <div class="quick-card-title">À propos</div>
       <div class="quick-card-desc">Mon parcours et ma vision</div>
       <div class="quick-card-arrow">Lire →</div>
     </a>
     <a href="competences.html" class="quick-card">
-      <div class="quick-card-icon">⚙️</div>
+      <div class="quick-card-icon">⚡</div>
       <div class="quick-card-title">Compétences</div>
       <div class="quick-card-desc">Réseaux, systèmes, sécurité</div>
       <div class="quick-card-arrow">Explorer →</div>
     </a>
     <a href="ecole.html" class="quick-card">
-      <div class="quick-card-icon">📚</div>
+      <div class="quick-card-icon">📁</div>
       <div class="quick-card-title">Projets École</div>
       <div class="quick-card-desc">GSB, M2L et autres réalisations</div>
       <div class="quick-card-arrow">Voir →</div>
@@ -176,9 +274,9 @@
       <div class="quick-card-arrow">Voir →</div>
     </a>
     <a href="veille.html" class="quick-card">
-      <div class="quick-card-icon">🔍</div>
+      <div class="quick-card-icon">🔐</div>
       <div class="quick-card-title">Veille Techno</div>
-      <div class="quick-card-desc">Actualités & tendances IT</div>
+      <div class="quick-card-desc">Actualités &amp; tendances IT</div>
       <div class="quick-card-arrow">Lire →</div>
     </a>
     <a href="contact.html" class="quick-card">
@@ -189,9 +287,11 @@
     </a>
   </div>
 </main>
+
 <footer>
   <span>© 2025 Eliot Fiette</span>
-  <span>Administrateur Systèmes & Réseaux</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
+<script src="main.js" defer></script>
 </body>
 </html>

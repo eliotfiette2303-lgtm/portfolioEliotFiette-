@@ -6,28 +6,125 @@
   <title>Synthèse CV — Eliot Fiette</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    .cv-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; max-width: 1000px; }
+    .cv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 2rem;
+      max-width: 1000px;
+    }
+
     .cv-section { margin-bottom: 2rem; }
-    .cv-section-title { font-family: var(--display); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent); display: inline-block; }
-    .cv-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+
+    .cv-section-title {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--accent);
+      display: inline-block;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .cv-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .cv-item {
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
     .cv-item:last-child { border-bottom: none; }
-    .cv-item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.3rem; }
-    .cv-item-title { font-weight: 500; font-size: 0.95rem; }
-    .cv-item-date { font-family: var(--mono); font-size: 0.7rem; color: var(--text3); white-space: nowrap; }
-    .cv-item-sub { font-size: 0.82rem; color: var(--accent); font-family: var(--mono); }
-    .cv-item-desc { font-size: 0.85rem; color: var(--text2); margin-top: 0.4rem; line-height: 1.6; }
-    .skill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+
+    .cv-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .cv-item-title { font-weight: 500; font-size: 0.95rem; color: var(--text); }
+
+    .cv-item-date {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text3);
+      white-space: nowrap;
+    }
+
+    .cv-item-sub { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+
+    .cv-item-desc {
+      font-size: 0.83rem;
+      color: var(--text2);
+      margin-top: 0.35rem;
+      line-height: 1.65;
+    }
+
+    .skill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      color: var(--text2);
+    }
+
     .skill-row:last-child { border-bottom: none; }
+
     .skill-dots { display: flex; gap: 4px; }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--bg3); }
-    .dot.filled { background: var(--accent2); }
-    .print-btn { margin-bottom: 2rem; }
+
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(59,130,246,0.10);
+      border: 1px solid var(--border);
+    }
+
+    .dot.filled {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 4px rgba(59,130,246,0.4);
+    }
+
+    .cv-group-label {
+      font-size: 0.68rem;
+      font-family: var(--mono);
+      color: var(--text3);
+      margin: 1rem 0 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .cv-group-label:first-child { margin-top: 0; }
+
+    .print-btn { margin-bottom: 1.5rem; }
+
+    @media (max-width: 768px) { .cv-grid { grid-template-columns: 1fr; } }
+
     @media print {
       nav, footer, .print-btn { display: none !important; }
-      body { background: white; }
-      .page-header { background: white; }
+      body { background: white !important; color: black !important; background-image: none !important; }
+      .page-header { background: white !important; border: none !important; }
+      .page-header h1, .page-header p { color: black !important; }
+      .cv-box { background: white !important; border: 1px solid #ccc !important; backdrop-filter: none !important; box-shadow: none !important; }
+      .cv-section-title { color: black !important; border-color: black !important; }
+      .cv-item-title { color: black !important; }
+      .cv-item-sub { color: #333 !important; }
+      .cv-item-desc, .skill-row { color: #555 !important; }
+      .dot.filled { background: black !important; border-color: black !important; box-shadow: none !important; }
+      .dot { background: #eee !important; border-color: #ccc !important; }
+      .tag { background: #f0f0f0 !important; color: #333 !important; border-color: #ccc !important; }
     }
-    @media (max-width: 768px) { .cv-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -44,51 +141,59 @@
     <li><a href="synthese.html" class="active">Synthèse CV</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
 <main>
   <div class="page-header fade-up">
     <div class="page-tag">Synthèse CV</div>
     <h1>Curriculum Vitæ</h1>
     <p>Vue d'ensemble de mon parcours, compétences et formations.</p>
   </div>
+
   <div class="content fade-up-2">
     <div class="print-btn">
       <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimer / Exporter PDF</button>
     </div>
+
     <div class="cv-grid">
       <!-- Colonne gauche -->
       <div>
         <div class="cv-section">
           <div class="cv-section-title">Informations</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
-            <div style="font-family:var(--display);font-size:1.4rem;font-weight:900;margin-bottom:0.3rem;">Eliot Fiette</div>
-            <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);margin-bottom:1.2rem;text-transform:uppercase;letter-spacing:0.1em;">Administrateur Systèmes & Réseaux</div>
-            <div style="font-size:0.85rem;color:var(--text2);line-height:1.8;">
-              📧 fietteeliotpro@gmail.com<br/>
+          <div class="cv-box">
+            <div style="font-family:var(--display);font-size:1.35rem;font-weight:700;margin-bottom:0.25rem;color:var(--text);letter-spacing:-0.02em;">Eliot Fiette</div>
+            <div style="font-family:var(--mono);font-size:0.68rem;color:var(--accent);margin-bottom:1.2rem;text-transform:uppercase;letter-spacing:0.12em;">Administrateur Systèmes &amp; Réseaux</div>
+            <div style="font-size:0.85rem;color:var(--text2);line-height:2;font-family:var(--mono);">
+              ✉ fietteeliotpro@gmail.com<br/>
               🎓 BTS SIO — SISR<br/>
               📍 France
             </div>
           </div>
         </div>
+
         <div class="cv-section">
           <div class="cv-section-title">Compétences techniques</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
-            <div style="font-size:0.72rem;font-family:var(--mono);color:var(--text3);margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.08em;">Réseaux</div>
+          <div class="cv-box">
+            <div class="cv-group-label">Réseaux</div>
             <div class="skill-row"><span>Cisco IOS</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
             <div class="skill-row"><span>VPN / Firewall</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
             <div class="skill-row"><span>VLAN / Routage</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
-            <div style="font-size:0.72rem;font-family:var(--mono);color:var(--text3);margin:1rem 0 0.8rem;text-transform:uppercase;letter-spacing:0.08em;">Systèmes</div>
+            <div class="cv-group-label">Systèmes</div>
             <div class="skill-row"><span>Windows Server</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
             <div class="skill-row"><span>Linux</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
             <div class="skill-row"><span>Active Directory</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
-            <div style="font-size:0.72rem;font-family:var(--mono);color:var(--text3);margin:1rem 0 0.8rem;text-transform:uppercase;letter-spacing:0.08em;">Virtualisation</div>
+            <div class="cv-group-label">Virtualisation</div>
             <div class="skill-row"><span>VMware / Hyper-V</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
             <div class="skill-row"><span>VirtualBox</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
           </div>
         </div>
+
         <div class="cv-section">
           <div class="cv-section-title">Certifications</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div class="cv-box">
             <div class="cv-item">
               <div class="cv-item-title">Introduction à la cybersécurité</div>
               <div class="cv-item-sub">Cisco Networking Academy</div>
@@ -100,11 +205,12 @@
           </div>
         </div>
       </div>
+
       <!-- Colonne droite -->
       <div>
         <div class="cv-section">
           <div class="cv-section-title">Formation</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div class="cv-box">
             <div class="cv-item">
               <div class="cv-item-header">
                 <div class="cv-item-title">BTS SIO — option SISR</div>
@@ -115,9 +221,10 @@
             </div>
           </div>
         </div>
+
         <div class="cv-section">
           <div class="cv-section-title">Projets scolaires</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div class="cv-box">
             <div class="cv-item">
               <div class="cv-item-header">
                 <div class="cv-item-title">Projet GSB</div>
@@ -136,17 +243,19 @@
             </div>
           </div>
         </div>
+
         <div class="cv-section">
           <div class="cv-section-title">Expériences professionnelles</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
-            <div class="cv-item" style="opacity:0.5;text-align:center;padding:2rem 0;">
-              <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text3)">À compléter prochainement</div>
+          <div class="cv-box">
+            <div class="cv-item" style="text-align:center;padding:2rem 0;">
+              <div style="font-family:var(--mono);font-size:0.75rem;color:var(--text3);">À compléter prochainement</div>
             </div>
           </div>
         </div>
+
         <div class="cv-section">
           <div class="cv-section-title">Qualités</div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <div class="cv-box" style="display:flex;flex-wrap:wrap;gap:0.45rem;">
             <span class="tag tag-brown">Rigueur</span>
             <span class="tag tag-green">Curiosité</span>
             <span class="tag tag-orange">Autonomie</span>
@@ -159,9 +268,11 @@
     </div>
   </div>
 </main>
+
 <footer>
   <span>© 2025 Eliot Fiette</span>
-  <span>Administrateur Systèmes & Réseaux</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
+<script src="main.js" defer></script>
 </body>
 </html>

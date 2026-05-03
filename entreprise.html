@@ -6,16 +6,73 @@
   <title>Entreprise — Eliot Fiette</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    .empty-state { text-align:center; padding: 5rem 2rem; }
-    .empty-icon { font-size: 3rem; margin-bottom: 1.5rem; }
-    .empty-title { font-family: var(--display); font-size: 1.8rem; font-weight: 700; margin-bottom: 1rem; }
-    .empty-text { color: var(--text2); max-width: 400px; margin: 0 auto 2rem; font-size: 0.95rem; }
-    .timeline-placeholder { max-width: 700px; margin-top: 3rem; }
-    .tl-item { display: flex; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); opacity: 0.4; }
-    .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent3); margin-top: 5px; flex-shrink: 0; }
-    .tl-label { font-family: var(--mono); font-size: 0.72rem; color: var(--text3); margin-bottom: 0.3rem; }
-    .tl-title { font-weight: 500; font-size: 0.95rem; }
-    .tl-desc { font-size: 0.85rem; color: var(--text3); margin-top: 0.3rem; }
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+
+    .empty-title {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--text);
+    }
+
+    .empty-text {
+      color: var(--text2);
+      max-width: 400px;
+      margin: 0 auto 2rem;
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+
+    .timeline-placeholder {
+      max-width: 700px;
+      margin-top: 3rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .tl-item {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0.3;
+      transition: opacity 0.2s;
+    }
+
+    .tl-item:last-child { border-bottom: none; }
+
+    .tl-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 5px;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    .tl-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tl-title { font-weight: 500; font-size: 0.95rem; color: var(--text); }
+    .tl-desc  { font-size: 0.83rem; color: var(--text3); margin-top: 0.3rem; }
   </style>
 </head>
 <body>
@@ -32,29 +89,51 @@
     <li><a href="synthese.html">Synthèse CV</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
 <main>
   <div class="page-header fade-up">
     <div class="page-tag">Entreprise</div>
     <h1>Expériences professionnelles</h1>
     <p>Mes projets et missions réalisés en milieu professionnel.</p>
   </div>
+
   <div class="content fade-up-2">
     <div class="empty-state">
       <div class="empty-icon">🏢</div>
       <div class="empty-title">Projets à venir</div>
-      <p class="empty-text">Cette section sera enrichie avec mes prochières expériences en entreprise. Revenez bientôt !</p>
+      <p class="empty-text">Cette section sera enrichie avec mes prochaines expériences en entreprise. Revenez bientôt !</p>
       <a href="contact.html" class="btn btn-primary">Me contacter</a>
     </div>
+
     <div class="timeline-placeholder">
-      <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-label">Projet entreprise — À venir</div><div class="tl-title">Votre prochain projet</div><div class="tl-desc">Description de la mission, contexte, objectifs...</div></div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-label">Stage / Alternance — À venir</div><div class="tl-title">Expérience professionnelle</div><div class="tl-desc">Entreprise, durée, missions réalisées...</div></div></div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-label">Projet entreprise — À venir</div>
+          <div class="tl-title">Votre prochain projet</div>
+          <div class="tl-desc">Description de la mission, contexte, objectifs...</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-label">Stage / Alternance — À venir</div>
+          <div class="tl-title">Expérience professionnelle</div>
+          <div class="tl-desc">Entreprise, durée, missions réalisées...</div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
+
 <footer>
   <span>© 2025 Eliot Fiette</span>
-  <span>Administrateur Systèmes & Réseaux</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
+<script src="main.js" defer></script>
 </body>
 </html>

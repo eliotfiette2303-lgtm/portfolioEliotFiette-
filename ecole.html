@@ -6,14 +6,89 @@
   <title>Projets École — Eliot Fiette</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    .proj-detail { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; margin-bottom: 2rem; }
-    .proj-num { font-family: var(--mono); font-size: 0.68rem; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-    .proj-title { font-family: var(--display); font-size: 1.8rem; font-weight: 900; margin-bottom: 0.8rem; }
-    .proj-body { color: var(--text2); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
-    .proj-section-title { font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); font-family: var(--mono); margin-bottom: 0.8rem; }
-    .obj-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .obj-list li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.9rem; color: var(--text2); }
-    .obj-list li::before { content: '→'; color: var(--accent2); font-family: var(--mono); flex-shrink: 0; margin-top: 1px; }
+    .proj-detail {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .proj-detail::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+    }
+
+    .proj-detail:hover { border-color: var(--border2); }
+
+    .proj-num {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text3);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .proj-title {
+      font-family: var(--display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .proj-body {
+      color: var(--text2);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 1.8rem;
+    }
+
+    .proj-section-title {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 0.9rem;
+    }
+
+    .obj-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .obj-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .obj-list li::before {
+      content: '→';
+      color: var(--accent2);
+      font-family: var(--mono);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
     .proj-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   </style>
 </head>
@@ -31,17 +106,22 @@
     <li><a href="synthese.html">Synthèse CV</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
 <main>
   <div class="page-header fade-up">
     <div class="page-tag">Projets École</div>
     <h1>Réalisations scolaires</h1>
     <p>Projets techniques réalisés dans le cadre de ma formation en BTS SIO.</p>
   </div>
+
   <div class="content fade-up-2" style="max-width:900px">
 
     <div class="proj-detail">
-      <div class="proj-num">PROJET 01 — BTS SIO</div>
+      <div class="proj-num">Projet 01 — BTS SIO</div>
       <div class="proj-title">Projet GSB</div>
       <p class="proj-body">
         Galaxy Swiss Bourdin (GSB) est un laboratoire pharmaceutique fictif utilisé comme cadre pédagogique.
@@ -67,7 +147,7 @@
     </div>
 
     <div class="proj-detail">
-      <div class="proj-num">PROJET 02 — BTS SIO</div>
+      <div class="proj-num">Projet 02 — BTS SIO</div>
       <div class="proj-title">Projet M2L</div>
       <p class="proj-body">
         La Maison des Ligues de Lorraine (M2L) héberge de nombreuses associations sportives régionales.
@@ -96,9 +176,11 @@
 
   </div>
 </main>
+
 <footer>
   <span>© 2025 Eliot Fiette</span>
-  <span>Administrateur Systèmes & Réseaux</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
+<script src="main.js" defer></script>
 </body>
 </html>

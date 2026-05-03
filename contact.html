@@ -6,31 +6,89 @@
   <title>Contact — Eliot Fiette</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    .contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; max-width: 900px; align-items: start; }
-    .contact-info-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; }
-    .contact-info-title { font-family: var(--display); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
-    .contact-row { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
-    .contact-row:last-child { border-bottom: none; }
-    .contact-icon { font-size: 1.1rem; margin-top: 2px; }
-    .contact-label { font-family: var(--mono); font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
-    .contact-val { font-size: 0.9rem; color: var(--text); word-break: break-all; }
-    .contact-val a { color: var(--accent); text-decoration: none; }
-    .contact-val a:hover { text-decoration: underline; }
-    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; }
-    .form-title { font-family: var(--display); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-label { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--text2); }
-    .form-input, .form-textarea {
-      width: 100%; padding: 0.75rem 1rem;
-      background: var(--bg2); border: 1px solid var(--border2);
-      border-radius: var(--radius); font-family: var(--body); font-size: 0.9rem;
-      color: var(--text); transition: border-color 0.2s;
-      outline: none;
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+      max-width: 900px;
+      align-items: start;
     }
-    .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
-    .form-textarea { min-height: 130px; resize: vertical; }
-    .form-note { font-size: 0.78rem; color: var(--text3); margin-top: 0.4rem; }
-    @media (max-width: 768px) { .contact-layout { grid-template-columns: 1fr; } }
+
+    .contact-info-card,
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 2.5rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border-color 0.3s;
+    }
+
+    .contact-info-card:hover,
+    .form-card:hover { border-color: var(--border2); }
+
+    .contact-info-title,
+    .form-title {
+      font-family: var(--display);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contact-row:last-child { border-bottom: none; }
+
+    .contact-icon { font-size: 1.1rem; margin-top: 1px; }
+
+    .contact-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-val { font-size: 0.875rem; color: var(--text); }
+
+    .contact-val a {
+      color: var(--accent2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-val a:hover { color: var(--accent3); }
+
+    .form-group { margin-bottom: 1.2rem; }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: var(--text2);
+    }
+
+    .form-note {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 0.8rem;
+      line-height: 1.6;
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 768px) {
+      .contact-layout { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -47,79 +105,101 @@
     <li><a href="synthese.html">Synthèse CV</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
   </ul>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
 <main>
   <div class="page-header fade-up">
     <div class="page-tag">Contact</div>
     <h1>Travaillons ensemble</h1>
     <p>Une opportunité, un projet ou une question ? Je suis disponible.</p>
   </div>
+
   <div class="content fade-up-2">
     <div class="contact-layout">
-      <div>
-        <div class="contact-info-card">
-          <div class="contact-info-title">Mes coordonnées</div>
-          <div class="contact-row">
-            <div class="contact-icon">📧</div>
-            <div>
-              <div class="contact-label">Email</div>
-              <div class="contact-val"><a href="mailto:fietteeliotpro@gmail.com">fietteeliotpro@gmail.com</a></div>
-            </div>
-          </div>
-          <div class="contact-row">
-            <div class="contact-icon">💼</div>
-            <div>
-              <div class="contact-label">LinkedIn</div>
-              <div class="contact-val"><a href="https://linkedin.com/" target="_blank">Profil LinkedIn</a></div>
-            </div>
-          </div>
-          <div class="contact-row">
-            <div class="contact-icon">🐙</div>
-            <div>
-              <div class="contact-label">GitHub</div>
-              <div class="contact-val"><a href="https://github.com/" target="_blank">Profil GitHub</a></div>
-            </div>
-          </div>
-          <div class="contact-row">
-            <div class="contact-icon">🟢</div>
-            <div>
-              <div class="contact-label">Disponibilité</div>
-              <div class="contact-val" style="color:var(--accent2)">Ouvert aux opportunités</div>
+
+      <div class="contact-info-card">
+        <div class="contact-info-title">Mes coordonnées</div>
+
+        <div class="contact-row">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-val">
+              <a href="mailto:fietteeliotpro@gmail.com">fietteeliotpro@gmail.com</a>
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        <div class="form-card">
-          <div class="form-title">Envoyer un message</div>
-          <div class="form-group">
-            <label class="form-label">Nom complet</label>
-            <input type="text" class="form-input" placeholder="Votre nom"/>
+
+        <div class="contact-row">
+          <div class="contact-icon">💼</div>
+          <div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-val">
+              <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" placeholder="votre@email.com"/>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-icon">🐙</div>
+          <div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-val">
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer">Profil GitHub</a>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Objet</label>
-            <input type="text" class="form-input" placeholder="Opportunité / Projet / Question..."/>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-icon">🟢</div>
+          <div>
+            <div class="contact-label">Disponibilité</div>
+            <div class="contact-val" style="color:#4ade80">Ouvert aux opportunités</div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Message</label>
-            <textarea class="form-textarea" placeholder="Décrivez votre projet ou votre demande..."></textarea>
-          </div>
-          <a href="mailto:fietteeliotpro@gmail.com" class="btn btn-primary" style="width:100%;justify-content:center;">
-            Envoyer par email →
-          </a>
-          <p class="form-note">Ce formulaire ouvre votre client mail. Vous pouvez aussi écrire directement à fietteeliotpro@gmail.com</p>
         </div>
       </div>
+
+      <div class="form-card">
+        <div class="form-title">Envoyer un message</div>
+
+        <div class="form-group">
+          <label class="form-label">Nom complet</label>
+          <input type="text" class="form-input" placeholder="Votre nom"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="votre@email.com"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Objet</label>
+          <input type="text" class="form-input" placeholder="Opportunité / Projet / Question..."/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Décrivez votre projet ou votre demande..."></textarea>
+        </div>
+
+        <a href="mailto:fietteeliotpro@gmail.com" class="btn btn-primary" style="width:100%;justify-content:center;">
+          Envoyer par email →
+        </a>
+
+        <p class="form-note">Ce formulaire ouvre votre client mail. Vous pouvez aussi écrire directement à fietteeliotpro@gmail.com</p>
+      </div>
+
     </div>
   </div>
 </main>
+
 <footer>
   <span>© 2025 Eliot Fiette</span>
-  <span>Administrateur Systèmes & Réseaux</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
+<script src="main.js" defer></script>
 </body>
 </html>
