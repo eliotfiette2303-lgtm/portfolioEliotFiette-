@@ -21,9 +21,7 @@
     align-items: center;
     gap: 0.7rem;
   }
-  .section-eyebrow::before { content:''; display:inline-block; width:18px; height:1px; background:var(--accent); }
   .section-eyebrow.center { justify-content: center; }
-  .section-eyebrow.center::before { display:none; }
 
   .section-title {
     font-family: var(--display);
@@ -273,9 +271,7 @@
     max-width: 900px;
     margin: 0 auto;
   }
-  .stat-item { text-align:center; padding:0.8rem 1rem; position:relative; }
-  .stat-item::after { content:''; position:absolute; right:0; top:20%; bottom:20%; width:1px; background:var(--border); }
-  .stat-item:last-child::after { display:none; }
+  .stat-item { text-align:center; padding:0.8rem 1rem; }
   .stat-num {
     font-family: var(--display);
     font-size: 2.5rem;
