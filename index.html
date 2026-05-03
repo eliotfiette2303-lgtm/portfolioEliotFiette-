@@ -5,11 +5,15 @@
   <script>
   (function () {
     try {
-      if (localStorage.getItem('portfolioAnim') === '1') {
+      if (localStorage.getItem('portfolioAnim') !== '0') {
         document.documentElement.classList.add('portfolio-anim-force');
       }
     } catch (e) {
-      /* private mode */
+      try {
+        document.documentElement.classList.add('portfolio-anim-force');
+      } catch (e2) {
+        /* private mode */
+      }
     }
   })();
   </script>
@@ -31,7 +35,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=21"/>
+  <link rel="stylesheet" href="style.css?v=32"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -602,7 +606,6 @@
     <span class="site-intro__ring site-intro__ring--b"></span>
     <span class="site-intro__ring site-intro__ring--c"></span>
   </div>
-  <canvas class="site-intro__spark" id="introSparkCanvas" width="800" height="800" aria-hidden="true"></canvas>
   <div class="site-intro__scanlines" aria-hidden="true"></div>
   <div class="site-intro__wrap">
     <p id="intro-desc" class="site-intro__eyebrow"><span class="site-intro__pulse"></span>Séquence d'amorçage · Portfolio 2026</p>
@@ -611,9 +614,24 @@
       <span class="site-intro__title-accent">Fiette</span>
     </h2>
     <p class="site-intro__role">Administration systèmes &amp; réseaux · BTS SIO — SISR</p>
+    <div
+      class="site-intro__meter"
+      id="introMeter"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      aria-label="Progression du chargement de l’interface"
+    >
+      <div class="site-intro__meter-ring" aria-hidden="true"></div>
+      <div class="site-intro__meter-core">
+        <span class="site-intro__pct" id="introPct">0</span><span class="site-intro__pct-unit" aria-hidden="true">%</span>
+      </div>
+    </div>
+    <p class="site-intro__stage" id="introStage">Couche 01 — veille du compositeur</p>
     <ul class="site-intro__boot" id="introBootList" aria-hidden="true"></ul>
-    <div class="site-intro__track" aria-hidden="true"><div class="site-intro__bar"></div></div>
-    <p class="site-intro__hint">Connexion sécurisée au rendu principal…</p>
+    <div class="site-intro__track" aria-hidden="true"><div class="site-intro__bar" id="introBar"></div></div>
+    <p class="site-intro__hint" id="introHint">Initialisation du pipeline de rendu…</p>
   </div>
   <button type="button" class="site-intro__skip" id="introSkip">Passer l'introduction</button>
 </div>
@@ -781,37 +799,47 @@
 <div class="tech-logos-band">
   <p class="tech-logos-label"><span>Écosystème</span> Outils &amp; éditeurs</p>
   <div class="tech-logos-marquee" role="region" aria-label="Logos cliquables vers les sites officiels">
-    <div class="tech-logos-track">
-      <div class="tech-logos-set">
-        <a class="tech-logo-link" href="https://www.proxmox.com/en" target="_blank" rel="noopener noreferrer" title="Proxmox — site officiel">
-          <img src="https://cdn.simpleicons.org/proxmox/E57000" alt="Proxmox" width="140" height="40" loading="lazy" decoding="async"/>
-        </a>
-        <a class="tech-logo-link" href="https://www.vmware.com/" target="_blank" rel="noopener noreferrer" title="VMware — site officiel">
-          <img src="https://cdn.simpleicons.org/vmware/607078" alt="VMware" width="140" height="40" loading="lazy" decoding="async"/>
-        </a>
+    <div class="tech-logos-track" id="techLogosTrack">
+      <div class="tech-logos-segment" data-tech-marquee-seed>
         <a class="tech-logo-link" href="https://www.cisco.com/" target="_blank" rel="noopener noreferrer" title="Cisco — site officiel">
           <img src="https://cdn.simpleicons.org/cisco/1BA0D7" alt="Cisco" width="140" height="40" loading="lazy" decoding="async"/>
         </a>
         <a class="tech-logo-link" href="https://www.microsoft.com/" target="_blank" rel="noopener noreferrer" title="Microsoft — site officiel">
           <img src="assets/logos/microsoft.svg" alt="Microsoft" width="120" height="28" loading="lazy" decoding="async"/>
         </a>
-      </div>
-      <div class="tech-logos-set" aria-hidden="true">
-        <a class="tech-logo-link" href="https://www.proxmox.com/en" target="_blank" rel="noopener noreferrer" tabindex="-1">
-          <img src="https://cdn.simpleicons.org/proxmox/E57000" alt="" width="140" height="40" loading="lazy" decoding="async"/>
+        <a class="tech-logo-link" href="https://www.nutanix.com/" target="_blank" rel="noopener noreferrer" title="Nutanix — site officiel">
+          <img src="https://cdn.simpleicons.org/nutanix" alt="Nutanix" width="140" height="40" loading="lazy" decoding="async"/>
         </a>
-        <a class="tech-logo-link" href="https://www.vmware.com/" target="_blank" rel="noopener noreferrer" tabindex="-1">
-          <img src="https://cdn.simpleicons.org/vmware/607078" alt="" width="140" height="40" loading="lazy" decoding="async"/>
+        <a class="tech-logo-link" href="https://www.vmware.com/" target="_blank" rel="noopener noreferrer" title="VMware — site officiel">
+          <img src="https://cdn.simpleicons.org/vmware/607078" alt="VMware" width="140" height="40" loading="lazy" decoding="async"/>
         </a>
-        <a class="tech-logo-link" href="https://www.cisco.com/" target="_blank" rel="noopener noreferrer" tabindex="-1">
-          <img src="https://cdn.simpleicons.org/cisco/1BA0D7" alt="" width="140" height="40" loading="lazy" decoding="async"/>
-        </a>
-        <a class="tech-logo-link" href="https://www.microsoft.com/" target="_blank" rel="noopener noreferrer" tabindex="-1">
-          <img src="assets/logos/microsoft.svg" alt="" width="120" height="28" loading="lazy" decoding="async"/>
+        <a class="tech-logo-link" href="https://www.proxmox.com/en" target="_blank" rel="noopener noreferrer" title="Proxmox — site officiel">
+          <img src="https://cdn.simpleicons.org/proxmox/E57000" alt="Proxmox" width="140" height="40" loading="lazy" decoding="async"/>
         </a>
       </div>
     </div>
   </div>
+  <script>
+  (function () {
+    var track = document.getElementById('techLogosTrack');
+    var seed = track && track.querySelector('.tech-logos-segment[data-tech-marquee-seed]');
+    if (!track || !seed) return;
+    var TOTAL = 8;
+    var n = track.querySelectorAll('.tech-logos-segment').length;
+    for (; n < TOTAL; n += 1) {
+      var seg = seed.cloneNode(true);
+      seg.removeAttribute('data-tech-marquee-seed');
+      seg.setAttribute('aria-hidden', 'true');
+      seg.querySelectorAll('a').forEach(function (a) {
+        a.setAttribute('tabindex', '-1');
+        var img = a.querySelector('img');
+        if (img) img.setAttribute('alt', '');
+      });
+      track.appendChild(seg);
+    }
+    track.style.setProperty('--tech-marquee-copies', String(TOTAL));
+  })();
+  </script>
 </div>
 
 <!-- ══════════ EXPERTISE ══════════ -->
@@ -948,99 +976,222 @@
   </div>
 </section>
 
-<!-- ══════════ ÉCOLE ══════════ -->
-<section id="ecole" class="single-section">
-  <div class="container" style="max-width:900px;margin:0 auto;">
-    <div class="expertise-header">
-      <div class="section-eyebrow">Projets École</div>
-      <h2 class="section-title">Réalisations scolaires</h2>
-      <p class="section-desc">Projets techniques réalisés dans le cadre de ma formation en BTS SIO.</p>
-    </div>
-    <div class="proj-detail">
-      <div class="proj-num">Projet 01 — BTS SIO</div>
-      <div class="proj-title">Projet GSB</div>
-      <p class="proj-body">
-        Galaxy Swiss Bourdin (GSB) est un laboratoire pharmaceutique fictif utilisé comme cadre pédagogique.
-        Ce projet consistait à mettre en place et administrer l'ensemble de l'infrastructure réseau et système
-        de l'entreprise, de la gestion des utilisateurs à la sécurisation des accès.
+<!-- ══════════ ÉCOLE (double volet : projets ⟷ IPSSI) ══════════ -->
+<section id="ecole" class="single-section school-hub" data-active="projets">
+  <span id="ecole-ipssi" class="school-hub__scroll" aria-hidden="true"></span>
+  <div class="container school-hub__container">
+    <div class="expertise-header school-hub__intro">
+      <div class="section-eyebrow">Formation</div>
+      <h2 class="section-title">École &amp; campus IPSSI</h2>
+      <p class="section-desc">
+        Bascule entre <strong>les projets réalisés en BTS SIO</strong> et une <strong>présentation du campus IPSSI Marne-la-Vallée</strong>
+        (Val d’Europe) — deux « canaux » sur la même fréquence.
       </p>
-      <div class="proj-section-title">Objectifs réalisés</div>
-      <ul class="obj-list">
-        <li>Installation et configuration d'un serveur Windows Server avec Active Directory</li>
-        <li>Mise en place des comptes utilisateurs, groupes et unités organisationnelles</li>
-        <li>Configuration des stratégies de groupe (GPO) pour la gestion des postes</li>
-        <li>Déploiement des services DNS et DHCP</li>
-        <li>Sécurisation des accès et des partages réseau</li>
-      </ul>
-      <div class="proj-section-title">Technologies utilisées</div>
-      <div class="proj-tags">
-        <span class="tag tag-brown">Windows Server</span>
-        <span class="tag tag-green">Active Directory</span>
-        <span class="tag tag-orange">DNS / DHCP</span>
-        <span class="tag tag-brown">GPO</span>
-        <span class="tag tag-green">PowerShell</span>
-      </div>
     </div>
-    <div class="proj-detail">
-      <div class="proj-num">Projet 02 — BTS SIO</div>
-      <div class="proj-title">Projet M2L</div>
-      <p class="proj-body">
-        La Maison des Ligues de Lorraine (M2L) héberge de nombreuses associations sportives régionales.
-        Ce projet portait sur l'administration et la sécurisation de son infrastructure réseau,
-        en mettant en place une segmentation par VLANs et en configurant les équipements Cisco.
-      </p>
-      <div class="proj-section-title">Objectifs réalisés</div>
-      <ul class="obj-list">
-        <li>Conception et mise en place d'une architecture réseau segmentée par VLANs</li>
-        <li>Configuration des switches et routeurs Cisco (IOS)</li>
-        <li>Mise en place d'un VPN pour les accès distants sécurisés</li>
-        <li>Configuration du pare-feu et des règles ACL</li>
-        <li>Administration des serveurs Linux (services réseau)</li>
-        <li>Documentation de l'infrastructure et des procédures</li>
-      </ul>
-      <div class="proj-section-title">Technologies utilisées</div>
-      <div class="proj-tags">
-        <span class="tag tag-brown">Cisco IOS</span>
-        <span class="tag tag-green">VLAN</span>
-        <span class="tag tag-orange">VPN IPSec</span>
-        <span class="tag tag-brown">Firewall / ACL</span>
-        <span class="tag tag-green">Linux</span>
-        <span class="tag tag-orange">Packet Tracer</span>
+
+    <div class="school-dock" role="tablist" aria-label="Basculer entre projets scolaires et présentation de l’école">
+      <span class="school-dock__glider" aria-hidden="true"></span>
+      <span class="school-dock__scan" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="school-dock__tab"
+        role="tab"
+        id="tab-school-projets"
+        aria-selected="true"
+        aria-controls="school-panel-projets"
+        data-panel="projets"
+        tabindex="0"
+      >
+        <span class="school-dock__ch">Canal A</span>
+        <span class="school-dock__label">Projets pédagogiques</span>
+        <span class="school-dock__meta">GSB · M2L · travaux pratiques</span>
+      </button>
+      <button
+        type="button"
+        class="school-dock__tab"
+        role="tab"
+        id="tab-school-ipssi"
+        aria-selected="false"
+        aria-controls="school-panel-ipssi"
+        data-panel="ipssi"
+        tabindex="-1"
+      >
+        <span class="school-dock__ch">Canal B</span>
+        <span class="school-dock__label">L’établissement</span>
+        <span class="school-dock__meta">IPSSI · Marne-la-Vallée (77)</span>
+      </button>
+    </div>
+
+    <div class="school-track-wrap">
+      <div class="school-track">
+        <div
+          class="school-panel school-panel--projets"
+          id="school-panel-projets"
+          role="tabpanel"
+          aria-labelledby="tab-school-projets"
+        >
+          <div class="school-panel__head">
+            <h3 class="school-panel__title">Réalisations scolaires</h3>
+            <p class="school-panel__lede">Projets techniques menés dans le cadre du BTS SIO — option SISR.</p>
+          </div>
+          <div class="proj-detail">
+            <div class="proj-num">Projet 01 — BTS SIO</div>
+            <div class="proj-title">Projet GSB</div>
+            <p class="proj-body">
+              Galaxy Swiss Bourdin (GSB) est un laboratoire pharmaceutique fictif utilisé comme cadre pédagogique.
+              Ce projet consistait à mettre en place et administrer l'ensemble de l'infrastructure réseau et système
+              de l'entreprise, de la gestion des utilisateurs à la sécurisation des accès.
+            </p>
+            <div class="proj-section-title">Objectifs réalisés</div>
+            <ul class="obj-list">
+              <li>Installation et configuration d'un serveur Windows Server avec Active Directory</li>
+              <li>Mise en place des comptes utilisateurs, groupes et unités organisationnelles</li>
+              <li>Configuration des stratégies de groupe (GPO) pour la gestion des postes</li>
+              <li>Déploiement des services DNS et DHCP</li>
+              <li>Sécurisation des accès et des partages réseau</li>
+            </ul>
+            <div class="proj-section-title">Technologies utilisées</div>
+            <div class="proj-tags">
+              <span class="tag tag-brown">Windows Server</span>
+              <span class="tag tag-green">Active Directory</span>
+              <span class="tag tag-orange">DNS / DHCP</span>
+              <span class="tag tag-brown">GPO</span>
+              <span class="tag tag-green">PowerShell</span>
+            </div>
+          </div>
+          <div class="proj-detail">
+            <div class="proj-num">Projet 02 — BTS SIO</div>
+            <div class="proj-title">Projet M2L</div>
+            <p class="proj-body">
+              La Maison des Ligues de Lorraine (M2L) héberge de nombreuses associations sportives régionales.
+              Ce projet portait sur l'administration et la sécurisation de son infrastructure réseau,
+              en mettant en place une segmentation par VLANs et en configurant les équipements Cisco.
+            </p>
+            <div class="proj-section-title">Objectifs réalisés</div>
+            <ul class="obj-list">
+              <li>Conception et mise en place d'une architecture réseau segmentée par VLANs</li>
+              <li>Configuration des switches et routeurs Cisco (IOS)</li>
+              <li>Mise en place d'un VPN pour les accès distants sécurisés</li>
+              <li>Configuration du pare-feu et des règles ACL</li>
+              <li>Administration des serveurs Linux (services réseau)</li>
+              <li>Documentation de l'infrastructure et des procédures</li>
+            </ul>
+            <div class="proj-section-title">Technologies utilisées</div>
+            <div class="proj-tags">
+              <span class="tag tag-brown">Cisco IOS</span>
+              <span class="tag tag-green">VLAN</span>
+              <span class="tag tag-orange">VPN IPSec</span>
+              <span class="tag tag-brown">Firewall / ACL</span>
+              <span class="tag tag-green">Linux</span>
+              <span class="tag tag-orange">Packet Tracer</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="school-panel school-panel--ipssi"
+          id="school-panel-ipssi"
+          role="tabpanel"
+          aria-labelledby="tab-school-ipssi"
+          inert
+        >
+          <div class="ipssi-card">
+            <div class="ipssi-card__brand">
+              <span class="ipssi-card__logo" aria-hidden="true">IPSSI</span>
+              <div class="ipssi-card__loc">
+                <span class="ipssi-card__dot"></span>
+                Val d’Europe · Marne-la-Vallée (77)
+              </div>
+            </div>
+            <p class="ipssi-card__pitch">
+              L’<strong>IPSSI</strong> est une école d’informatique reconnue pour ses parcours orientés
+              <strong>cybersécurité</strong>, <strong>réseaux &amp; systèmes</strong> et <strong>développement</strong>.
+              Le campus du <strong>Val d’Europe</strong> propose notamment le <strong>BTS SIO</strong> dans un environnement
+              proche des entreprises et des transports (RER A).
+            </p>
+            <ul class="ipssi-card__facts">
+              <li><span>Pédagogie</span> alternance théorie / mise en situation technique</li>
+              <li><span>Écosystème</span> bassin d’emploi dynamique &amp; opportunités d’alternance</li>
+              <li><span>Vie étudiante</span> associations, événements tech &amp; entraide sur le campus</li>
+            </ul>
+            <div class="ipssi-card__actions">
+              <a
+                class="btn btn-primary"
+                href="https://ecole-ipssi.com/ecole-informatique-marne-la-vallee/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Site du campus Marne-la-Vallée</a>
+              <span class="ipssi-card__addr">14 avenue de l’Europe · 77144 Montévrain</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ ENTREPRISE ══════════ -->
-<section id="entreprise" class="single-section">
-  <div class="container">
+<!-- ══════════ ENTREPRISE (entreprise ⟷ projet) ══════════ -->
+<section id="entreprise" class="single-section entreprise-exp">
+  <div class="container entreprise-exp__wrap">
     <div class="expertise-header">
       <div class="section-eyebrow">Entreprise</div>
       <h2 class="section-title">Expériences professionnelles</h2>
       <p class="section-desc">Projets et missions réalisés en milieu professionnel.</p>
     </div>
-    <p style="color:var(--text2);max-width:640px;margin-bottom:2.5rem;line-height:1.8;font-size:0.95rem;">
-      Projets menés en entreprise : migrations applicatives et opérations d'infrastructure (déménagement, transfert de site).
+    <p class="entreprise-exp__intro">
+      Migrations applicatives et opérations d’infrastructure : chaque mission est présentée <strong>en regard</strong> de la structure
+      d’accueil — employeur à gauche, livrable projet à droite.
     </p>
-    <div class="timeline-placeholder">
-      <div class="tl-item" id="migration-erp">
-        <div class="tl-dot"></div>
-        <div>
-          <div class="tl-label">Projet entreprise — ERP</div>
-          <div class="tl-title">Migration d'ERP (MAX → SAP)</div>
-          <div class="tl-desc">Participation à la migration depuis l'environnement MAX vers SAP : préparation des environnements, contrôle des flux et des données, phases de test, bascule et support utilisateurs pour limiter l'impact sur l'activité.</div>
+
+    <div class="exp-board" aria-label="Tableau expériences entreprise et projets">
+      <article class="exp-pair" id="migration-erp">
+        <div class="exp-pair__rail" aria-hidden="true"></div>
+        <aside class="exp-pair__company">
+          <span class="exp-pair__kicker">Employeur</span>
+          <h3 class="exp-pair__brand">SPS Medical</h3>
+          <p class="exp-pair__sector">Industrie médicale · qualité &amp; traçabilité</p>
+          <ul class="exp-pair__chips" aria-label="Contexte">
+            <li>ERP critique</li>
+            <li>Environnement contraint</li>
+          </ul>
+        </aside>
+        <div class="exp-pair__project">
+          <span class="exp-pair__proj-kicker">Projet mené en entreprise</span>
+          <h4 class="exp-pair__proj-title">Migration d'ERP (MAX → SAP)</h4>
+          <p class="exp-pair__proj-lede">Passage de l’environnement <strong>MAX</strong> vers <strong>SAP</strong> : coordination des phases techniques et du support utilisateurs.</p>
+          <p class="exp-pair__proj-body">
+            Participation à la migration : préparation des environnements, contrôle des flux et des données, phases de test,
+            bascule et support utilisateurs pour limiter l’impact sur l’activité.
+          </p>
         </div>
-      </div>
-      <div class="tl-item" id="demenagement-jacquemus">
-        <div class="tl-dot"></div>
-        <div>
-          <div class="tl-label">Projet entreprise — Infrastructure</div>
-          <div class="tl-title">Déménagement Jacquemus</div>
-          <div class="tl-desc">Mission de déménagement IT : inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services et vérification des accès sur le nouveau site.</div>
+      </article>
+
+      <article class="exp-pair exp-pair--logistics" id="demenagement-jacquemus">
+        <div class="exp-pair__rail exp-pair__rail--warm" aria-hidden="true"></div>
+        <aside class="exp-pair__company">
+          <span class="exp-pair__kicker">Employeur</span>
+          <h3 class="exp-pair__brand">Kuehne+Nagel</h3>
+          <p class="exp-pair__sector">Logistique &amp; supply chain · opérations terrain</p>
+          <ul class="exp-pair__chips" aria-label="Contexte">
+            <li>Transfert de site</li>
+            <li>Infrastructure client</li>
+          </ul>
+        </aside>
+        <div class="exp-pair__project">
+          <span class="exp-pair__proj-kicker">Projet mené en entreprise</span>
+          <h4 class="exp-pair__proj-title">Déménagement Jacquemus</h4>
+          <p class="exp-pair__proj-lede">
+            Mission IT pour le <strong>déménagement de site</strong> d’une marque cliente : coordination logistique et remise en service des services.
+          </p>
+          <p class="exp-pair__proj-body">
+            Inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services
+            et vérification des accès sur le nouveau site.
+          </p>
         </div>
-      </div>
+      </article>
     </div>
-    <p style="margin-top:2rem;">
+
+    <p class="entreprise-exp__cta">
       <a href="#contact" class="btn btn-primary">Me contacter</a>
     </p>
   </div>
@@ -1262,49 +1413,38 @@
 <footer>
   <span>© 2026 Eliot Fiette</span>
   <span>Administrateur Systèmes &amp; Réseaux</span>
-  <span class="footer-anim" id="footerAnimWrap" hidden>
-    <button type="button" class="footer-anim-btn" id="footerAnimOn" hidden>Activer les animations du site</button>
-    <button type="button" class="footer-anim-btn footer-anim-btn--ghost" id="footerAnimOff" hidden>Revenir au réglage Windows (animations réduites)</button>
+  <span class="footer-anim" id="footerAnimWrap">
+    <button type="button" class="footer-anim-btn" id="footerAnimToggle" aria-pressed="true">Désactiver les animations du site</button>
   </span>
 </footer>
 <script>
 (function () {
   var wrap = document.getElementById('footerAnimWrap');
-  var btnOn = document.getElementById('footerAnimOn');
-  var btnOff = document.getElementById('footerAnimOff');
-  if (!wrap || !btnOn || !btnOff) return;
-  var reduce = false;
-  try {
-    reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch (e) {}
-  var forced = false;
-  try {
-    forced = localStorage.getItem('portfolioAnim') === '1';
-  } catch (e) {}
-  if (reduce && !forced) {
-    wrap.hidden = false;
-    btnOn.hidden = false;
-    btnOn.addEventListener('click', function () {
-      try {
-        localStorage.setItem('portfolioAnim', '1');
-      } catch (e) {}
-      location.reload();
-    });
+  var btn = document.getElementById('footerAnimToggle');
+  if (!wrap || !btn) return;
+  function syncToggle() {
+    var on = document.documentElement.classList.contains('portfolio-anim-force');
+    btn.textContent = on
+      ? 'Désactiver les animations du site'
+      : 'Activer les animations du site';
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('footer-anim-btn--ghost', !on);
   }
-  if (forced) {
-    wrap.hidden = false;
-    btnOff.hidden = false;
-    btnOff.addEventListener('click', function () {
-      try {
+  syncToggle();
+  btn.addEventListener('click', function () {
+    try {
+      if (document.documentElement.classList.contains('portfolio-anim-force')) {
+        localStorage.setItem('portfolioAnim', '0');
+      } else {
         localStorage.removeItem('portfolioAnim');
-      } catch (e) {}
-      location.reload();
-    });
-  }
+      }
+    } catch (e) {}
+    location.reload();
+  });
 })();
 </script>
 
-<script src="main.js?v=19"></script>
+<script src="main.js?v=21"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
@@ -1325,7 +1465,22 @@
   const header = document.querySelector('header.site-nav');
   const skip = document.getElementById('introSkip');
   const list = document.getElementById('introBootList');
-  const cv = document.getElementById('introSparkCanvas');
+  const hint = document.getElementById('introHint');
+  const pctEl = document.getElementById('introPct');
+  const barEl = document.getElementById('introBar');
+  const ringEl = intro.querySelector('.site-intro__meter-ring');
+  const meterEl = document.getElementById('introMeter');
+  const stageEl = document.getElementById('introStage');
+  const loadPhases = [
+    { until: 0.16, text: 'Couche 01 — veille du compositeur & tampons GPU' },
+    { until: 0.34, text: 'Couche 02 — poignée TLS · négociation des suites' },
+    { until: 0.54, text: 'Couche 03 — résolution feuilles de style & modules JS' },
+    { until: 0.74, text: 'Couche 04 — graphe de navigation & ancres sémantiques' },
+    { until: 0.92, text: 'Couche 05 — calibrage des zones interactives' },
+    { until: 1.01, text: 'Synchronisation finale — file d’attente vidée' },
+  ];
+  var loadRaf = 0;
+  var loadT0 = 0;
 
   function lock() {
     html.classList.add('site-intro-lock');
@@ -1349,19 +1504,58 @@
   main?.setAttribute('aria-hidden', 'true');
   header?.setAttribute('aria-hidden', 'true');
 
-  skip?.addEventListener('click', function onSkip() {
+  function setLoadVisual(p) {
+    var n = Math.min(100, Math.max(0, Math.floor(p * 100 + 1e-6)));
+    if (pctEl) pctEl.textContent = String(n);
+    if (barEl) barEl.style.width = n + '%';
+    if (ringEl) ringEl.style.setProperty('--intro-deg', n * 3.6 + 'deg');
+    if (meterEl) meterEl.setAttribute('aria-valuenow', String(n));
+    if (meterEl) meterEl.classList.toggle('site-intro__meter--near', p >= 0.88);
+    if (stageEl) {
+      var msg = loadPhases[loadPhases.length - 1].text;
+      for (var i = 0; i < loadPhases.length; i += 1) {
+        if (p < loadPhases[i].until) {
+          msg = loadPhases[i].text;
+          break;
+        }
+      }
+      stageEl.textContent = msg;
+    }
+  }
+
+  function beginExit() {
+    if (introDone || !intro.parentNode) return;
+    if (intro.classList.contains('site-intro--exit')) return;
     clearTimeout(endTimer);
+    if (loadRaf) cancelAnimationFrame(loadRaf);
+    loadRaf = 0;
+    setLoadVisual(1);
+    if (hint) {
+      hint.textContent = 'Ouverture du portail dimensionnel — synchronisation du plan réel…';
+      hint.classList.add('site-intro__hint--ready');
+    }
     intro.classList.add('site-intro--exit');
-    setTimeout(cleanup, 950);
+    function onExitAnim(e) {
+      if (e.target !== intro) return;
+      if (e.animationName !== 'siteIntroExoticExit' && e.animationName !== 'siteIntroExoticExitReduced') return;
+      intro.removeEventListener('animationend', onExitAnim);
+      cleanup();
+    }
+    intro.addEventListener('animationend', onExitAnim);
+    setTimeout(cleanup, 3000);
+  }
+
+  skip?.addEventListener('click', function onSkip() {
+    beginExit();
   });
 
   const bootLines = [
-    '[t+000ms] INIT · surface=viewport · depth_buffer=on',
-    '[t+042ms] TLS · handshake · cipher=AES_256_GCM ✓',
-    '[t+086ms] ASSETS · style.css · main.js · resolved',
-    '[t+128ms] NET · route_cache · mtu=1500 · latency_ok',
-    '[t+168ms] PROFILE · Eliot_Fiette · SISR · verified',
-    '[t+210ms] PORTFOLIO · compositor · READY → render',
+    '[t+000ms] INIT · surface=viewport · depth_buffer=on · vsync=adaptive',
+    '[t+048ms] TLS · handshake · cipher=AES_256_GCM · OCSP=stapled ✓',
+    '[t+096ms] ASSETS · style.css · main.js · integrity=sha256+ ✓',
+    '[t+142ms] NET · route_cache · mtu=1500 · jitter<1.2ms',
+    '[t+186ms] PROFILE · Eliot_Fiette · SISR · rôle=admin_sys ✓',
+    '[t+228ms] UI · focus_trap=armed · WCAG=AA · READY → render',
   ];
   let bi = 0;
   function nextBoot() {
@@ -1369,64 +1563,28 @@
     var li = document.createElement('li');
     li.textContent = bootLines[bi++];
     list.appendChild(li);
-    setTimeout(nextBoot, 380 + Math.random() * 220);
+    setTimeout(nextBoot, 340 + Math.random() * 190);
   }
-  setTimeout(nextBoot, 500);
+  setTimeout(nextBoot, 420);
 
-  if (cv && cv.getContext) {
-    var ctx = cv.getContext('2d');
-    var w = (cv.width = Math.min(900, window.innerWidth * 1.2));
-    var h = (cv.height = Math.min(900, window.innerHeight * 1.2));
-    var cx = w * 0.5;
-    var cy = h * 0.5;
-    var sparks = [];
-    for (var si = 0; si < 140; si++) {
-      var ang = Math.random() * Math.PI * 2;
-      var sp = 1.2 + Math.random() * 3.8;
-      sparks.push({
-        x: cx,
-        y: cy,
-        vx: Math.cos(ang) * sp,
-        vy: Math.sin(ang) * sp,
-        life: 1,
-        r: 0.6 + Math.random() * 1.8,
-        hue: 200 + Math.random() * 80,
-      });
-    }
-    var t0 = performance.now();
-    function sparkFrame(now) {
-      var t = now - t0;
-      if (t > 2800) return;
-      ctx.clearRect(0, 0, w, h);
-      for (var i = 0; i < sparks.length; i++) {
-        var p = sparks[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.985;
-        p.vy *= 0.985;
-        p.life *= 0.987;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'hsla(' + p.hue + ',85%,62%,' + (p.life * 0.55) + ')';
-        ctx.fill();
-      }
-      requestAnimationFrame(sparkFrame);
-    }
-    requestAnimationFrame(sparkFrame);
+  var totalMs = 6200;
+  var loadDuration = 5600;
+
+  function easeOutQuart(x) {
+    return 1 - Math.pow(1 - x, 4);
   }
 
-  var totalMs = 6400;
-  endTimer = setTimeout(function () {
-    if (introDone || !intro.parentNode) return;
-    intro.classList.add('site-intro--exit');
-    function onEnd(e) {
-      if (e.target !== intro || e.propertyName !== 'opacity') return;
-      intro.removeEventListener('transitionend', onEnd);
-      cleanup();
-    }
-    intro.addEventListener('transitionend', onEnd);
-    setTimeout(cleanup, 1200);
-  }, totalMs);
+  function tickLoad(now) {
+    if (introDone || intro.classList.contains('site-intro--exit')) return;
+    if (!loadT0) loadT0 = now;
+    var raw = Math.min(1, (now - loadT0) / loadDuration);
+    setLoadVisual(easeOutQuart(raw));
+    if (raw < 1) loadRaf = requestAnimationFrame(tickLoad);
+    else loadRaf = 0;
+  }
+  loadRaf = requestAnimationFrame(tickLoad);
+
+  endTimer = setTimeout(beginExit, totalMs);
 })();
 </script>
 <script>

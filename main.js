@@ -59,7 +59,7 @@ if (skillBars.length) {
     'main #parcours .about-grid',
     'main #parcours .side-card',
     'main .single-section .proj-detail',
-    'main .timeline-placeholder',
+    'main #entreprise .exp-pair',
     'main .veille-intro',
     'main .theme-banner',
     'main .veille-card',
@@ -124,7 +124,60 @@ window.addEventListener('resize', () => {
     'contact',
   ];
 
+  const NAV_SCROLL_MS = 340;
+
   let lastSyncedId = '';
+  let navScrollRaf = 0;
+
+  function scrollPaddingTopPx() {
+    const raw = getComputedStyle(document.documentElement).scrollPaddingTop;
+    const n = parseFloat(raw);
+    return Number.isFinite(n) ? n : 124;
+  }
+
+  function prefersReducedScroll() {
+    try {
+      return (
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+        !document.documentElement.classList.contains('portfolio-anim-force')
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function scrollToSectionFast(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const pad = scrollPaddingTopPx();
+    const targetY = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - pad);
+    const startY = window.pageYOffset;
+    const delta = targetY - startY;
+    if (Math.abs(delta) < 2) return;
+
+    if (navScrollRaf) {
+      cancelAnimationFrame(navScrollRaf);
+      navScrollRaf = 0;
+    }
+
+    if (prefersReducedScroll()) {
+      window.scrollTo(0, targetY);
+      return;
+    }
+
+    const t0 = performance.now();
+    const dur = NAV_SCROLL_MS;
+    function easeOutCubic(t) {
+      return 1 - (1 - t) ** 3;
+    }
+    function step(now) {
+      const p = Math.min(1, (now - t0) / dur);
+      window.scrollTo(0, startY + delta * easeOutCubic(p));
+      if (p < 1) navScrollRaf = requestAnimationFrame(step);
+      else navScrollRaf = 0;
+    }
+    navScrollRaf = requestAnimationFrame(step);
+  }
 
   function navBottomPx() {
     const nav = document.querySelector('.site-nav');
@@ -219,6 +272,17 @@ window.addEventListener('resize', () => {
     syncNavActive();
   });
 
+  window.addEventListener('popstate', () => {
+    const hid = (window.location.hash || '').slice(1);
+    if (hid && SECTION_ORDER.includes(hid)) {
+      scrollToSectionFast(hid);
+    }
+    lastSyncedId = '';
+    requestAnimationFrame(() => {
+      syncNavActive();
+    });
+  });
+
   let resizeScheduled = false;
   window.addEventListener('resize', () => {
     if (resizeScheduled) return;
@@ -243,6 +307,13 @@ window.addEventListener('resize', () => {
       const href = a.getAttribute('href') || '';
       const id = href.slice(1);
       if (!SECTION_ORDER.includes(id)) return;
+      e.preventDefault();
+      try {
+        history.pushState(null, '', href);
+      } catch (_) {
+        /* file:// */
+      }
+      scrollToSectionFast(id);
       lastSyncedId = '';
       requestAnimationFrame(() => {
         lastSyncedId = '';
@@ -251,14 +322,84 @@ window.addEventListener('resize', () => {
       setTimeout(() => {
         lastSyncedId = '';
         syncNavActive();
-      }, 450);
+      }, NAV_SCROLL_MS + 40);
       setTimeout(() => {
         lastSyncedId = '';
         syncNavActive();
-      }, 1200);
+      }, NAV_SCROLL_MS + 200);
     },
     true,
   );
 
   syncNavActive();
+})();
+
+/* ── École : double volet (projets ⟷ IPSSI) — canaux + hash #ecole-ipssi ── */
+(() => {
+  const hub = document.querySelector('.school-hub');
+  if (!hub) return;
+  const tabs = [...hub.querySelectorAll('.school-dock__tab')];
+  const panels = [...hub.querySelectorAll('.school-panel')];
+  const tablist = hub.querySelector('.school-dock');
+  if (tabs.length < 2 || panels.length !== 2) return;
+
+  function setPanel(which, opts) {
+    const isIpssi = which === 'ipssi';
+    hub.dataset.active = isIpssi ? 'ipssi' : 'projets';
+
+    tabs.forEach((tab) => {
+      const on =
+        (isIpssi && tab.dataset.panel === 'ipssi') || (!isIpssi && tab.dataset.panel === 'projets');
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      tab.tabIndex = on ? 0 : -1;
+    });
+
+    panels.forEach((panel) => {
+      const isProjets = panel.id === 'school-panel-projets';
+      const active = (isProjets && !isIpssi) || (!isProjets && isIpssi);
+      panel.toggleAttribute('inert', !active);
+      panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+
+    const fromHash = opts && opts.fromHash;
+    if (!fromHash) {
+      try {
+        const h = isIpssi ? '#ecole-ipssi' : '#ecole';
+        history.replaceState(null, '', `${location.pathname}${location.search}${h}`);
+      } catch (_) {
+        /* file:// */
+      }
+    }
+  }
+
+  function applyHash() {
+    const raw = (location.hash || '').toLowerCase();
+    if (raw === '#ecole-ipssi') setPanel('ipssi', { fromHash: true });
+    else setPanel('projets', { fromHash: true });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      setPanel(tab.dataset.panel === 'ipssi' ? 'ipssi' : 'projets');
+    });
+  });
+
+  if (tablist) {
+    tablist.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const ipssi = hub.dataset.active === 'ipssi';
+      if (e.key === 'ArrowLeft' && ipssi) {
+        e.preventDefault();
+        setPanel('projets');
+        tabs.find((t) => t.dataset.panel === 'projets')?.focus();
+      } else if (e.key === 'ArrowRight' && !ipssi) {
+        e.preventDefault();
+        setPanel('ipssi');
+        tabs.find((t) => t.dataset.panel === 'ipssi')?.focus();
+      }
+    });
+  }
+
+  window.addEventListener('hashchange', applyHash);
+  applyHash();
 })();
