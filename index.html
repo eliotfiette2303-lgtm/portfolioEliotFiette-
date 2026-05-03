@@ -35,7 +35,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=32"/>
+  <link rel="stylesheet" href="style.css?v=34"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -614,8 +614,10 @@
       <span class="site-intro__title-accent">Fiette</span>
     </h2>
     <p class="site-intro__role">Administration systèmes &amp; réseaux · BTS SIO — SISR</p>
+    <p class="site-intro__stage" id="introStage">Couche 01 — veille du compositeur</p>
+    <ul class="site-intro__boot" id="introBootList" aria-hidden="true"></ul>
     <div
-      class="site-intro__meter"
+      class="site-intro__loadrow"
       id="introMeter"
       role="progressbar"
       aria-valuemin="0"
@@ -623,16 +625,17 @@
       aria-valuenow="0"
       aria-label="Progression du chargement de l’interface"
     >
-      <div class="site-intro__meter-ring" aria-hidden="true"></div>
-      <div class="site-intro__meter-core">
-        <span class="site-intro__pct" id="introPct">0</span><span class="site-intro__pct-unit" aria-hidden="true">%</span>
-      </div>
+      <div class="site-intro__track" aria-hidden="true"><div class="site-intro__bar" id="introBar"></div></div>
+      <span class="site-intro__pct" id="introPct" aria-hidden="true">0%</span>
     </div>
-    <p class="site-intro__stage" id="introStage">Couche 01 — veille du compositeur</p>
-    <ul class="site-intro__boot" id="introBootList" aria-hidden="true"></ul>
-    <div class="site-intro__track" aria-hidden="true"><div class="site-intro__bar" id="introBar"></div></div>
     <p class="site-intro__hint" id="introHint">Initialisation du pipeline de rendu…</p>
   </div>
+  <div class="site-intro__warp" aria-hidden="true">
+    <div class="site-intro__warp-tunnel"></div>
+    <div class="site-intro__warp-streaks"></div>
+    <div class="site-intro__warp-streaks site-intro__warp-streaks--b"></div>
+  </div>
+  <div class="site-intro__hypershock" aria-hidden="true"></div>
   <button type="button" class="site-intro__skip" id="introSkip">Passer l'introduction</button>
 </div>
 
@@ -1468,7 +1471,6 @@
   const hint = document.getElementById('introHint');
   const pctEl = document.getElementById('introPct');
   const barEl = document.getElementById('introBar');
-  const ringEl = intro.querySelector('.site-intro__meter-ring');
   const meterEl = document.getElementById('introMeter');
   const stageEl = document.getElementById('introStage');
   const loadPhases = [
@@ -1498,6 +1500,12 @@
     unlock();
     main?.removeAttribute('aria-hidden');
     header?.removeAttribute('aria-hidden');
+    try {
+      html.classList.add('portfolio-main-warp-in');
+      setTimeout(function () {
+        html.classList.remove('portfolio-main-warp-in');
+      }, 1100);
+    } catch (e) {}
   }
 
   lock();
@@ -1506,11 +1514,10 @@
 
   function setLoadVisual(p) {
     var n = Math.min(100, Math.max(0, Math.floor(p * 100 + 1e-6)));
-    if (pctEl) pctEl.textContent = String(n);
+    if (pctEl) pctEl.textContent = n + '%';
     if (barEl) barEl.style.width = n + '%';
-    if (ringEl) ringEl.style.setProperty('--intro-deg', n * 3.6 + 'deg');
     if (meterEl) meterEl.setAttribute('aria-valuenow', String(n));
-    if (meterEl) meterEl.classList.toggle('site-intro__meter--near', p >= 0.88);
+    if (meterEl) meterEl.classList.toggle('site-intro__loadrow--near', p >= 0.88);
     if (stageEl) {
       var msg = loadPhases[loadPhases.length - 1].text;
       for (var i = 0; i < loadPhases.length; i += 1) {
@@ -1531,18 +1538,18 @@
     loadRaf = 0;
     setLoadVisual(1);
     if (hint) {
-      hint.textContent = 'Ouverture du portail dimensionnel — synchronisation du plan réel…';
+      hint.textContent = 'Saut en hyperespace — stabilisation du continuum…';
       hint.classList.add('site-intro__hint--ready');
     }
     intro.classList.add('site-intro--exit');
     function onExitAnim(e) {
       if (e.target !== intro) return;
-      if (e.animationName !== 'siteIntroExoticExit' && e.animationName !== 'siteIntroExoticExitReduced') return;
+      if (e.animationName !== 'siteIntroHyperspaceExit' && e.animationName !== 'siteIntroHyperspaceExitReduced') return;
       intro.removeEventListener('animationend', onExitAnim);
       cleanup();
     }
     intro.addEventListener('animationend', onExitAnim);
-    setTimeout(cleanup, 3000);
+    setTimeout(cleanup, 4200);
   }
 
   skip?.addEventListener('click', function onSkip() {
