@@ -20,7 +20,7 @@
   <script>
     (function () {
       var el = document.getElementById('site-stylesheet');
-      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=8';
+      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=9';
     })();
   </script>
   <style>
@@ -438,23 +438,38 @@
   </style>
 </head>
 <body>
-<nav>
-  <a href="#hero" class="nav-logo">Eliot Fiette</a>
-  <details class="nav-dropdown">
-    <summary aria-label="Ouvrir le menu de navigation">Menu</summary>
-    <ul class="nav-dropdown-panel">
+<header class="site-nav">
+  <div class="nav-top">
+    <a href="#hero" class="nav-logo">Eliot Fiette</a>
+    <details class="nav-dropdown">
+      <summary aria-label="Ouvrir le menu de navigation">Menu</summary>
+      <ul class="nav-dropdown-panel">
+        <li><a href="#hero" class="active">Accueil</a></li>
+        <li><a href="#parcours">Mon parcours</a></li>
+        <li><a href="#competences">Compétences</a></li>
+        <li><a href="#projets">Projets</a></li>
+        <li><a href="#ecole">École</a></li>
+        <li><a href="#entreprise">Entreprise</a></li>
+        <li><a href="#veille">Veille</a></li>
+        <li><a href="#cv">Synthèse CV</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </details>
+  </div>
+  <div class="nav-tabs-strip" role="navigation" aria-label="Accès rapide aux sections">
+    <ul class="nav-tabs">
       <li><a href="#hero" class="active">Accueil</a></li>
-      <li><a href="#parcours">Mon parcours</a></li>
+      <li><a href="#parcours">Parcours</a></li>
       <li><a href="#competences">Compétences</a></li>
       <li><a href="#projets">Projets</a></li>
       <li><a href="#ecole">École</a></li>
       <li><a href="#entreprise">Entreprise</a></li>
       <li><a href="#veille">Veille</a></li>
-      <li><a href="#cv">Synthèse CV</a></li>
+      <li><a href="#cv">CV</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-  </details>
-</nav>
+  </div>
+</header>
 
 <main>
 
@@ -1163,7 +1178,7 @@
 (function () {
   var s = document.createElement('script');
   s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=10';
+  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=11';
   document.body.appendChild(s);
 })();
 </script>

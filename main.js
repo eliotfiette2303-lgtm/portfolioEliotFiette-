@@ -25,6 +25,12 @@ document.querySelectorAll('details.nav-dropdown').forEach((det) => {
   });
 });
 
+document.querySelector('.nav-tabs')?.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  document.querySelector('details.nav-dropdown')?.removeAttribute('open');
+});
+
 /* ── SKILL BAR ANIMATION ── */
 const skillBars = document.querySelectorAll('.skill-bar');
 
@@ -96,9 +102,10 @@ window.addEventListener('resize', () => {
 /* ── NAV SCROLL SPY (ancres #hero … #contact) ── */
 (() => {
   const navPanel = document.querySelector('.nav-dropdown-panel');
-  if (!navPanel) return;
+  const navTabs = document.querySelector('.nav-tabs');
+  if (!navPanel && !navTabs) return;
 
-  const OFFSET = 80;
+  const OFFSET = 104;
   const SECTION_ORDER = [
     'hero',
     'parcours',
@@ -123,10 +130,12 @@ window.addEventListener('resize', () => {
 
   function syncNavActive() {
     const id = currentNavId();
-    navPanel.querySelectorAll('a[href^="#"]').forEach((a) => {
+    const setActive = (a) => {
       const href = a.getAttribute('href') || '';
       a.classList.toggle('active', href === `#${id}`);
-    });
+    };
+    navPanel?.querySelectorAll('a[href^="#"]').forEach(setActive);
+    navTabs?.querySelectorAll('a[href^="#"]').forEach(setActive);
   }
 
   let scrollScheduled = false;
