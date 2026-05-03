@@ -775,19 +775,29 @@ footer {
 
 .tech-logos-marquee {
   overflow: hidden;
+  cursor: default;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
 
 .tech-logos-track {
   display: flex;
+  flex-direction: row;
   width: max-content;
   align-items: center;
   gap: 0;
-  animation: techLogosMarquee 52s linear infinite;
+  flex-wrap: nowrap;
+  animation: techLogosMarquee 48s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
-.tech-logos-marquee:hover .tech-logos-track,
+@media (hover: hover) and (pointer: fine) {
+  .tech-logos-marquee:hover .tech-logos-track {
+    animation-play-state: paused;
+  }
+}
+
 .tech-logos-marquee:focus-within .tech-logos-track,
 .tech-logos-marquee:active .tech-logos-track {
   animation-play-state: paused;
@@ -879,18 +889,7 @@ footer {
 
 @media (prefers-reduced-motion: reduce) {
   .tech-logos-track {
-    animation: none !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100% !important;
-    max-width: 920px;
-    margin: 0 auto;
-    row-gap: 1rem;
-    column-gap: 1.25rem;
-  }
-
-  .tech-logos-band .tech-logos-set[aria-hidden='true'] {
-    display: none;
+    animation-duration: 100s !important;
   }
 }
 
