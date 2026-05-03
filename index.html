@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=2"/>
+  <link rel="stylesheet" href="style.css?v=3"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -192,9 +192,13 @@
     align-items: center;
     gap: 0.5rem;
     z-index: 2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
     animation: fadeUp 1s 1.2s ease both;
     opacity: 0;
   }
+  .hero-scroll:hover { color: var(--accent2); }
   .scroll-line {
     width:1px; height:36px;
     background: linear-gradient(to bottom, var(--accent), transparent);
@@ -480,12 +484,12 @@
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-logo">Eliot Fiette</a>
+  <a href="#hero" class="nav-logo">Eliot Fiette</a>
   <ul class="nav-links">
-    <li><a href="index.html" class="active">Accueil</a></li>
+    <li><a href="#hero" class="active">Accueil</a></li>
     <li><a href="about.html">À propos</a></li>
-    <li><a href="competences.html">Compétences</a></li>
-    <li><a href="projets.html">Projets</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#projets">Projets</a></li>
     <li><a href="ecole.html">École</a></li>
     <li><a href="entreprise.html">Entreprise</a></li>
     <li><a href="veille.html">Veille</a></li>
@@ -524,7 +528,7 @@
         Certifié Cisco &amp; ANSSI, je construis des environnements IT robustes et sécurisés.
       </p>
       <div class="hero-ctas fade-up-4">
-        <a href="projets.html" class="btn btn-primary">Voir mes projets</a>
+        <a href="#projets" class="btn btn-primary">Voir mes projets</a>
         <a href="contact.html" class="btn btn-outline">Me contacter</a>
       </div>
     </div>
@@ -555,14 +559,14 @@
     </div>
   </div>
 
-  <div class="hero-scroll">
+  <a href="#competences" class="hero-scroll" aria-label="Aller aux compétences">
     <span>Découvrir</span>
     <div class="scroll-line"></div>
-  </div>
+  </a>
 </section>
 
 <!-- ══════════ STATS ══════════ -->
-<section class="stats-section">
+<section class="stats-section" id="stats">
   <div class="stats-grid">
     <div class="stat-item">
       <div class="stat-num" data-count="2" data-suffix="+">0+</div>
@@ -584,7 +588,7 @@
 </section>
 
 <!-- ══════════ EXPERTISE ══════════ -->
-<section class="expertise-section">
+<section class="expertise-section" id="competences">
   <div class="container">
     <div class="expertise-header">
       <div class="section-eyebrow">Compétences</div>
@@ -650,7 +654,7 @@
 </section>
 
 <!-- ══════════ PROJETS ══════════ -->
-<section class="projects-section">
+<section class="projects-section" id="projets">
   <div class="container">
     <div class="expertise-header">
       <div class="section-eyebrow">Réalisations</div>
@@ -688,11 +692,14 @@
       </a>
 
     </div>
+    <p style="text-align:center;margin-top:2.5rem;font-size:0.9rem;color:var(--text2);">
+      <a href="projets.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.06em;">Voir la page détaillée des projets →</a>
+    </p>
   </div>
 </section>
 
 <!-- ══════════ TECH STACK ══════════ -->
-<section class="tech-section">
+<section class="tech-section" id="stack">
   <div class="container" style="text-align:center">
     <div class="section-eyebrow center">Stack technique</div>
     <h2 class="section-title">Technologies maîtrisées</h2>
@@ -741,7 +748,7 @@
   <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
 
-<script src="main.js?v=2" defer></script>
+<script src="main.js?v=3" defer></script>
 <script>
 /* ── CANVAS PARTICULES ── */
 (function(){

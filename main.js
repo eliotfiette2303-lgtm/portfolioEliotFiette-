@@ -75,3 +75,54 @@ window.addEventListener('resize', () => {
     document.body.style.overflow = '';
   }
 });
+
+/* ── NAV SCROLL SPY (page d'accueil, ancres #hero / #competences / #projets) ── */
+(() => {
+  const competencesSection = document.getElementById('competences');
+  const navBarLinks = document.querySelector('nav .nav-links');
+  if (!competencesSection || !navBarLinks) return;
+
+  const OFFSET = 80;
+  const SECTION_ORDER = ['hero', 'stats', 'competences', 'projets', 'stack'];
+
+  function mapSectionToNavId(sectionId) {
+    if (sectionId === 'stats') return 'hero';
+    if (sectionId === 'stack') return 'projets';
+    return sectionId;
+  }
+
+  function currentNavId() {
+    let raw = 'hero';
+    for (const id of SECTION_ORDER) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      if (el.getBoundingClientRect().top <= OFFSET) raw = id;
+    }
+    return mapSectionToNavId(raw);
+  }
+
+  function syncNavActive() {
+    const id = currentNavId();
+    navBarLinks.querySelectorAll('a').forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      a.classList.toggle('active', href === `#${id}`);
+    });
+  }
+
+  let scrollScheduled = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (scrollScheduled) return;
+      scrollScheduled = true;
+      requestAnimationFrame(() => {
+        syncNavActive();
+        scrollScheduled = false;
+      });
+    },
+    { passive: true },
+  );
+
+  window.addEventListener('hashchange', syncNavActive);
+  syncNavActive();
+})();
