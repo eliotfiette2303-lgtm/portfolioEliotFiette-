@@ -448,3 +448,9 @@ footer {
   .page-header h1 { color: black !important; }
   .page-header p  { color: #444 !important; }
 }
+
+/* Ancien bandeau chiffres retiré du HTML — masque si navigateur / CDN sert encore une vieille page */
+#stats,
+.stats-section {
+  display: none !important;
+}
