@@ -886,6 +886,47 @@ html.site-intro-lock body {
   transition: none;
 }
 
+/* WebGL Three.js : vaisseau en transition */
+.intro-ship-root {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.intro-ship-root canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.site-intro--exit-ship .site-intro__wrap {
+  transition:
+    opacity 0.55s ease,
+    filter 0.6s ease,
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.1;
+  filter: blur(14px) saturate(0.82);
+  transform: scale(0.96);
+}
+
+.site-intro--exit-ship .site-intro__skip,
+.site-intro--exit-ship .site-intro__warp,
+.site-intro--exit-ship .site-intro__hypershock {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.35s ease !important;
+}
+
+.site-intro--exit-ship .site-intro__aurora,
+.site-intro--exit-ship .site-intro__grid,
+.site-intro--exit-ship .site-intro__rings,
+.site-intro--exit-ship .site-intro__scanlines {
+  opacity: 0.22;
+  transition: opacity 0.5s ease;
+}
+
 /* Vortex conique (visible uniquement en phase de sortie) */
 .site-intro::before {
   content: '';

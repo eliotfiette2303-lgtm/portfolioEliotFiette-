@@ -35,7 +35,14 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=34"/>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css?v=35"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1463,6 +1470,9 @@
     return;
   }
 
+  var useSpaceship3d = !reduce;
+  if (reduce && animForce) useSpaceship3d = false;
+
   const html = document.documentElement;
   const main = document.querySelector('main');
   const header = document.querySelector('header.site-nav');
@@ -1530,17 +1540,8 @@
     }
   }
 
-  function beginExit() {
-    if (introDone || !intro.parentNode) return;
-    if (intro.classList.contains('site-intro--exit')) return;
-    clearTimeout(endTimer);
-    if (loadRaf) cancelAnimationFrame(loadRaf);
-    loadRaf = 0;
-    setLoadVisual(1);
-    if (hint) {
-      hint.textContent = 'Saut en hyperespace — stabilisation du continuum…';
-      hint.classList.add('site-intro__hint--ready');
-    }
+  function fallbackCssExit() {
+    intro.classList.remove('site-intro--exit-ship');
     intro.classList.add('site-intro--exit');
     function onExitAnim(e) {
       if (e.target !== intro) return;
@@ -1550,6 +1551,48 @@
     }
     intro.addEventListener('animationend', onExitAnim);
     setTimeout(cleanup, 4200);
+  }
+
+  function beginExit() {
+    if (introDone || !intro.parentNode) return;
+    if (intro.classList.contains('site-intro--exit') || intro.classList.contains('site-intro--exit-ship')) return;
+    clearTimeout(endTimer);
+    if (loadRaf) cancelAnimationFrame(loadRaf);
+    loadRaf = 0;
+    setLoadVisual(1);
+    if (hint) {
+      hint.textContent = useSpaceship3d
+        ? 'Mise des moteurs — passage en vitesse lumière…'
+        : 'Saut en hyperespace — stabilisation du continuum…';
+      hint.classList.add('site-intro__hint--ready');
+    }
+
+    if (useSpaceship3d) {
+      intro.classList.add('site-intro--exit-ship');
+      var rootBase = typeof window.__SITE_ROOT__ === 'string' ? window.__SITE_ROOT__ : '';
+      import(rootBase + 'intro-spaceship.js?v=2')
+        .then(function (mod) {
+          if (introDone || !intro.parentNode) return;
+          try {
+            mod.runSpaceshipTransition({
+              onComplete: function () {
+                intro.classList.remove('site-intro--exit-ship');
+                cleanup();
+              },
+            });
+          } catch (err2) {
+            console.warn('[intro] exécution vaisseau', err2);
+            fallbackCssExit();
+          }
+        })
+        .catch(function (err) {
+          console.warn('[intro] vaisseau 3D indisponible, repli CSS', err);
+          fallbackCssExit();
+        });
+      return;
+    }
+
+    fallbackCssExit();
   }
 
   skip?.addEventListener('click', function onSkip() {
