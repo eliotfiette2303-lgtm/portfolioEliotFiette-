@@ -16,21 +16,6 @@ navLinks?.querySelectorAll('a')?.forEach((link) => {
   });
 });
 
-/* ── MENU DÉROULANT : fermer après clic sur une ancre ── */
-document.querySelectorAll('details.nav-dropdown').forEach((det) => {
-  det.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    det.removeAttribute('open');
-  });
-});
-
-document.querySelector('.nav-tabs')?.addEventListener('click', (e) => {
-  const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  document.querySelector('details.nav-dropdown')?.removeAttribute('open');
-});
-
 /* ── SKILL BAR ANIMATION ── */
 const skillBars = document.querySelectorAll('.skill-bar');
 
@@ -101,9 +86,8 @@ window.addEventListener('resize', () => {
 
 /* ── NAV SCROLL SPY (ancres #hero … #contact) ── */
 (() => {
-  const navPanel = document.querySelector('.nav-dropdown-panel');
   const navTabs = document.querySelector('.nav-tabs');
-  if (!navPanel && !navTabs) return;
+  if (!navTabs) return;
 
   const OFFSET = 104;
   const SECTION_ORDER = [
@@ -134,8 +118,7 @@ window.addEventListener('resize', () => {
       const href = a.getAttribute('href') || '';
       a.classList.toggle('active', href === `#${id}`);
     };
-    navPanel?.querySelectorAll('a[href^="#"]').forEach(setActive);
-    navTabs?.querySelectorAll('a[href^="#"]').forEach(setActive);
+    navTabs.querySelectorAll('a[href^="#"]').forEach(setActive);
   }
 
   let scrollScheduled = false;
