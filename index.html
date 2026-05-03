@@ -8,21 +8,19 @@
     if (location.protocol === 'file:') return;
     var host = location.hostname;
     if (host === 'localhost' || host === '127.0.0.1') return;
-    if (host.endsWith('github.io')) {
-      var seg = location.pathname.split('/').filter(Boolean)[0];
-      if (seg && !/\.html$/i.test(seg)) window.__SITE_ROOT__ = '/' + seg + '/';
-    }
+    if (!host.endsWith('github.io')) return;
+    var parts = location.pathname.split('/').filter(Boolean);
+    var seg = parts[0];
+    if (!seg || /\.html$/i.test(seg)) return;
+    window.__SITE_ROOT__ = '/' + seg + '/';
+    var base = document.createElement('base');
+    base.href = location.origin + window.__SITE_ROOT__;
+    document.head.appendChild(base);
   })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="" id="site-stylesheet"/>
-  <script>
-    (function () {
-      var el = document.getElementById('site-stylesheet');
-      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=16';
-    })();
-  </script>
+  <link rel="stylesheet" href="style.css?v=17"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1230,14 +1228,7 @@
   <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
 
-<script>
-(function () {
-  var s = document.createElement('script');
-  s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=15';
-  document.body.appendChild(s);
-})();
-</script>
+<script src="main.js?v=17"></script>
 <script>
 /* ── CANVAS PARTICULES ── */
 (function(){
