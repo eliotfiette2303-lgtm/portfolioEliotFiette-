@@ -35,7 +35,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=40"/>
+  <link rel="stylesheet" href="style.css?v=41"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -607,6 +607,9 @@
     <span class="site-intro__ring site-intro__ring--c"></span>
   </div>
   <div class="site-intro__scanlines" aria-hidden="true"></div>
+  <!-- Moitiés « coque » sous le contenu, au-dessus du fond intro -->
+  <div class="site-intro__cine-shard site-intro__cine-shard--top" aria-hidden="true"></div>
+  <div class="site-intro__cine-shard site-intro__cine-shard--bottom" aria-hidden="true"></div>
   <div class="site-intro__wrap">
     <p id="intro-desc" class="site-intro__eyebrow"><span class="site-intro__pulse"></span>Séquence d'amorçage · Portfolio 2026</p>
     <h2 id="intro-title" class="site-intro__title">
@@ -629,6 +632,19 @@
       <span class="site-intro__pct" id="introPct" aria-hidden="true">0%</span>
     </div>
     <p class="site-intro__hint" id="introHint">Initialisation du pipeline de rendu…</p>
+  </div>
+  <!-- Lame laser, flash et particules (au-dessus du contenu pendant la sortie) -->
+  <div class="site-intro__cine-fx" aria-hidden="true">
+    <div class="site-intro__cine-laser">
+      <span class="site-intro__cine-laser-core"></span>
+      <span class="site-intro__cine-laser-beam"></span>
+    </div>
+    <div class="site-intro__cine-flash"></div>
+    <div class="site-intro__cine-sparks">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
   </div>
   <div class="site-intro__warp" aria-hidden="true">
     <div class="site-intro__warp-tunnel"></div>
@@ -1448,9 +1464,6 @@
 </script>
 
 <script src="main.js?v=21"></script>
-<!-- Three.js UMD en local : depuis three@0.170 le paquet npm n’inclut plus build/three.min.js → l’ancienne URL CDN renvoyait 404 et THREE restait indéfini. -->
-<script src="vendor/three.min.js"></script>
-<script src="intro-spaceship.js?v=10"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
@@ -1466,8 +1479,8 @@
     return;
   }
 
-  /* Vaisseau 3D : actif dès que l’intro est affichée (y compris « anim portfolio » + OS reduced-motion) */
-  var useSpaceship3d = !reduce || animForce;
+  var useCinematicSplit = !reduce || animForce;
+  var cinematicReduced = reduce && animForce;
 
   const html = document.documentElement;
   const main = document.querySelector('main');
@@ -1537,7 +1550,7 @@
   }
 
   function fallbackCssExit() {
-    intro.classList.remove('site-intro--exit-ship');
+    intro.classList.remove('site-intro--exit-cinematic', 'site-intro--exit-cinematic--reduced');
     intro.classList.add('site-intro--exit');
     function onExitAnim(e) {
       if (e.target !== intro) return;
@@ -1551,41 +1564,47 @@
 
   function beginExit() {
     if (introDone || !intro.parentNode) return;
-    if (intro.classList.contains('site-intro--exit') || intro.classList.contains('site-intro--exit-ship')) return;
+    if (
+      intro.classList.contains('site-intro--exit') ||
+      intro.classList.contains('site-intro--exit-cinematic')
+    )
+      return;
     clearTimeout(endTimer);
     if (loadRaf) cancelAnimationFrame(loadRaf);
     loadRaf = 0;
     setLoadVisual(1);
     if (hint) {
-      hint.textContent = useSpaceship3d
-        ? 'Mise des moteurs — passage en vitesse lumière…'
+      hint.textContent = useCinematicSplit
+        ? 'Synchronisation du faisceau — ouverture cinématique…'
         : 'Saut en hyperespace — stabilisation du continuum…';
       hint.classList.add('site-intro__hint--ready');
     }
 
-    if (useSpaceship3d) {
-      intro.classList.add('site-intro--exit-ship');
-      if (window.__portfolioSpaceship && typeof window.__portfolioSpaceship.run === 'function') {
-        try {
-          window.__portfolioSpaceship.run({
-            introEl: intro,
-            onComplete: function () {
-              intro.classList.remove('site-intro--exit-ship');
-              intro.classList.remove('site-intro--ship-smoke');
-              intro.classList.remove('site-intro--ship-smoke-peak');
-              cleanup();
-            },
-          });
-        } catch (err2) {
-          console.warn('[intro] exécution vaisseau', err2);
-          intro.classList.remove('site-intro--exit-ship');
-          fallbackCssExit();
-        }
-      } else {
-        console.warn('[intro] THREE ou intro-spaceship.js non chargé — repli CSS');
-        intro.classList.remove('site-intro--exit-ship');
-        fallbackCssExit();
+    if (useCinematicSplit) {
+      var cineDone = false;
+      function finishCinematic() {
+        if (cineDone) return;
+        cineDone = true;
+        intro.removeEventListener('animationend', onCineAnim);
+        intro.classList.remove(
+          'site-intro--exit-cinematic',
+          'site-intro--exit-cinematic--reduced'
+        );
+        cleanup();
       }
+      function onCineAnim(e) {
+        if (e.target !== intro) return;
+        if (
+          e.animationName !== 'siteIntroCinematicHost' &&
+          e.animationName !== 'siteIntroCinematicHostReduced'
+        )
+          return;
+        finishCinematic();
+      }
+      intro.addEventListener('animationend', onCineAnim);
+      if (cinematicReduced) intro.classList.add('site-intro--exit-cinematic--reduced');
+      else intro.classList.add('site-intro--exit-cinematic');
+      setTimeout(finishCinematic, cinematicReduced ? 1100 : 3200);
       return;
     }
 
@@ -1622,7 +1641,12 @@
   }
 
   function tickLoad(now) {
-    if (introDone || intro.classList.contains('site-intro--exit') || intro.classList.contains('site-intro--exit-ship')) return;
+    if (
+      introDone ||
+      intro.classList.contains('site-intro--exit') ||
+      intro.classList.contains('site-intro--exit-cinematic')
+    )
+      return;
     if (!loadT0) loadT0 = now;
     var raw = Math.min(1, (now - loadT0) / loadDuration);
     setLoadVisual(easeOutQuart(raw));
