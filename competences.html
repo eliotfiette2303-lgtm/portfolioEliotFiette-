@@ -2,18 +2,41 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
+  <script>
+  (function () {
+    window.__SITE_ROOT__ = '';
+    if (location.protocol === 'file:') return;
+    var host = location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return;
+    if (host.endsWith('github.io')) {
+      var seg = location.pathname.split('/').filter(Boolean)[0];
+      if (seg && !/\.html$/i.test(seg)) window.__SITE_ROOT__ = '/' + seg + '/';
+    }
+  })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compétences — Eliot Fiette</title>
-  <meta http-equiv="refresh" content="0;url=index.html#competences"/>
+  <link rel="stylesheet" href="" id="site-stylesheet"/>
   <script>
-    location.replace('index.html#competences');
+    (function () {
+      var el = document.getElementById('site-stylesheet');
+      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=5';
+    })();
   </script>
-  <link rel="stylesheet" href="style.css?v=4"/>
+  <script>
+    location.replace((window.__SITE_ROOT__ || '') + 'index.html#competences');
+  </script>
 </head>
 <body style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg);color:var(--text2);font-family:var(--body,system-ui,sans-serif);">
   <p style="text-align:center;line-height:1.8;">
     Redirection vers la section <strong style="color:var(--text);">Compétences</strong> de l’accueil…<br/>
-    <a href="index.html#competences" style="color:var(--accent2);">Cliquez ici</a> si rien ne se passe.
+    <a id="competences-fallback-link" href="index.html#competences" style="color:var(--accent2);">Cliquez ici</a> si rien ne se passe.
   </p>
+  <script>
+    (function () {
+      var a = document.getElementById('competences-fallback-link');
+      if (a) a.href = (window.__SITE_ROOT__ || '') + 'index.html#competences';
+    })();
+  </script>
 </body>
 </html>
