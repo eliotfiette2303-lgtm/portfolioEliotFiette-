@@ -6,208 +6,480 @@
   <title>Eliot Fiette — Portfolio</title>
   <link rel="stylesheet" href="style.css?v=2"/>
   <style>
-    /* ── HERO ── */
-    .hero {
-      min-height: calc(100vh - 62px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 5rem 3rem;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse 80% 70% at 85% 10%, rgba(59,130,246,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 10% 90%, rgba(99,102,241,0.07) 0%, transparent 60%);
-    }
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-wrap { padding: 6rem 3rem; }
 
-    /* Subtle grid overlay */
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(59,130,246,0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59,130,246,0.045) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 80%);
-      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 80%);
-    }
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .section-eyebrow::before { content:''; display:inline-block; width:18px; height:1px; background:var(--accent); }
+  .section-eyebrow.center { justify-content: center; }
+  .section-eyebrow.center::before { display:none; }
 
-    /* Floating glow orb */
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: -150px; right: -150px;
-      width: 550px; height: 550px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-      pointer-events: none;
-      animation: floatOrb 12s ease-in-out infinite;
-    }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+  }
 
-    .hero-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: #4ade80;
-      background: rgba(34,197,94,0.08);
-      border: 1px solid rgba(34,197,94,0.22);
-      border-radius: 20px;
-      padding: 0.32rem 0.8rem;
-      margin-bottom: 1.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+  .section-desc { font-size: 0.95rem; color: var(--text2); line-height: 1.8; max-width: 500px; }
 
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 6px rgba(34,197,94,0.7);
-      animation: pulseGreenDot 2s ease-in-out infinite;
-    }
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
 
-    .hero-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      position: relative;
-      z-index: 1;
-    }
+  #particleCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
 
-    .hero-eyebrow::before {
-      content: '';
-      display: block;
-      width: 30px; height: 1px;
-      background: var(--accent);
-    }
+  .hero-scan {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.5) 40%, rgba(96,165,250,0.7) 50%, rgba(59,130,246,0.5) 60%, transparent);
+    animation: scanDown 6s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+  @keyframes scanDown {
+    0%   { top:-1px; opacity:0; }
+    3%   { opacity:1; }
+    97%  { opacity:1; }
+    100% { top:100%; opacity:0; }
+  }
 
-    .hero h1 {
-      font-family: var(--display);
-      font-size: clamp(3.5rem, 9vw, 7.5rem);
-      font-weight: 700;
-      line-height: 1.0;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.2rem;
-      max-width: 900px;
-      color: var(--text);
-      position: relative;
-      z-index: 1;
-    }
+  /* HUD corners */
+  .hud { position:absolute; z-index:2; pointer-events:none; }
+  .hud-tl { top:24px; left:24px; }
+  .hud-tr { top:24px; right:24px; }
+  .hud-bl { bottom:24px; left:24px; }
+  .hud-br { bottom:24px; right:24px; }
+  .hud-corner { width:22px; height:22px; border-style:solid; border-color:rgba(59,130,246,0.35); }
+  .hud-tl .hud-corner { border-width:2px 0 0 2px; }
+  .hud-tr .hud-corner { border-width:2px 2px 0 0; }
+  .hud-bl .hud-corner { border-width:0 0 2px 2px; }
+  .hud-br .hud-corner { border-width:0 2px 2px 0; }
 
-    .hero h1 em {
-      font-style: normal;
-      background: linear-gradient(135deg, var(--accent2) 0%, #a78bfa 60%, var(--accent2) 100%);
-      background-size: 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+  .hero-layout {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 4rem;
+    align-items: center;
+  }
 
-    .hero-desc {
-      font-size: 1.05rem;
-      color: var(--text2);
-      max-width: 520px;
-      margin-bottom: 2.5rem;
-      line-height: 1.85;
-      position: relative;
-      z-index: 1;
-    }
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: #4ade80;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.22);
+    border-radius: 20px;
+    padding: 0.32rem 0.85rem;
+    margin-bottom: 1.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-dot {
+    width:6px; height:6px; border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 8px rgba(34,197,94,0.7);
+    animation:pulseGreenDot 2s ease-in-out infinite;
+  }
 
-    .hero-ctas {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .hero-eyebrow::before { content:''; display:block; width:30px; height:1px; background:var(--accent); }
 
-    .hero-scroll {
-      position: absolute;
-      bottom: 2.5rem; right: 3rem;
-      font-family: var(--mono);
-      font-size: 0.63rem;
-      color: var(--text3);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      z-index: 1;
-    }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(3.2rem, 8vw, 6.5rem);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  }
 
-    /* ── QUICK NAV GRID ── */
-    .hero-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      background: var(--border);
-      border-top: 1px solid var(--border);
-      gap: 1px;
-    }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent2) 0%, #a78bfa 55%, var(--accent2) 100%);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 5s ease-in-out infinite;
+  }
+  @keyframes gradientShift {
+    0%,100% { background-position:0% 50%; }
+    50%     { background-position:100% 50%; }
+  }
 
-    .quick-card {
-      background: var(--bg2);
-      padding: 1.8rem;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      transition: background 0.25s, box-shadow 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
+  .hero-subtitle {
+    font-family: var(--display);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 1.5rem;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .cursor {
+    display: inline-block;
+    width: 2px; height: 1.2em;
+    background: var(--accent2);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
-    .quick-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--accent-dim), transparent);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--text2);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    line-height: 1.85;
+  }
+  .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; }
 
-    .quick-card:hover { background: var(--bg3); }
-    .quick-card:hover::before { opacity: 1; }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    animation: fadeUp 1s 1.2s ease both;
+    opacity: 0;
+  }
+  .scroll-line {
+    width:1px; height:36px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%,100%{opacity:0.3;transform:scaleY(1);}
+    50%{opacity:0.8;transform:scaleY(1.1);}
+  }
 
-    .quick-card-icon { font-size: 1.25rem; position: relative; z-index: 1; }
+  /* ── TERMINAL ── */
+  .terminal-card {
+    background: rgba(6,12,24,0.92);
+    border: 1px solid rgba(59,130,246,0.22);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(59,130,246,0.08);
+  }
+  .terminal-bar {
+    background: rgba(12,20,40,0.98);
+    border-bottom: 1px solid rgba(59,130,246,0.12);
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .t-dot { width:10px; height:10px; border-radius:50%; }
+  .t-dot.red    { background:#ff5f57; }
+  .t-dot.yellow { background:#febc2e; }
+  .t-dot.green  { background:#28c840; }
+  .terminal-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text3);
+    margin-left: auto;
+    letter-spacing: 0.04em;
+  }
+  .terminal-body {
+    padding: 1.2rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.77rem;
+    line-height: 1.9;
+  }
+  .t-line { opacity:0; }
+  .t-line:nth-child(1)  { animation:showLine .05s  .5s  forwards; }
+  .t-line:nth-child(2)  { animation:showLine .05s  .9s  forwards; }
+  .t-line:nth-child(3)  { animation:showLine .05s 1.4s  forwards; }
+  .t-line:nth-child(4)  { animation:showLine .05s 1.8s  forwards; }
+  .t-line:nth-child(5)  { animation:showLine .05s 2.1s  forwards; }
+  .t-line:nth-child(6)  { animation:showLine .05s 2.6s  forwards; }
+  .t-line:nth-child(7)  { animation:showLine .05s 3.0s  forwards; }
+  .t-line:nth-child(8)  { animation:showLine .05s 3.4s  forwards; }
+  .t-line:nth-child(9)  { animation:showLine .05s 3.8s  forwards; }
+  .t-line:nth-child(10) { animation:showLine .05s 4.3s  forwards; }
+  .t-line:nth-child(11) { animation:showLine .05s 4.7s  forwards; }
+  @keyframes showLine { to{opacity:1;} }
+  .t-prompt { color:var(--accent2); margin-right:.45rem; }
+  .t-cmd    { color:#e2e8f4; }
+  .t-out    { color:var(--text2); padding-left:1rem; }
+  .t-green  { color:#4ade80; padding-left:1rem; }
+  .t-blue   { color:var(--accent2); padding-left:1rem; }
+  .t-caret  { display:inline-block; width:7px; height:13px; background:var(--accent2); vertical-align:middle; animation:blink 1s step-end infinite; margin-left:2px; }
 
-    .quick-card-title {
-      font-family: var(--display);
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-      position: relative; z-index: 1;
-    }
+  /* ── STATS ── */
+  .stats-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2.8rem 3rem;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .stat-item { text-align:center; padding:0.8rem 1rem; position:relative; }
+  .stat-item::after { content:''; position:absolute; right:0; top:20%; bottom:20%; width:1px; background:var(--border); }
+  .stat-item:last-child::after { display:none; }
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--accent2);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    text-shadow: 0 0 20px rgba(96,165,250,0.3);
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
 
-    .quick-card-desc {
-      font-size: 0.78rem;
-      color: var(--text3);
-      position: relative; z-index: 1;
-    }
+  /* ── EXPERTISE CARDS (3D) ── */
+  .expertise-section { padding: 6rem 3rem; }
+  .expertise-header  { margin-bottom: 3.5rem; }
 
-    .quick-card-arrow {
-      margin-top: auto;
-      font-size: 0.73rem;
-      color: var(--accent);
-      font-family: var(--mono);
-      position: relative; z-index: 1;
-    }
+  .expertise-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 1.2rem;
+  }
 
-    @media (max-width: 640px) {
-      .hero { padding: 3rem 1.4rem; }
-      .hero-scroll { display: none; }
-      .hero-cards { grid-template-columns: repeat(2, 1fr); }
-    }
+  .expertise-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 1.8rem;
+    backdrop-filter: blur(14px);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transform-style: preserve-3d;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    --mx: 50%; --my: 50%;
+  }
+  .expertise-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background: var(--c-accent, var(--accent));
+    box-shadow: 0 0 12px var(--c-accent, var(--accent));
+  }
+  .expertise-card::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.055) 0%, transparent 55%);
+    opacity:0;
+    transition:opacity 0.3s;
+    border-radius:inherit;
+    pointer-events:none;
+  }
+  .expertise-card:hover { border-color:var(--border2); box-shadow:var(--shadow),var(--glow); }
+  .expertise-card:hover::after { opacity:1; }
+
+  .card-icon-wrap {
+    width:44px; height:44px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.3rem;
+    background: var(--c-bg, rgba(59,130,246,0.09));
+    border: 1px solid var(--c-border, rgba(59,130,246,0.18));
+    margin-bottom:1.1rem;
+  }
+  .card-title { font-family:var(--display); font-size:1rem; font-weight:600; margin-bottom:0.3rem; }
+  .card-sub   { font-family:var(--mono); font-size:0.62rem; color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem; }
+  .card-items { list-style:none; display:flex; flex-direction:column; gap:0.35rem; }
+  .card-items li { font-size:0.8rem; color:var(--text2); display:flex; align-items:center; gap:0.5rem; }
+  .card-items li::before { content:''; display:inline-block; width:4px; height:4px; border-radius:50%; background:var(--c-accent, var(--accent)); flex-shrink:0; }
+
+  /* ── FEATURED PROJECTS ── */
+  .projects-section {
+    padding: 6rem 3rem;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    border-top: 1px solid var(--border);
+  }
+  .proj-featured-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; margin-top:3rem; }
+
+  .proj-featured-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 2.5rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    transform-style: preserve-3d;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .proj-featured-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:0;
+    transition:opacity 0.3s;
+  }
+  .proj-featured-card:hover { border-color:var(--border2); box-shadow:var(--shadow),var(--glow2); }
+  .proj-featured-card:hover::before { opacity:1; }
+
+  .proj-number {
+    font-family:var(--mono);
+    font-size:5rem;
+    font-weight:700;
+    color:rgba(59,130,246,0.07);
+    line-height:1;
+    position:absolute;
+    top:1.5rem; right:2rem;
+    letter-spacing:-0.04em;
+    pointer-events:none;
+    user-select:none;
+  }
+  .proj-meta  { font-family:var(--mono); font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.15em; }
+  .proj-name  { font-family:var(--display); font-size:1.75rem; font-weight:700; letter-spacing:-0.03em; }
+  .proj-text  { font-size:0.875rem; color:var(--text2); line-height:1.8; flex:1; }
+  .proj-tech  { display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .proj-link  { font-family:var(--mono); font-size:0.73rem; color:var(--accent); display:flex; align-items:center; gap:0.4rem; transition:color 0.2s, gap 0.2s; }
+  .proj-featured-card:hover .proj-link { color:var(--accent2); gap:0.7rem; }
+
+  /* ── TECH STACK ── */
+  .tech-section { padding:6rem 3rem; border-top:1px solid var(--border); }
+  .tech-cloud { display:flex; flex-wrap:wrap; gap:0.7rem; justify-content:center; max-width:860px; margin:3rem auto 0; }
+  .tech-badge {
+    font-family:var(--mono);
+    font-size:0.75rem;
+    padding:0.48rem 1rem;
+    border-radius:7px;
+    background:var(--card);
+    border:1px solid var(--border);
+    color:var(--text2);
+    backdrop-filter:blur(8px);
+    transition:border-color 0.25s, color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+    animation:floatBadge var(--dur,5s) var(--del,0s) ease-in-out infinite;
+    cursor:default;
+  }
+  .tech-badge:hover {
+    border-color:var(--accent);
+    color:var(--accent2);
+    background:var(--accent-dim);
+    transform:translateY(-3px) scale(1.04);
+    box-shadow:0 4px 16px rgba(59,130,246,0.15);
+    animation-play-state:paused;
+  }
+  @keyframes floatBadge {
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-7px);}
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding:8rem 3rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    border-top:1px solid var(--border);
+  }
+  .cta-glow {
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:700px; height:700px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 65%);
+    pointer-events:none;
+    animation:floatOrb 10s ease-in-out infinite;
+  }
+  .cta-content { position:relative; z-index:1; }
+  .cta-label  { font-family:var(--mono); font-size:0.68rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.2em; margin-bottom:1rem; }
+  .cta-title  { font-family:var(--display); font-size:clamp(2rem,5vw,3.5rem); font-weight:700; letter-spacing:-0.03em; margin-bottom:0.9rem; }
+  .cta-desc   { font-size:1rem; color:var(--text2); max-width:420px; margin:0 auto 2.5rem; line-height:1.8; }
+  .btn-lg     { padding:0.9rem 2.4rem; font-size:1rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:1100px) {
+    .expertise-grid { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:900px) {
+    .hero-layout   { grid-template-columns:1fr; }
+    .hero-terminal { display:none; }
+    .stats-grid    { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:640px) {
+    .hero-layout, .expertise-section, .projects-section,
+    .tech-section, .cta-section { padding-left:1.4rem; padding-right:1.4rem; }
+    .hero-layout { padding-top:4rem; padding-bottom:4rem; }
+    .stats-section { padding:2rem 1.4rem; }
+    .expertise-grid      { grid-template-columns:1fr; }
+    .proj-featured-grid  { grid-template-columns:1fr; }
+  }
   </style>
 </head>
 <body>
@@ -230,68 +502,367 @@
 </nav>
 
 <main>
-  <section class="hero">
-    <div class="hero-status fade-up">
-      <span class="status-dot"></span>
-      Disponible pour opportunités
-    </div>
-    <div class="hero-eyebrow fade-up">Administrateur Systèmes &amp; Réseaux</div>
-    <h1 class="fade-up-2">Eliot<br/><em>Fiette</em></h1>
-    <p class="hero-desc fade-up-3">
-      Passionné par les infrastructures réseau, la cybersécurité et l'administration système.
-      Certifié Cisco &amp; ANSSI, je construis des environnements IT robustes et sécurisés.
-    </p>
-    <div class="hero-ctas fade-up-3">
-      <a href="projets.html" class="btn btn-primary">Voir mes projets</a>
-      <a href="about.html" class="btn btn-outline">En savoir plus</a>
-    </div>
-    <div class="hero-scroll fade-up-4">Découvrir ↓</div>
-  </section>
 
-  <div class="hero-cards">
-    <a href="about.html" class="quick-card">
-      <div class="quick-card-icon">👤</div>
-      <div class="quick-card-title">À propos</div>
-      <div class="quick-card-desc">Mon parcours et ma vision</div>
-      <div class="quick-card-arrow">Lire →</div>
-    </a>
-    <a href="competences.html" class="quick-card">
-      <div class="quick-card-icon">⚡</div>
-      <div class="quick-card-title">Compétences</div>
-      <div class="quick-card-desc">Réseaux, systèmes, sécurité</div>
-      <div class="quick-card-arrow">Explorer →</div>
-    </a>
-    <a href="ecole.html" class="quick-card">
-      <div class="quick-card-icon">📁</div>
-      <div class="quick-card-title">Projets École</div>
-      <div class="quick-card-desc">GSB, M2L et autres réalisations</div>
-      <div class="quick-card-arrow">Voir →</div>
-    </a>
-    <a href="entreprise.html" class="quick-card">
-      <div class="quick-card-icon">🏢</div>
-      <div class="quick-card-title">Entreprise</div>
-      <div class="quick-card-desc">Expériences professionnelles</div>
-      <div class="quick-card-arrow">Voir →</div>
-    </a>
-    <a href="veille.html" class="quick-card">
-      <div class="quick-card-icon">🔐</div>
-      <div class="quick-card-title">Veille Techno</div>
-      <div class="quick-card-desc">Actualités &amp; tendances IT</div>
-      <div class="quick-card-arrow">Lire →</div>
-    </a>
-    <a href="contact.html" class="quick-card">
-      <div class="quick-card-icon">✉️</div>
-      <div class="quick-card-title">Contact</div>
-      <div class="quick-card-desc">Travaillons ensemble</div>
-      <div class="quick-card-arrow">Écrire →</div>
-    </a>
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="hero">
+  <canvas id="particleCanvas"></canvas>
+  <div class="hero-scan"></div>
+  <div class="hud hud-tl"><div class="hud-corner"></div></div>
+  <div class="hud hud-tr"><div class="hud-corner"></div></div>
+  <div class="hud hud-bl"><div class="hud-corner"></div></div>
+  <div class="hud hud-br"><div class="hud-corner"></div></div>
+
+  <div class="hero-layout">
+    <!-- Contenu principal -->
+    <div class="hero-content">
+      <div class="hero-status fade-up">
+        <span class="status-dot"></span>Disponible pour opportunités
+      </div>
+      <div class="hero-eyebrow fade-up">BTS SIO — SISR</div>
+      <h1 class="fade-up-2">Eliot<br/><em>Fiette</em></h1>
+      <div class="hero-subtitle fade-up-3">
+        <span id="typewriter"></span><span class="cursor"></span>
+      </div>
+      <p class="hero-desc fade-up-3">
+        Passionné par les infrastructures réseau, la cybersécurité et l'administration système.
+        Certifié Cisco &amp; ANSSI, je construis des environnements IT robustes et sécurisés.
+      </p>
+      <div class="hero-ctas fade-up-4">
+        <a href="projets.html" class="btn btn-primary">Voir mes projets</a>
+        <a href="contact.html" class="btn btn-outline">Me contacter</a>
+      </div>
+    </div>
+
+    <!-- Terminal -->
+    <div class="hero-terminal fade-up-3">
+      <div class="terminal-card">
+        <div class="terminal-bar">
+          <div class="t-dot red"></div>
+          <div class="t-dot yellow"></div>
+          <div class="t-dot green"></div>
+          <span class="terminal-title">eliot@portfolio ~ </span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd"> whoami</span></div>
+          <div class="t-line t-out">eliot_fiette</div>
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd"> cat role.txt</span></div>
+          <div class="t-line t-blue">Administrateur Systèmes &amp; Réseaux</div>
+          <div class="t-line t-blue">BTS SIO — SISR | Cybersécurité</div>
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd"> list --certifications</span></div>
+          <div class="t-line t-out">[✓] Cisco — Introduction Cybersécurité</div>
+          <div class="t-line t-out">[✓] ANSSI — SecNumAcadémie</div>
+          <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd"> status --check</span></div>
+          <div class="t-line t-green">● ONLINE — Ouvert aux opportunités</div>
+          <div class="t-line"><span class="t-prompt">$</span> <span class="t-caret"></span></div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="hero-scroll">
+    <span>Découvrir</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════ STATS ══════════ -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num" data-count="2" data-suffix="+">0+</div>
+      <div class="stat-label">Années de formation</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="2">0</div>
+      <div class="stat-label">Projets majeurs</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="2">0</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="font-size:1.5rem;font-family:var(--mono)">SISR</div>
+      <div class="stat-label">Option BTS SIO</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ EXPERTISE ══════════ -->
+<section class="expertise-section">
+  <div class="container">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Compétences</div>
+      <h2 class="section-title">Domaines d'expertise</h2>
+      <p class="section-desc">Une maîtrise complète des environnements IT, du réseau à la sécurité.</p>
+    </div>
+    <div class="expertise-grid">
+
+      <div class="expertise-card" style="--c-accent:#3b82f6;--c-bg:rgba(59,130,246,0.08);--c-border:rgba(59,130,246,0.18)">
+        <div class="card-icon-wrap">🌐</div>
+        <div class="card-title">Réseaux</div>
+        <div class="card-sub">Infrastructure &amp; protocoles</div>
+        <ul class="card-items">
+          <li>Cisco IOS &amp; Packet Tracer</li>
+          <li>VPN IPSec / SSL</li>
+          <li>VLAN &amp; Trunk</li>
+          <li>Firewall &amp; ACL</li>
+          <li>TCP/IP · DNS · DHCP</li>
+        </ul>
+      </div>
+
+      <div class="expertise-card" style="--c-accent:#06b6d4;--c-bg:rgba(6,182,212,0.08);--c-border:rgba(6,182,212,0.18)">
+        <div class="card-icon-wrap" style="background:rgba(6,182,212,0.08);border-color:rgba(6,182,212,0.18)">🖥️</div>
+        <div class="card-title">Systèmes</div>
+        <div class="card-sub">Administration OS</div>
+        <ul class="card-items" style="--c-accent:#06b6d4">
+          <li>Linux Debian / Ubuntu</li>
+          <li>Windows Server</li>
+          <li>Active Directory</li>
+          <li>PowerShell &amp; Bash</li>
+          <li>GPO &amp; gestion AD</li>
+        </ul>
+      </div>
+
+      <div class="expertise-card" style="--c-accent:#8b5cf6;--c-bg:rgba(139,92,246,0.08);--c-border:rgba(139,92,246,0.18)">
+        <div class="card-icon-wrap" style="background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.18)">🔐</div>
+        <div class="card-title">Cybersécurité</div>
+        <div class="card-sub">Protection &amp; analyse</div>
+        <ul class="card-items" style="--c-accent:#8b5cf6">
+          <li>Certifié ANSSI</li>
+          <li>Analyse de risques</li>
+          <li>IDS / IPS</li>
+          <li>Durcissement système</li>
+          <li>RGPD &amp; NIS2</li>
+        </ul>
+      </div>
+
+      <div class="expertise-card" style="--c-accent:#6366f1;--c-bg:rgba(99,102,241,0.08);--c-border:rgba(99,102,241,0.18)">
+        <div class="card-icon-wrap" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.18)">⚙️</div>
+        <div class="card-title">Virtualisation</div>
+        <div class="card-sub">Environnements virtuels</div>
+        <ul class="card-items" style="--c-accent:#6366f1">
+          <li>VMware vSphere</li>
+          <li>Microsoft Hyper-V</li>
+          <li>VirtualBox</li>
+          <li>Snapshots &amp; clones</li>
+          <li>Réseau virtuel</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROJETS ══════════ -->
+<section class="projects-section">
+  <div class="container">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Réalisations</div>
+      <h2 class="section-title">Projets en vedette</h2>
+      <p class="section-desc">Projets techniques réalisés dans le cadre de ma formation BTS SIO.</p>
+    </div>
+    <div class="proj-featured-grid">
+
+      <a href="ecole.html" class="proj-featured-card">
+        <div class="proj-number">01</div>
+        <div class="proj-meta">Projet École — BTS SIO</div>
+        <div class="proj-name">Projet GSB</div>
+        <p class="proj-text">Infrastructure réseau et système pour Galaxy Swiss Bourdin. Déploiement complet : Active Directory, DNS/DHCP, GPO et sécurisation des accès.</p>
+        <div class="proj-tech">
+          <span class="tag tag-brown">Windows Server</span>
+          <span class="tag tag-green">Active Directory</span>
+          <span class="tag tag-orange">GPO</span>
+          <span class="tag tag-brown">DNS / DHCP</span>
+        </div>
+        <div class="proj-link">Voir le projet →</div>
+      </a>
+
+      <a href="ecole.html" class="proj-featured-card">
+        <div class="proj-number">02</div>
+        <div class="proj-meta">Projet École — BTS SIO</div>
+        <div class="proj-name">Projet M2L</div>
+        <p class="proj-text">Administration et sécurisation du réseau de la Maison des Ligues de Lorraine. Architecture VLANs, Cisco IOS, VPN et pare-feu.</p>
+        <div class="proj-tech">
+          <span class="tag tag-brown">Cisco IOS</span>
+          <span class="tag tag-green">VLAN</span>
+          <span class="tag tag-orange">VPN IPSec</span>
+          <span class="tag tag-brown">Firewall</span>
+        </div>
+        <div class="proj-link">Voir le projet →</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TECH STACK ══════════ -->
+<section class="tech-section">
+  <div class="container" style="text-align:center">
+    <div class="section-eyebrow center">Stack technique</div>
+    <h2 class="section-title">Technologies maîtrisées</h2>
+    <p class="section-desc" style="margin:0 auto">L'ensemble des outils et technologies que j'utilise au quotidien.</p>
+    <div class="tech-cloud">
+      <span class="tech-badge" style="--dur:5.2s;--del:0s">Cisco IOS</span>
+      <span class="tech-badge" style="--dur:6.1s;--del:.4s">Windows Server</span>
+      <span class="tech-badge" style="--dur:4.8s;--del:.8s">Linux / Debian</span>
+      <span class="tech-badge" style="--dur:5.8s;--del:.2s">Active Directory</span>
+      <span class="tech-badge" style="--dur:6.4s;--del:1.1s">VMware vSphere</span>
+      <span class="tech-badge" style="--dur:5.0s;--del:.6s">Hyper-V</span>
+      <span class="tech-badge" style="--dur:5.6s;--del:1.4s">VirtualBox</span>
+      <span class="tech-badge" style="--dur:4.5s;--del:.3s">VPN IPSec / SSL</span>
+      <span class="tech-badge" style="--dur:6.2s;--del:.9s">Firewall &amp; ACL</span>
+      <span class="tech-badge" style="--dur:5.3s;--del:1.6s">DNS / DHCP</span>
+      <span class="tech-badge" style="--dur:4.9s;--del:.1s">VLAN &amp; Trunk</span>
+      <span class="tech-badge" style="--dur:6.0s;--del:1.2s">PowerShell</span>
+      <span class="tech-badge" style="--dur:5.7s;--del:.7s">Bash / Shell</span>
+      <span class="tech-badge" style="--dur:4.7s;--del:1.8s">TCP / IP</span>
+      <span class="tech-badge" style="--dur:6.3s;--del:.5s">GPO</span>
+      <span class="tech-badge" style="--dur:5.1s;--del:1.0s">Packet Tracer</span>
+      <span class="tech-badge" style="--dur:5.5s;--del:1.3s">IDS / IPS</span>
+      <span class="tech-badge" style="--dur:4.6s;--del:.2s">ANSSI / CERT-FR</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CTA ══════════ -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-content fade-up">
+    <div class="cta-label">Contact</div>
+    <h2 class="cta-title">Prêt à collaborer ?</h2>
+    <p class="cta-desc">Je suis disponible pour un stage, une alternance ou tout projet IT. N'hésitez pas à me contacter.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="contact.html" class="btn btn-primary btn-lg">Prendre contact →</a>
+      <a href="synthese.html" class="btn btn-outline btn-lg">Voir mon CV</a>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer>
   <span>© 2025 Eliot Fiette</span>
   <span>Administrateur Systèmes &amp; Réseaux</span>
 </footer>
+
 <script src="main.js?v=2" defer></script>
+<script>
+/* ── CANVAS PARTICULES ── */
+(function(){
+  const cv = document.getElementById('particleCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;
+
+  let pts = [], mouse = {x:null,y:null}, raf;
+
+  function resize(){
+    cv.width  = cv.offsetWidth;
+    cv.height = cv.offsetHeight;
+    pts = [];
+    const n = window.innerWidth < 768 ? 0 : Math.min(Math.floor(cv.width * cv.height / 9000), 80);
+    for(let i=0;i<n;i++) pts.push({
+      x: Math.random()*cv.width,
+      y: Math.random()*cv.height,
+      vx:(Math.random()-.5)*.35,
+      vy:(Math.random()-.5)*.35,
+      r: Math.random()*1.2+.4,
+      a: Math.random()*.4+.15
+    });
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(let i=0;i<pts.length;i++){
+      const p=pts[i];
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>cv.width)  p.vx*=-1;
+      if(p.y<0||p.y>cv.height) p.vy*=-1;
+      if(mouse.x!==null){
+        const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<90){p.x+=dx*.025;p.y+=dy*.025;}
+      }
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(59,130,246,${p.a})`;
+      ctx.fill();
+      for(let j=i+1;j<pts.length;j++){
+        const q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d2=dx*dx+dy*dy;
+        if(d2<14400){
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle=`rgba(59,130,246,${.12*(1-d2/14400)})`;
+          ctx.lineWidth=.5; ctx.stroke();
+        }
+      }
+    }
+    raf=requestAnimationFrame(frame);
+  }
+
+  resize(); frame();
+  window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();frame();});
+  cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
+  cv.addEventListener('mouseleave',()=>{mouse.x=null;});
+})();
+
+/* ── TYPEWRITER ── */
+(function(){
+  const el=document.getElementById('typewriter');
+  if(!el) return;
+  const words=['Administrateur Systèmes & Réseaux','Spécialiste Cybersécurité','Étudiant BTS SIO — SISR'];
+  let wi=0,ci=0,del=false;
+  function tick(){
+    const w=words[wi];
+    el.textContent=del?w.substring(0,ci--):w.substring(0,ci++);
+    if(!del&&ci>w.length){del=true;setTimeout(tick,2400);return;}
+    if(del&&ci<0){del=false;wi=(wi+1)%words.length;ci=0;}
+    setTimeout(tick,del?42:78);
+  }
+  setTimeout(tick,900);
+})();
+
+/* ── COMPTEURS ── */
+(function(){
+  const els=document.querySelectorAll('[data-count]');
+  if(!els.length) return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el=e.target, end=parseInt(el.dataset.count), suf=el.dataset.suffix||'';
+      let start=null;
+      requestAnimationFrame(function step(ts){
+        if(!start) start=ts;
+        const p=Math.min((ts-start)/1200,1);
+        el.textContent=Math.floor(p*end)+suf;
+        if(p<1) requestAnimationFrame(step);
+      });
+      obs.unobserve(el);
+    });
+  },{threshold:.5});
+  els.forEach(el=>obs.observe(el));
+})();
+
+/* ── 3D TILT ── */
+(function(){
+  document.querySelectorAll('.expertise-card,.proj-featured-card').forEach(card=>{
+    card.addEventListener('mouseenter',()=>{
+      card.style.transition='border-color .3s,box-shadow .3s';
+    });
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(900px) rotateX(${-y*10}deg) rotateY(${x*10}deg) translateZ(10px)`;
+      card.style.setProperty('--mx',`${(e.clientX-r.left)/r.width*100}%`);
+      card.style.setProperty('--my',`${(e.clientY-r.top)/r.height*100}%`);
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transition='transform .4s ease,border-color .3s,box-shadow .3s';
+      card.style.transform='perspective(900px) rotateX(0) rotateY(0) translateZ(0)';
+    });
+  });
+})();
+</script>
 </body>
 </html>
