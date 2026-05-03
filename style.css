@@ -1176,9 +1176,10 @@ html.site-intro-lock body {
   }
 }
 
+/* Pas d’opacity ici : sinon le navigateur interpole 1→0 sur toute la durée et
+   estompe tout le contenu (#site-intro inclut les moitiés + laser). */
 @keyframes siteIntroCinematicHost {
   0% {
-    opacity: 1;
     filter: brightness(1);
     transform: perspective(1400px) scale(1) translateY(0) rotateX(0deg);
   }
@@ -1195,7 +1196,6 @@ html.site-intro-lock body {
     transform: perspective(1400px) scale(1) translateY(0) rotateX(0deg);
   }
   100% {
-    opacity: 0;
     filter: brightness(1);
     transform: perspective(1400px) scale(1) translateY(0) rotateX(0deg);
   }
