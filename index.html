@@ -20,7 +20,7 @@
   <script>
     (function () {
       var el = document.getElementById('site-stylesheet');
-      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=7';
+      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=8';
     })();
   </script>
   <style>
@@ -447,7 +447,6 @@
       <li><a href="#parcours">Mon parcours</a></li>
       <li><a href="#competences">Compétences</a></li>
       <li><a href="#projets">Projets</a></li>
-      <li><a href="#projets-list">Tous les projets</a></li>
       <li><a href="#ecole">École</a></li>
       <li><a href="#entreprise">Entreprise</a></li>
       <li><a href="#veille">Veille</a></li>
@@ -726,56 +725,6 @@
         <div class="proj-link">Voir le détail →</div>
       </a>
 
-    </div>
-
-    <div id="projets-list">
-      <p class="proj-list-sub">Tous les projets</p>
-      <div class="projects-grid">
-        <a href="#ecole" class="project-card">
-          <div class="proj-cat" style="color:var(--accent2)">📁 Projets École</div>
-          <div class="proj-title">Projet GSB</div>
-          <p class="proj-desc">Infrastructure réseau et système pour Galaxy Swiss Bourdin. Administration des services, gestion des utilisateurs, sécurisation.</p>
-          <div class="proj-tags">
-            <span class="tag tag-brown">Windows Server</span>
-            <span class="tag tag-green">Active Directory</span>
-            <span class="tag tag-orange">GPO</span>
-          </div>
-          <div class="proj-arrow">Voir le détail →</div>
-        </a>
-        <a href="#ecole" class="project-card">
-          <div class="proj-cat" style="color:var(--accent2)">📁 Projets École</div>
-          <div class="proj-title">Projet M2L</div>
-          <p class="proj-desc">Administration et sécurisation du réseau de la Maison des Ligues de Lorraine. VLANs, Cisco, services réseau.</p>
-          <div class="proj-tags">
-            <span class="tag tag-brown">Cisco</span>
-            <span class="tag tag-green">VLAN</span>
-            <span class="tag tag-orange">Firewall</span>
-          </div>
-          <div class="proj-arrow">Voir le détail →</div>
-        </a>
-        <a href="#migration-erp" class="project-card">
-          <div class="proj-cat" style="color:#93c5fd">🏢 Projet Entreprise</div>
-          <div class="proj-title">Migration d'ERP</div>
-          <p class="proj-desc">Migration depuis l'environnement MAX vers SAP : préparation des données, bascules, tests et accompagnement des utilisateurs pour sécuriser la continuité d'activité.</p>
-          <div class="proj-tags">
-            <span class="tag tag-brown">SAP</span>
-            <span class="tag tag-green">ERP</span>
-            <span class="tag tag-orange">Migration</span>
-          </div>
-          <div class="proj-arrow">Voir le détail →</div>
-        </a>
-        <a href="#demenagement-jacquemus" class="project-card">
-          <div class="proj-cat" style="color:#93c5fd">🏢 Projet Entreprise</div>
-          <div class="proj-title">Déménagement Jacquemus</div>
-          <p class="proj-desc">Déménagement des infrastructures IT : coordination du transfert des postes, équipements réseau et services, remise en production et validation des accès.</p>
-          <div class="proj-tags">
-            <span class="tag tag-brown">Infrastructure</span>
-            <span class="tag tag-green">Réseau</span>
-            <span class="tag tag-orange">Déménagement</span>
-          </div>
-          <div class="proj-arrow">Voir le détail →</div>
-        </a>
-      </div>
     </div>
   </div>
 </section>
@@ -1214,7 +1163,7 @@
 (function () {
   var s = document.createElement('script');
   s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=9';
+  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=10';
   document.body.appendChild(s);
 })();
 </script>
@@ -1296,7 +1245,7 @@
 
 /* ── 3D TILT ── */
 (function(){
-  document.querySelectorAll('.expertise-card,.proj-featured-card,.project-card').forEach(card=>{
+  document.querySelectorAll('.expertise-card,.proj-featured-card').forEach(card=>{
     card.addEventListener('mouseenter',()=>{
       card.style.transition='border-color .3s,box-shadow .3s';
     });

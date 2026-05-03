@@ -58,7 +58,7 @@ if (skillBars.length) {
 
 /* ── SCROLL REVEAL FOR CARDS ── */
 const revealTargets = document.querySelectorAll(
-  '.skill-card, .project-card, .proj-detail, .source-card, .veille-card, .quick-card',
+  '.skill-card, .proj-detail, .source-card, .veille-card, .quick-card',
 );
 
 if (revealTargets.length) {
@@ -104,7 +104,6 @@ window.addEventListener('resize', () => {
     'parcours',
     'competences',
     'projets',
-    'projets-list',
     'ecole',
     'entreprise',
     'veille',
