@@ -35,7 +35,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=41"/>
+  <link rel="stylesheet" href="style.css?v=42"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -598,6 +598,16 @@
   </style>
 </head>
 <body>
+<script>
+(function () {
+  try {
+    document.querySelectorAll('.intro-ship-root').forEach(function (n) {
+      n.remove();
+    });
+    window.__portfolioSpaceship = null;
+  } catch (e) {}
+})();
+</script>
 <div id="site-intro" class="site-intro" aria-modal="true" role="dialog" aria-labelledby="intro-title" aria-describedby="intro-desc">
   <div class="site-intro__aurora" aria-hidden="true"></div>
   <div class="site-intro__grid" aria-hidden="true"></div>
@@ -1463,7 +1473,7 @@
 })();
 </script>
 
-<script src="main.js?v=21"></script>
+<script src="main.js?v=22"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
