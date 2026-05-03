@@ -1,6 +1,6 @@
-/* ── MOBILE NAV ── */
+/* ── MOBILE NAV (pages avec .nav-links + #navToggle) ── */
 const hamburger = document.getElementById('navToggle');
-const navLinks  = document.querySelector('.nav-links');
+const navLinks = document.querySelector('.nav-links');
 
 hamburger?.addEventListener('click', () => {
   const open = navLinks.classList.toggle('open');
@@ -8,7 +8,7 @@ hamburger?.addEventListener('click', () => {
   document.body.style.overflow = open ? 'hidden' : '';
 });
 
-navLinks?.querySelectorAll('a').forEach(link => {
+navLinks?.querySelectorAll('a')?.forEach((link) => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
     hamburger?.classList.remove('active');
@@ -16,11 +16,20 @@ navLinks?.querySelectorAll('a').forEach(link => {
   });
 });
 
+/* ── MENU DÉROULANT : fermer après clic sur une ancre ── */
+document.querySelectorAll('details.nav-dropdown').forEach((det) => {
+  det.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    det.removeAttribute('open');
+  });
+});
+
 /* ── SKILL BAR ANIMATION ── */
 const skillBars = document.querySelectorAll('.skill-bar');
 
 if (skillBars.length) {
-  skillBars.forEach(bar => {
+  skillBars.forEach((bar) => {
     const w = bar.style.width;
     if (w) {
       bar.dataset.targetW = w;
@@ -29,22 +38,27 @@ if (skillBars.length) {
     }
   });
 
-  const barObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const bar = entry.target;
-        setTimeout(() => { bar.style.width = bar.dataset.targetW || '0'; }, 100);
-        barObserver.unobserve(bar);
-      }
-    });
-  }, { threshold: 0.3 });
+  const barObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const bar = entry.target;
+          setTimeout(() => {
+            bar.style.width = bar.dataset.targetW || '0';
+          }, 100);
+          barObserver.unobserve(bar);
+        }
+      });
+    },
+    { threshold: 0.3 },
+  );
 
-  skillBars.forEach(bar => barObserver.observe(bar));
+  skillBars.forEach((bar) => barObserver.observe(bar));
 }
 
 /* ── SCROLL REVEAL FOR CARDS ── */
 const revealTargets = document.querySelectorAll(
-  '.skill-card, .project-card, .proj-detail, .source-card, .veille-card, .quick-card'
+  '.skill-card, .project-card, .proj-detail, .source-card, .veille-card, .quick-card',
 );
 
 if (revealTargets.length) {
@@ -54,17 +68,20 @@ if (revealTargets.length) {
     el.style.transition = `opacity 0.45s ${i * 0.07}s ease, transform 0.45s ${i * 0.07}s ease`;
   });
 
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -30px 0px' },
+  );
 
-  revealTargets.forEach(el => revealObserver.observe(el));
+  revealTargets.forEach((el) => revealObserver.observe(el));
 }
 
 /* ── CLOSE MOBILE MENU ON RESIZE ── */
@@ -76,14 +93,24 @@ window.addEventListener('resize', () => {
   }
 });
 
-/* ── NAV SCROLL SPY (page d'accueil, ancres #hero / #competences / #projets) ── */
+/* ── NAV SCROLL SPY (ancres #hero … #contact) ── */
 (() => {
-  const competencesSection = document.getElementById('competences');
-  const navBarLinks = document.querySelector('nav .nav-links');
-  if (!competencesSection || !navBarLinks) return;
+  const navPanel = document.querySelector('.nav-dropdown-panel');
+  if (!navPanel) return;
 
   const OFFSET = 80;
-  const SECTION_ORDER = ['hero', 'competences', 'projets'];
+  const SECTION_ORDER = [
+    'hero',
+    'parcours',
+    'competences',
+    'projets',
+    'projets-list',
+    'ecole',
+    'entreprise',
+    'veille',
+    'cv',
+    'contact',
+  ];
 
   function currentNavId() {
     let id = 'hero';
@@ -97,7 +124,7 @@ window.addEventListener('resize', () => {
 
   function syncNavActive() {
     const id = currentNavId();
-    navBarLinks.querySelectorAll('a').forEach((a) => {
+    navPanel.querySelectorAll('a[href^="#"]').forEach((a) => {
       const href = a.getAttribute('href') || '';
       a.classList.toggle('active', href === `#${id}`);
     });

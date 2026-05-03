@@ -16,150 +16,25 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Entreprise — Eliot Fiette</title>
-  <link rel="stylesheet" href="" id="site-stylesheet"/>
   <script>
     (function () {
-      var el = document.getElementById('site-stylesheet');
-      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=6';
+      var base = (window.__SITE_ROOT__ || '') + 'index.html';
+      var h = location.hash;
+      if (!h || h === '#') h = '#entreprise';
+      location.replace(base + h);
     })();
   </script>
-  <style>
-    .empty-state {
-      text-align: center;
-      padding: 5rem 2rem;
-    }
-
-    .empty-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      opacity: 0.5;
-    }
-
-    .empty-title {
-      font-family: var(--display);
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-      color: var(--text);
-    }
-
-    .empty-text {
-      color: var(--text2);
-      max-width: 400px;
-      margin: 0 auto 2rem;
-      font-size: 0.95rem;
-      line-height: 1.75;
-    }
-
-    .timeline-placeholder {
-      max-width: 700px;
-      margin-top: 3rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius2);
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-    }
-
-    .tl-item {
-      display: flex;
-      gap: 1.5rem;
-      padding: 1.5rem 2rem;
-      border-bottom: 1px solid var(--border);
-      scroll-margin-top: 5rem;
-    }
-
-    .tl-item:last-child { border-bottom: none; }
-
-    .tl-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 5px;
-      flex-shrink: 0;
-      box-shadow: 0 0 6px var(--accent-glow);
-    }
-
-    .tl-label {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--text3);
-      margin-bottom: 0.3rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .tl-title { font-weight: 500; font-size: 0.95rem; color: var(--text); }
-    .tl-desc  { font-size: 0.83rem; color: var(--text3); margin-top: 0.3rem; }
-  </style>
 </head>
-<body>
-<nav>
-  <a href="index.html#hero" class="nav-logo">Eliot Fiette</a>
-  <ul class="nav-links">
-    <li><a href="index.html#hero">Accueil</a></li>
-    <li><a href="about.html">Mon parcours</a></li>
-    <li><a href="index.html#competences">Compétences</a></li>
-    <li><a href="index.html#projets">Projets</a></li>
-    <li><a href="ecole.html">École</a></li>
-    <li><a href="entreprise.html" class="active">Entreprise</a></li>
-    <li><a href="veille.html">Veille</a></li>
-    <li><a href="synthese.html">Synthèse CV</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<main>
-  <div class="page-header fade-up">
-    <div class="page-tag">Entreprise</div>
-    <h1>Expériences professionnelles</h1>
-    <p>Mes projets et missions réalisés en milieu professionnel.</p>
-  </div>
-
-  <div class="content fade-up-2">
-    <p style="color:var(--text2);max-width:640px;margin-bottom:2.5rem;line-height:1.8;font-size:0.95rem;">
-      Projets menés en entreprise : migrations applicatives et opérations d'infrastructure (déménagement, transfert de site).
-    </p>
-
-    <div class="timeline-placeholder">
-      <div class="tl-item" id="migration-erp">
-        <div class="tl-dot"></div>
-        <div>
-          <div class="tl-label">Projet entreprise — ERP</div>
-          <div class="tl-title">Migration d'ERP (MAX → SAP)</div>
-          <div class="tl-desc">Participation à la migration depuis l'environnement MAX vers SAP : préparation des environnements, contrôle des flux et des données, phases de test, bascule et support utilisateurs pour limiter l'impact sur l'activité.</div>
-        </div>
-      </div>
-      <div class="tl-item" id="demenagement-jacquemus">
-        <div class="tl-dot"></div>
-        <div>
-          <div class="tl-label">Projet entreprise — Infrastructure</div>
-          <div class="tl-title">Déménagement Jacquemus</div>
-          <div class="tl-desc">Mission de déménagement IT : inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services et vérification des accès sur le nouveau site.</div>
-        </div>
-      </div>
-    </div>
-
-    <p style="margin-top:2rem;">
-      <a href="projets.html" class="btn btn-outline">← Tous les projets</a>
-      <a href="contact.html" class="btn btn-primary" style="margin-left:0.75rem;">Me contacter</a>
-    </p>
-  </div>
-</main>
-
-<footer>
-  <span>© 2026 Eliot Fiette</span>
-  <span>Administrateur Systèmes &amp; Réseaux</span>
-</footer>
-<script>
-(function () {
-  var s = document.createElement('script');
-  s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=8';
-  document.body.appendChild(s);
-})();
-</script>
+<body style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:#080c14;color:#7585a0;font-family:system-ui,sans-serif;">
+  <p style="text-align:center;line-height:1.8;">
+    Redirection vers la section <strong style="color:#e1e7f5;">Entreprise</strong>…<br/>
+    <a id="entreprise-fallback" href="index.html#entreprise" style="color:#60a5fa;">Cliquez ici</a> si rien ne se passe.
+  </p>
+  <script>
+    (function () {
+      var a = document.getElementById('entreprise-fallback');
+      if (a) a.href = (window.__SITE_ROOT__ || '') + 'index.html#entreprise';
+    })();
+  </script>
 </body>
 </html>

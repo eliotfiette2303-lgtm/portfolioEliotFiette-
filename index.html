@@ -20,7 +20,7 @@
   <script>
     (function () {
       var el = document.getElementById('site-stylesheet');
-      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=6';
+      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=7';
     })();
   </script>
   <style>
@@ -440,20 +440,21 @@
 <body>
 <nav>
   <a href="#hero" class="nav-logo">Eliot Fiette</a>
-  <ul class="nav-links">
-    <li><a href="#hero" class="active">Accueil</a></li>
-    <li><a href="about.html">Mon parcours</a></li>
-    <li><a href="#competences">Compétences</a></li>
-    <li><a href="#projets">Projets</a></li>
-    <li><a href="ecole.html">École</a></li>
-    <li><a href="entreprise.html">Entreprise</a></li>
-    <li><a href="veille.html">Veille</a></li>
-    <li><a href="synthese.html">Synthèse CV</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <details class="nav-dropdown">
+    <summary aria-label="Ouvrir le menu de navigation">Menu</summary>
+    <ul class="nav-dropdown-panel">
+      <li><a href="#hero" class="active">Accueil</a></li>
+      <li><a href="#parcours">Mon parcours</a></li>
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#projets-list">Tous les projets</a></li>
+      <li><a href="#ecole">École</a></li>
+      <li><a href="#entreprise">Entreprise</a></li>
+      <li><a href="#veille">Veille</a></li>
+      <li><a href="#cv">Synthèse CV</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </details>
 </nav>
 
 <main>
@@ -484,7 +485,7 @@
       </p>
       <div class="hero-ctas fade-up-4">
         <a href="#projets" class="btn btn-primary">Voir mes projets</a>
-        <a href="contact.html" class="btn btn-outline">Me contacter</a>
+        <a href="#contact" class="btn btn-outline">Me contacter</a>
       </div>
     </div>
 
@@ -518,6 +519,81 @@
     <span>Découvrir</span>
     <div class="scroll-line"></div>
   </a>
+</section>
+
+<!-- ══════════ MON PARCOURS ══════════ -->
+<section id="parcours" class="single-section">
+  <div class="container">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Mon parcours</div>
+      <h2 class="section-title">Mon parcours</h2>
+      <p class="section-desc">Administrateur systèmes &amp; réseaux en formation, passionné par la cybersécurité.</p>
+    </div>
+    <div class="about-grid">
+      <div>
+        <div class="about-text">
+          <p>Je m'appelle <strong>Eliot Fiette</strong>, étudiant en administration systèmes et réseaux. Dès le début de ma formation, j'ai développé un intérêt particulier pour la <strong>cybersécurité</strong>, la gestion d'infrastructures et la virtualisation.</p>
+          <p>Je suis quelqu'un de rigoureux, curieux et toujours en veille sur les nouvelles technologies. J'aime comprendre le fonctionnement en profondeur des systèmes pour mieux les sécuriser et les optimiser.</p>
+          <p>Mon objectif est de rejoindre une équipe IT dynamique où je pourrai mettre en pratique mes compétences tout en continuant à progresser dans le domaine de la sécurité des infrastructures.</p>
+        </div>
+        <div class="divider"></div>
+        <h3 style="font-family:var(--display);font-size:1rem;font-weight:600;margin-bottom:1.2rem;color:var(--text);">Certifications &amp; formations</h3>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <div>
+            <div class="certif-name">Introduction à la cybersécurité</div>
+            <div class="certif-org">Cisco Networking Academy</div>
+          </div>
+        </div>
+        <div class="certif-item">
+          <div class="certif-dot" style="background:var(--accent3);box-shadow:0 0 6px rgba(147,197,253,0.4)"></div>
+          <div>
+            <div class="certif-name">MOOC SecNumAcadémie</div>
+            <div class="certif-org">ANSSI</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-title">Informations</div>
+          <div class="info-row">
+            <span class="info-label">Nom</span>
+            <span class="info-val">Eliot Fiette</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Domaine</span>
+            <span class="info-val">Sysadmin &amp; Réseaux</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Spécialité</span>
+            <span class="info-val">Cybersécurité</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-val" style="font-size:0.8rem">fietteeliotpro@gmail.com</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Dispo.</span>
+            <span class="info-val" style="color:#4ade80;font-size:0.85rem">● Ouvert aux opportunités</span>
+          </div>
+        </div>
+        <div class="side-card">
+          <div class="side-title">Points forts</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.45rem;margin-top:0.4rem;">
+            <span class="tag tag-brown">Rigueur</span>
+            <span class="tag tag-green">Curiosité</span>
+            <span class="tag tag-orange">Autonomie</span>
+            <span class="tag tag-brown">Esprit d'équipe</span>
+            <span class="tag tag-green">Veille active</span>
+            <span class="tag tag-orange">Résolution de pb</span>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:1.5rem">
+          <a href="#cv" class="btn btn-primary">Voir le CV complet</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ══════════ EXPERTISE ══════════ -->
@@ -596,7 +672,7 @@
     </div>
     <div class="proj-featured-grid">
 
-      <a href="ecole.html" class="proj-featured-card">
+      <a href="#ecole" class="proj-featured-card">
         <div class="proj-number">01</div>
         <div class="proj-meta">Projet École — BTS SIO</div>
         <div class="proj-name">Projet GSB</div>
@@ -610,7 +686,7 @@
         <div class="proj-link">Voir le projet →</div>
       </a>
 
-      <a href="ecole.html" class="proj-featured-card">
+      <a href="#ecole" class="proj-featured-card">
         <div class="proj-number">02</div>
         <div class="proj-meta">Projet École — BTS SIO</div>
         <div class="proj-name">Projet M2L</div>
@@ -624,7 +700,7 @@
         <div class="proj-link">Voir le projet →</div>
       </a>
 
-      <a href="entreprise.html#migration-erp" class="proj-featured-card">
+      <a href="#migration-erp" class="proj-featured-card">
         <div class="proj-number">03</div>
         <div class="proj-meta">Projet Entreprise</div>
         <div class="proj-name">Migration d'ERP</div>
@@ -637,7 +713,7 @@
         <div class="proj-link">Voir le détail →</div>
       </a>
 
-      <a href="entreprise.html#demenagement-jacquemus" class="proj-featured-card">
+      <a href="#demenagement-jacquemus" class="proj-featured-card">
         <div class="proj-number">04</div>
         <div class="proj-meta">Projet Entreprise</div>
         <div class="proj-name">Déménagement Jacquemus</div>
@@ -651,22 +727,478 @@
       </a>
 
     </div>
-    <p style="text-align:center;margin-top:2.5rem;font-size:0.9rem;color:var(--text2);">
-      <a href="projets.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.06em;">Voir la page détaillée des projets →</a>
+
+    <div id="projets-list">
+      <p class="proj-list-sub">Tous les projets</p>
+      <div class="projects-grid">
+        <a href="#ecole" class="project-card">
+          <div class="proj-cat" style="color:var(--accent2)">📁 Projets École</div>
+          <div class="proj-title">Projet GSB</div>
+          <p class="proj-desc">Infrastructure réseau et système pour Galaxy Swiss Bourdin. Administration des services, gestion des utilisateurs, sécurisation.</p>
+          <div class="proj-tags">
+            <span class="tag tag-brown">Windows Server</span>
+            <span class="tag tag-green">Active Directory</span>
+            <span class="tag tag-orange">GPO</span>
+          </div>
+          <div class="proj-arrow">Voir le détail →</div>
+        </a>
+        <a href="#ecole" class="project-card">
+          <div class="proj-cat" style="color:var(--accent2)">📁 Projets École</div>
+          <div class="proj-title">Projet M2L</div>
+          <p class="proj-desc">Administration et sécurisation du réseau de la Maison des Ligues de Lorraine. VLANs, Cisco, services réseau.</p>
+          <div class="proj-tags">
+            <span class="tag tag-brown">Cisco</span>
+            <span class="tag tag-green">VLAN</span>
+            <span class="tag tag-orange">Firewall</span>
+          </div>
+          <div class="proj-arrow">Voir le détail →</div>
+        </a>
+        <a href="#migration-erp" class="project-card">
+          <div class="proj-cat" style="color:#93c5fd">🏢 Projet Entreprise</div>
+          <div class="proj-title">Migration d'ERP</div>
+          <p class="proj-desc">Migration depuis l'environnement MAX vers SAP : préparation des données, bascules, tests et accompagnement des utilisateurs pour sécuriser la continuité d'activité.</p>
+          <div class="proj-tags">
+            <span class="tag tag-brown">SAP</span>
+            <span class="tag tag-green">ERP</span>
+            <span class="tag tag-orange">Migration</span>
+          </div>
+          <div class="proj-arrow">Voir le détail →</div>
+        </a>
+        <a href="#demenagement-jacquemus" class="project-card">
+          <div class="proj-cat" style="color:#93c5fd">🏢 Projet Entreprise</div>
+          <div class="proj-title">Déménagement Jacquemus</div>
+          <p class="proj-desc">Déménagement des infrastructures IT : coordination du transfert des postes, équipements réseau et services, remise en production et validation des accès.</p>
+          <div class="proj-tags">
+            <span class="tag tag-brown">Infrastructure</span>
+            <span class="tag tag-green">Réseau</span>
+            <span class="tag tag-orange">Déménagement</span>
+          </div>
+          <div class="proj-arrow">Voir le détail →</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ÉCOLE ══════════ -->
+<section id="ecole" class="single-section">
+  <div class="container" style="max-width:900px;margin:0 auto;">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Projets École</div>
+      <h2 class="section-title">Réalisations scolaires</h2>
+      <p class="section-desc">Projets techniques réalisés dans le cadre de ma formation en BTS SIO.</p>
+    </div>
+    <div class="proj-detail">
+      <div class="proj-num">Projet 01 — BTS SIO</div>
+      <div class="proj-title">Projet GSB</div>
+      <p class="proj-body">
+        Galaxy Swiss Bourdin (GSB) est un laboratoire pharmaceutique fictif utilisé comme cadre pédagogique.
+        Ce projet consistait à mettre en place et administrer l'ensemble de l'infrastructure réseau et système
+        de l'entreprise, de la gestion des utilisateurs à la sécurisation des accès.
+      </p>
+      <div class="proj-section-title">Objectifs réalisés</div>
+      <ul class="obj-list">
+        <li>Installation et configuration d'un serveur Windows Server avec Active Directory</li>
+        <li>Mise en place des comptes utilisateurs, groupes et unités organisationnelles</li>
+        <li>Configuration des stratégies de groupe (GPO) pour la gestion des postes</li>
+        <li>Déploiement des services DNS et DHCP</li>
+        <li>Sécurisation des accès et des partages réseau</li>
+      </ul>
+      <div class="proj-section-title">Technologies utilisées</div>
+      <div class="proj-tags">
+        <span class="tag tag-brown">Windows Server</span>
+        <span class="tag tag-green">Active Directory</span>
+        <span class="tag tag-orange">DNS / DHCP</span>
+        <span class="tag tag-brown">GPO</span>
+        <span class="tag tag-green">PowerShell</span>
+      </div>
+    </div>
+    <div class="proj-detail">
+      <div class="proj-num">Projet 02 — BTS SIO</div>
+      <div class="proj-title">Projet M2L</div>
+      <p class="proj-body">
+        La Maison des Ligues de Lorraine (M2L) héberge de nombreuses associations sportives régionales.
+        Ce projet portait sur l'administration et la sécurisation de son infrastructure réseau,
+        en mettant en place une segmentation par VLANs et en configurant les équipements Cisco.
+      </p>
+      <div class="proj-section-title">Objectifs réalisés</div>
+      <ul class="obj-list">
+        <li>Conception et mise en place d'une architecture réseau segmentée par VLANs</li>
+        <li>Configuration des switches et routeurs Cisco (IOS)</li>
+        <li>Mise en place d'un VPN pour les accès distants sécurisés</li>
+        <li>Configuration du pare-feu et des règles ACL</li>
+        <li>Administration des serveurs Linux (services réseau)</li>
+        <li>Documentation de l'infrastructure et des procédures</li>
+      </ul>
+      <div class="proj-section-title">Technologies utilisées</div>
+      <div class="proj-tags">
+        <span class="tag tag-brown">Cisco IOS</span>
+        <span class="tag tag-green">VLAN</span>
+        <span class="tag tag-orange">VPN IPSec</span>
+        <span class="tag tag-brown">Firewall / ACL</span>
+        <span class="tag tag-green">Linux</span>
+        <span class="tag tag-orange">Packet Tracer</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ENTREPRISE ══════════ -->
+<section id="entreprise" class="single-section">
+  <div class="container">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Entreprise</div>
+      <h2 class="section-title">Expériences professionnelles</h2>
+      <p class="section-desc">Projets et missions réalisés en milieu professionnel.</p>
+    </div>
+    <p style="color:var(--text2);max-width:640px;margin-bottom:2.5rem;line-height:1.8;font-size:0.95rem;">
+      Projets menés en entreprise : migrations applicatives et opérations d'infrastructure (déménagement, transfert de site).
+    </p>
+    <div class="timeline-placeholder">
+      <div class="tl-item" id="migration-erp">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-label">Projet entreprise — ERP</div>
+          <div class="tl-title">Migration d'ERP (MAX → SAP)</div>
+          <div class="tl-desc">Participation à la migration depuis l'environnement MAX vers SAP : préparation des environnements, contrôle des flux et des données, phases de test, bascule et support utilisateurs pour limiter l'impact sur l'activité.</div>
+        </div>
+      </div>
+      <div class="tl-item" id="demenagement-jacquemus">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-label">Projet entreprise — Infrastructure</div>
+          <div class="tl-title">Déménagement Jacquemus</div>
+          <div class="tl-desc">Mission de déménagement IT : inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services et vérification des accès sur le nouveau site.</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:2rem;">
+      <a href="#contact" class="btn btn-primary">Me contacter</a>
     </p>
   </div>
 </section>
 
-<!-- ══════════ CTA ══════════ -->
-<section class="cta-section">
-  <div class="cta-glow"></div>
-  <div class="cta-content fade-up">
-    <div class="cta-label">Contact</div>
-    <h2 class="cta-title">Prêt à collaborer ?</h2>
-    <p class="cta-desc">Je suis disponible pour un stage, une alternance ou tout projet IT. N'hésitez pas à me contacter.</p>
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-      <a href="contact.html" class="btn btn-primary btn-lg">Prendre contact →</a>
-      <a href="synthese.html" class="btn btn-outline btn-lg">Voir mon CV</a>
+<!-- ══════════ VEILLE ══════════ -->
+<section id="veille" class="single-section veille-page">
+  <div class="container" style="max-width:1000px;margin:0 auto;">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Veille technologique</div>
+      <h2 class="section-title">Cybersécurité dans les infrastructures réseau</h2>
+      <p class="section-desc">Suivi des menaces, vulnérabilités et bonnes pratiques de sécurisation des réseaux d'entreprise.</p>
+    </div>
+    <div class="theme-banner">
+      <div class="theme-icon">🛡️</div>
+      <div>
+        <div class="theme-label">Thème de veille</div>
+        <div class="theme-title">La cybersécurité dans les infrastructures réseau</div>
+      </div>
+    </div>
+    <div class="veille-intro">
+      <p>
+        Les infrastructures réseau constituent le système nerveux de toute organisation. Pare-feux, routeurs, commutateurs, VPN, systèmes de détection d'intrusion — chacun de ces composants est une surface d'attaque potentielle. Je surveille en continu les nouvelles vulnérabilités, les techniques d'attaque émergentes et les recommandations des organismes spécialisés (ANSSI, CERT-FR) pour anticiper les risques et appliquer les bonnes pratiques de sécurisation.
+      </p>
+    </div>
+    <div class="section-title">Sujets surveillés</div>
+    <div class="veille-grid">
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🔥</div>
+          <div class="veille-topic-title">Menaces &amp; Attaques réseau</div>
+        </div>
+        <ul class="veille-items">
+          <li>Attaques DDoS et nouvelles techniques d'amplification (DNS, NTP)</li>
+          <li>Man-in-the-Middle (MitM) sur les réseaux d'entreprise</li>
+          <li>Intrusions via équipements réseau (CVE Cisco, Fortinet, Juniper…)</li>
+          <li>Lateral movement et pivoting post-compromission</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🔒</div>
+          <div class="veille-topic-title">Sécurisation &amp; Bonnes pratiques</div>
+        </div>
+        <ul class="veille-items">
+          <li>Zero Trust Network Access (ZTNA) : mise en œuvre en entreprise</li>
+          <li>Segmentation réseau et micro-segmentation</li>
+          <li>Durcissement des équipements (hardening Cisco, guides ANSSI)</li>
+          <li>Chiffrement des flux : TLS 1.3, MACsec, IPsec</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">📡</div>
+          <div class="veille-topic-title">Détection &amp; Supervision</div>
+        </div>
+        <ul class="veille-items">
+          <li>IDS/IPS : évolution des signatures et détection comportementale</li>
+          <li>SIEM et corrélation d'événements réseau</li>
+          <li>NDR (Network Detection &amp; Response) et analyse de flux</li>
+          <li>Threat Intelligence appliquée aux IOC réseau</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">⚠️</div>
+          <div class="veille-topic-title">Vulnérabilités &amp; CVE</div>
+        </div>
+        <ul class="veille-items">
+          <li>Suivi des CVE critiques affectant les équipements réseau</li>
+          <li>Bulletins de sécurité CERT-FR et alertes ANSSI</li>
+          <li>Correctifs et contournements pour les failles zero-day</li>
+          <li>Exploitation active de vulnérabilités dans la nature</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🏛️</div>
+          <div class="veille-topic-title">Réglementations &amp; Conformité</div>
+        </div>
+        <ul class="veille-items">
+          <li>Directive NIS2 : obligations pour les opérateurs critiques</li>
+          <li>Référentiel PRIS et qualification ANSSI</li>
+          <li>RGPD et sécurité des données en transit</li>
+          <li>ISO 27001 / IEC 62443 pour les environnements industriels</li>
+        </ul>
+      </div>
+      <div class="veille-card">
+        <div class="veille-topic">
+          <div class="veille-topic-icon">🌐</div>
+          <div class="veille-topic-title">Tendances émergentes</div>
+        </div>
+        <ul class="veille-items">
+          <li>SASE (Secure Access Service Edge) : convergence réseau &amp; sécurité</li>
+          <li>SD-WAN sécurisé et chiffrement des liens WAN</li>
+          <li>Sécurité des réseaux OT/IoT industriels</li>
+          <li>BGP hijacking et sécurisation du routage Internet</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sources-section">
+      <div class="section-title">Sources principales</div>
+      <div class="source-cards">
+        <a href="https://feedly.com/i/threatLandscape" target="_blank" rel="noopener noreferrer" class="source-card">
+          <div class="source-card-header">
+            <div class="source-card-icon">📰</div>
+            <div>
+              <div class="source-card-name">Feedly Threat Intelligence</div>
+              <span class="source-card-tag">Flux RSS &amp; Threat Intel</span>
+            </div>
+          </div>
+          <div class="source-card-desc">Agrégateur de flux spécialisé en cybersécurité. Suivi en temps réel des menaces, IOC et actualités sécurité provenant de centaines de sources expertes.</div>
+          <div class="source-card-url">feedly.com/i/threatLandscape</div>
+        </a>
+        <a href="https://www.cert.ssi.gouv.fr/" target="_blank" rel="noopener noreferrer" class="source-card">
+          <div class="source-card-header">
+            <div class="source-card-icon">🏛️</div>
+            <div>
+              <div class="source-card-name">CERT-FR / ANSSI</div>
+              <span class="source-card-tag">Alertes officielles</span>
+            </div>
+          </div>
+          <div class="source-card-desc">Centre Gouvernemental de Veille, d'Alerte et de Réponse aux Attaques Informatiques. Bulletins de vulnérabilités et recommandations officielles pour la France.</div>
+          <div class="source-card-url">cert.ssi.gouv.fr</div>
+        </a>
+      </div>
+    </div>
+    <div class="sources-section">
+      <div class="section-title">Autres sources consultées</div>
+      <div class="sources-grid">
+        <a href="https://www.anssi.gouv.fr" target="_blank" rel="noopener noreferrer" class="source-chip">ANSSI</a>
+        <a href="https://nvd.nist.gov" target="_blank" rel="noopener noreferrer" class="source-chip">NVD / CVE Database</a>
+        <a href="https://thehackernews.com" target="_blank" rel="noopener noreferrer" class="source-chip">The Hacker News</a>
+        <a href="https://www.securityweek.com" target="_blank" rel="noopener noreferrer" class="source-chip">SecurityWeek</a>
+        <a href="https://blog.cisco.com/security" target="_blank" rel="noopener noreferrer" class="source-chip">Cisco Security Blog</a>
+        <a href="https://www.bleepingcomputer.com" target="_blank" rel="noopener noreferrer" class="source-chip">BleepingComputer</a>
+        <a href="https://www.lemag-it.com" target="_blank" rel="noopener noreferrer" class="source-chip">LeMagIT</a>
+        <a href="https://www.zdnet.fr" target="_blank" rel="noopener noreferrer" class="source-chip">ZDNet France</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SYNTHÈSE CV ══════════ -->
+<section id="cv" class="single-section cv-print-block">
+  <div class="container">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Synthèse CV</div>
+      <h2 class="section-title">Curriculum Vitæ</h2>
+      <p class="section-desc">Vue d'ensemble de mon parcours, compétences et formations.</p>
+    </div>
+    <div class="print-btn">
+      <button type="button" class="btn btn-outline" onclick="window.print()">🖨️ Imprimer / Exporter PDF</button>
+    </div>
+    <div class="cv-grid">
+      <div>
+        <div class="cv-section">
+          <div class="cv-section-title">Informations</div>
+          <div class="cv-box">
+            <div style="font-family:var(--display);font-size:1.35rem;font-weight:700;margin-bottom:0.25rem;color:var(--text);letter-spacing:-0.02em;">Eliot Fiette</div>
+            <div style="font-family:var(--mono);font-size:0.68rem;color:var(--accent);margin-bottom:1.2rem;text-transform:uppercase;letter-spacing:0.12em;">Administrateur Systèmes &amp; Réseaux</div>
+            <div style="font-size:0.85rem;color:var(--text2);line-height:2;font-family:var(--mono);">
+              ✉ fietteeliotpro@gmail.com<br/>
+              🎓 BTS SIO — SISR<br/>
+              📍 France
+            </div>
+          </div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Compétences techniques</div>
+          <div class="cv-box">
+            <div class="cv-group-label">Réseaux</div>
+            <div class="skill-row"><span>Cisco IOS</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+            <div class="skill-row"><span>VPN / Firewall</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+            <div class="skill-row"><span>VLAN / Routage</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+            <div class="cv-group-label">Systèmes</div>
+            <div class="skill-row"><span>Windows Server</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+            <div class="skill-row"><span>Linux</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+            <div class="skill-row"><span>Active Directory</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="cv-group-label">Virtualisation</div>
+            <div class="skill-row"><span>VMware / Hyper-V</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="skill-row"><span>VirtualBox</span><div class="skill-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+          </div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Certifications</div>
+          <div class="cv-box">
+            <div class="cv-item">
+              <div class="cv-item-title">Introduction à la cybersécurité</div>
+              <div class="cv-item-sub">Cisco Networking Academy</div>
+            </div>
+            <div class="cv-item">
+              <div class="cv-item-title">MOOC SecNumAcadémie</div>
+              <div class="cv-item-sub">ANSSI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="cv-section">
+          <div class="cv-section-title">Formation</div>
+          <div class="cv-box">
+            <div class="cv-item">
+              <div class="cv-item-header">
+                <div class="cv-item-title">BTS SIO — option SISR</div>
+                <div class="cv-item-date">En cours</div>
+              </div>
+              <div class="cv-item-sub">Services Informatiques aux Organisations</div>
+              <div class="cv-item-desc">Solutions d'Infrastructure, Systèmes et Réseaux. Administration des systèmes, réseaux, virtualisation et sécurité.</div>
+            </div>
+          </div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Projets scolaires</div>
+          <div class="cv-box">
+            <div class="cv-item">
+              <div class="cv-item-header">
+                <div class="cv-item-title">Projet GSB</div>
+                <div class="cv-item-date">BTS SIO</div>
+              </div>
+              <div class="cv-item-sub">Galaxy Swiss Bourdin</div>
+              <div class="cv-item-desc">Mise en place d'une infrastructure réseau complète : Windows Server, Active Directory, GPO, DNS/DHCP.</div>
+            </div>
+            <div class="cv-item">
+              <div class="cv-item-header">
+                <div class="cv-item-title">Projet M2L</div>
+                <div class="cv-item-date">BTS SIO</div>
+              </div>
+              <div class="cv-item-sub">Maison des Ligues de Lorraine</div>
+              <div class="cv-item-desc">Administration réseau, VLANs, Cisco IOS, VPN, pare-feu et services Linux.</div>
+            </div>
+          </div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Expériences professionnelles</div>
+          <div class="cv-box">
+            <div class="cv-item" style="text-align:center;padding:2rem 0;">
+              <div style="font-family:var(--mono);font-size:0.75rem;color:var(--text3);">À compléter prochainement</div>
+            </div>
+          </div>
+        </div>
+        <div class="cv-section">
+          <div class="cv-section-title">Qualités</div>
+          <div class="cv-box" style="display:flex;flex-wrap:wrap;gap:0.45rem;">
+            <span class="tag tag-brown">Rigueur</span>
+            <span class="tag tag-green">Curiosité</span>
+            <span class="tag tag-orange">Autonomie</span>
+            <span class="tag tag-brown">Esprit d'équipe</span>
+            <span class="tag tag-green">Adaptabilité</span>
+            <span class="tag tag-orange">Organisation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" class="single-section">
+  <div class="container">
+    <div class="expertise-header">
+      <div class="section-eyebrow">Contact</div>
+      <h2 class="section-title">Travaillons ensemble</h2>
+      <p class="section-desc">Une opportunité, un projet ou une question ? Je suis disponible.</p>
+    </div>
+    <div class="contact-layout">
+      <div class="contact-info-card">
+        <div class="contact-info-title">Mes coordonnées</div>
+        <div class="contact-row">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-val">
+              <a href="mailto:fietteeliotpro@gmail.com">fietteeliotpro@gmail.com</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">💼</div>
+          <div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-val">
+              <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">🐙</div>
+          <div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-val">
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer">Profil GitHub</a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">🟢</div>
+          <div>
+            <div class="contact-label">Disponibilité</div>
+            <div class="contact-val" style="color:#4ade80">Ouvert aux opportunités</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="form-title">Envoyer un message</div>
+        <div class="form-group">
+          <label class="form-label">Nom complet</label>
+          <input type="text" class="form-input" placeholder="Votre nom"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="votre@email.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Objet</label>
+          <input type="text" class="form-input" placeholder="Opportunité / Projet / Question..."/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Décrivez votre projet ou votre demande..."></textarea>
+        </div>
+        <a href="mailto:fietteeliotpro@gmail.com" class="btn btn-primary" style="width:100%;justify-content:center;">
+          Envoyer par email →
+        </a>
+        <p class="form-note">Ce formulaire ouvre votre client mail. Vous pouvez aussi écrire directement à fietteeliotpro@gmail.com</p>
+      </div>
     </div>
   </div>
 </section>
@@ -682,7 +1214,7 @@
 (function () {
   var s = document.createElement('script');
   s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=8';
+  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=9';
   document.body.appendChild(s);
 })();
 </script>
@@ -764,7 +1296,7 @@
 
 /* ── 3D TILT ── */
 (function(){
-  document.querySelectorAll('.expertise-card,.proj-featured-card').forEach(card=>{
+  document.querySelectorAll('.expertise-card,.proj-featured-card,.project-card').forEach(card=>{
     card.addEventListener('mouseenter',()=>{
       card.style.transition='border-color .3s,box-shadow .3s';
     });
