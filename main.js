@@ -47,33 +47,57 @@ if (skillBars.length) {
   skillBars.forEach((bar) => barObserver.observe(bar));
 }
 
-/* ── SCROLL REVEAL FOR CARDS ── */
-const revealTargets = document.querySelectorAll(
-  '.skill-card, .proj-detail, .source-card, .veille-card, .quick-card',
-);
+/* ── WOW : révélations au scroll (sections, cartes, blocs) ── */
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sel = [
+    'main .expertise-header',
+    'main .expertise-card',
+    'main .proj-featured-card',
+    'main #parcours .about-grid',
+    'main #parcours .side-card',
+    'main .single-section .proj-detail',
+    'main .timeline-placeholder',
+    'main .veille-intro',
+    'main .theme-banner',
+    'main .veille-card',
+    'main .sources-section',
+    'main .source-card',
+    'main .cv-grid',
+    'main .print-btn',
+    'main .contact-layout',
+    'main .skill-card',
+    'main .quick-card',
+  ].join(', ');
 
-if (revealTargets.length) {
-  revealTargets.forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(14px)';
-    el.style.transition = `opacity 0.45s ${i * 0.07}s ease, transform 0.45s ${i * 0.07}s ease`;
+  const nodes = document.querySelectorAll(sel);
+  if (!nodes.length) return;
+
+  if (reduce) {
+    nodes.forEach((el) => {
+      el.classList.add('wow-el', 'wow-in');
+    });
+    return;
+  }
+
+  nodes.forEach((el, idx) => {
+    el.classList.add('wow-el');
+    el.style.setProperty('--wow-d', `${Math.min(idx * 48, 420)}ms`);
   });
 
-  const revealObserver = new IntersectionObserver(
+  const obs = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-          revealObserver.unobserve(entry.target);
-        }
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('wow-in');
+        obs.unobserve(en.target);
       });
     },
-    { threshold: 0.1, rootMargin: '0px 0px -30px 0px' },
+    { threshold: 0.06, rootMargin: '0px 0px -10% 0px' },
   );
 
-  revealTargets.forEach((el) => revealObserver.observe(el));
-}
+  nodes.forEach((el) => obs.observe(el));
+})();
 
 /* ── CLOSE MOBILE MENU ON RESIZE ── */
 window.addEventListener('resize', () => {

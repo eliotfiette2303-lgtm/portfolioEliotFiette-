@@ -462,6 +462,7 @@ footer {
   -webkit-backdrop-filter: blur(22px);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: navHeaderFade 0.55s ease both;
 }
 
 .nav-top {
@@ -540,6 +541,23 @@ footer {
     0 0 0 1px rgba(96, 165, 250, 0.25),
     0 6px 28px rgba(59, 130, 246, 0.38);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  animation: navTabActivePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes navTabActivePulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 0 0 1px rgba(96, 165, 250, 0.25),
+      0 6px 28px rgba(59, 130, 246, 0.38);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 0 0 1px rgba(147, 197, 253, 0.45),
+      0 8px 36px rgba(59, 130, 246, 0.55);
+  }
 }
 
 @media (max-width: 640px) {
@@ -561,6 +579,57 @@ footer {
 
   .nav-tabs a:hover {
     transform: none;
+  }
+
+  .site-nav {
+    animation: none !important;
+  }
+
+  .nav-tabs a.active {
+    animation: none !important;
+  }
+}
+
+/* ══ WOW : entrées au scroll (IntersectionObserver + .wow-in) ══ */
+@media (prefers-reduced-motion: no-preference) {
+  .wow-el {
+    opacity: 0;
+    transform: translate3d(0, 64px, 0) scale(0.9) rotateX(4deg);
+    filter: blur(12px);
+    transform-origin: center top;
+    transition:
+      opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.75s ease;
+    transition-delay: var(--wow-d, 0ms);
+    will-change: opacity, transform, filter;
+  }
+
+  .wow-el.wow-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotateX(0);
+    filter: blur(0);
+    will-change: auto;
+    transition-timing-function: cubic-bezier(0.34, 1.35, 0.55, 1), cubic-bezier(0.34, 1.35, 0.55, 1), ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wow-el {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes navHeaderFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

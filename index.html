@@ -20,7 +20,7 @@
   <script>
     (function () {
       var el = document.getElementById('site-stylesheet');
-      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=11';
+      if (el) el.href = (window.__SITE_ROOT__ || '') + 'style.css?v=12';
     })();
   </script>
   <style>
@@ -38,6 +38,13 @@
     display: flex;
     align-items: center;
     gap: 0.7rem;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.08) 50%, transparent);
+    background-size: 200% 100%;
+    animation: eyebrowShimmer 5s ease-in-out infinite;
+  }
+  @keyframes eyebrowShimmer {
+    0%, 100% { background-position: 0% 50%; opacity: 0.95; }
+    50% { background-position: 100% 50%; opacity: 1; }
   }
   .section-eyebrow.center { justify-content: center; }
 
@@ -60,6 +67,54 @@
     overflow: hidden;
   }
 
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: -18%;
+    background:
+      radial-gradient(ellipse 85% 65% at 18% 42%, rgba(59, 130, 246, 0.2) 0%, transparent 52%),
+      radial-gradient(ellipse 70% 55% at 88% 58%, rgba(139, 92, 246, 0.14) 0%, transparent 50%),
+      radial-gradient(ellipse 55% 45% at 50% 105%, rgba(59, 130, 246, 0.1) 0%, transparent 42%);
+    z-index: 0;
+    pointer-events: none;
+    animation: heroAuraDrift 14s ease-in-out infinite;
+  }
+
+  @keyframes heroAuraDrift {
+    0%, 100% { opacity: 0.72; transform: scale(1) translate(0, 0); }
+    40% { opacity: 1; transform: scale(1.08) translate(2%, -1.5%); }
+    70% { opacity: 0.85; transform: scale(1.04) translate(-1.5%, 1.5%); }
+  }
+
+  .hero-orbit {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(140vw, 1400px);
+    height: min(140vw, 1400px);
+    margin: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(59, 130, 246, 0.14);
+    z-index: 1;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: heroOrbitSpin 28s linear infinite;
+    box-shadow: inset 0 0 80px rgba(59, 130, 246, 0.04);
+  }
+
+  .hero-orbit::before {
+    content: '';
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 92, 246, 0.12);
+  }
+
+  @keyframes heroOrbitSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
   #particleCanvas {
     position: absolute;
     inset: 0;
@@ -70,17 +125,36 @@
   .hero-scan {
     position: absolute;
     left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.5) 40%, rgba(96,165,250,0.7) 50%, rgba(59,130,246,0.5) 60%, transparent);
-    animation: scanDown 6s linear infinite;
-    z-index: 1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.45) 38%, rgba(147,197,253,0.95) 50%, rgba(59,130,246,0.45) 62%, transparent);
+    box-shadow: 0 0 24px rgba(96, 165, 250, 0.55);
+    animation: scanDown 5s linear infinite;
+    z-index: 2;
     pointer-events: none;
   }
   @keyframes scanDown {
     0%   { top:-1px; opacity:0; }
-    3%   { opacity:1; }
-    97%  { opacity:1; }
+    4%   { opacity:1; }
+    96%  { opacity:1; }
     100% { top:100%; opacity:0; }
+  }
+
+  .hero-scan-2 {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139,92,246,0.35) 42%, rgba(196,181,253,0.75) 50%, rgba(139,92,246,0.35) 58%, transparent);
+    animation: scanDownAlt 6.5s linear infinite;
+    animation-delay: -2.2s;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  @keyframes scanDownAlt {
+    0%   { top: 102%; opacity: 0; }
+    5%   { opacity: 0.9; }
+    95%  { opacity: 0.9; }
+    100% { top: -2%; opacity: 0; }
   }
 
   /* HUD corners */
@@ -89,7 +163,14 @@
   .hud-tr { top:24px; right:24px; }
   .hud-bl { bottom:24px; left:24px; }
   .hud-br { bottom:24px; right:24px; }
-  .hud-corner { width:22px; height:22px; border-style:solid; border-color:rgba(59,130,246,0.35); }
+  .hud-corner {
+    width:22px; height:22px; border-style:solid; border-color:rgba(59,130,246,0.35);
+    animation: hudCornerPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes hudCornerPulse {
+    0%, 100% { border-color: rgba(59,130,246,0.28); filter: drop-shadow(0 0 4px rgba(59,130,246,0.15)); }
+    50% { border-color: rgba(147,197,253,0.75); filter: drop-shadow(0 0 12px rgba(96,165,250,0.45)); }
+  }
   .hud-tl .hud-corner { border-width:2px 0 0 2px; }
   .hud-tr .hud-corner { border-width:2px 2px 0 0; }
   .hud-bl .hud-corner { border-width:0 0 2px 2px; }
@@ -115,13 +196,20 @@
     font-family: var(--mono);
     font-size: 0.65rem;
     color: #4ade80;
-    background: rgba(34,197,94,0.08);
-    border: 1px solid rgba(34,197,94,0.22);
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.35);
     border-radius: 20px;
     padding: 0.32rem 0.85rem;
     margin-bottom: 1.8rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    animation:
+      fadeUp 0.55s 0s ease both,
+      heroBadgeGlow 2.6s ease-in-out 0.55s infinite;
+  }
+  @keyframes heroBadgeGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.25), 0 0 12px rgba(34,197,94,0.12); }
+    50% { box-shadow: 0 0 0 3px rgba(34,197,94,0.12), 0 0 28px rgba(34,197,94,0.35); }
   }
   .status-dot {
     width:6px; height:6px; border-radius:50%;
@@ -150,17 +238,30 @@
     line-height: 1.0;
     letter-spacing: -0.04em;
     margin-bottom: 1rem;
-    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    text-shadow:
+      0 4px 30px rgba(0,0,0,0.45),
+      0 0 40px rgba(59,130,246,0.15);
+    animation:
+      fadeUp 0.72s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both,
+      heroTitleGlow 4.5s ease-in-out 0.85s infinite;
+  }
+  @keyframes heroTitleGlow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(59,130,246,0.15)); }
+    50% { filter: drop-shadow(0 0 36px rgba(96,165,250,0.45)) drop-shadow(0 0 60px rgba(139,92,246,0.2)); }
   }
 
   .hero h1 em {
     font-style: normal;
-    background: linear-gradient(135deg, var(--accent2) 0%, #a78bfa 55%, var(--accent2) 100%);
-    background-size: 200%;
+    background: linear-gradient(135deg, var(--accent2) 0%, #c4b5fd 40%, #a78bfa 55%, var(--accent2) 100%);
+    background-size: 220%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradientShift 5s ease-in-out infinite;
+    animation: gradientShift 4s ease-in-out infinite, heroEmShine 3s ease-in-out infinite;
+  }
+  @keyframes heroEmShine {
+    0%, 100% { filter: brightness(1) saturate(1); }
+    50% { filter: brightness(1.12) saturate(1.15); }
   }
   @keyframes gradientShift {
     0%,100% { background-position:0% 50%; }
@@ -230,10 +331,15 @@
   /* ── TERMINAL ── */
   .terminal-card {
     background: rgba(6,12,24,0.92);
-    border: 1px solid rgba(59,130,246,0.22);
+    border: 1px solid rgba(59,130,246,0.28);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(59,130,246,0.08);
+    animation: termCardFloat 6s ease-in-out infinite;
+  }
+  @keyframes termCardFloat {
+    0%, 100% { transform: translateY(0); box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(59,130,246,0.1); }
+    50% { transform: translateY(-8px); box-shadow: 0 36px 80px rgba(0,0,0,0.65), 0 0 56px rgba(59,130,246,0.22); }
   }
   .terminal-bar {
     background: rgba(12,20,40,0.98);
@@ -308,8 +414,14 @@
     position:absolute;
     top:0; left:0; right:0;
     height:2px;
-    background: var(--c-accent, var(--accent));
+    background: linear-gradient(90deg, transparent, var(--c-accent, var(--accent)) 30%, #fff 50%, var(--c-accent, var(--accent)) 70%, transparent);
+    background-size: 200% 100%;
     box-shadow: 0 0 12px var(--c-accent, var(--accent));
+    animation: cardTopShine 3.5s ease-in-out infinite;
+  }
+  @keyframes cardTopShine {
+    0%, 100% { background-position: 0% 50%; opacity: 0.85; }
+    50% { background-position: 100% 50%; opacity: 1; }
   }
   .expertise-card::after {
     content:'';
@@ -388,6 +500,11 @@
     letter-spacing:-0.04em;
     pointer-events:none;
     user-select:none;
+    animation: projNumPulse 5s ease-in-out infinite;
+  }
+  @keyframes projNumPulse {
+    0%, 100% { color: rgba(59,130,246,0.06); transform: scale(1); }
+    50% { color: rgba(59,130,246,0.14); transform: scale(1.03); }
   }
   .proj-meta  { font-family:var(--mono); font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.15em; }
   .proj-name  { font-family:var(--display); font-size:1.75rem; font-weight:700; letter-spacing:-0.03em; }
@@ -435,6 +552,35 @@
     .expertise-grid      { grid-template-columns:1fr; }
     .proj-featured-grid  { grid-template-columns:1fr; }
   }
+
+  .proj-featured-card::before {
+    animation: projCardTopPulse 3.8s ease-in-out infinite;
+  }
+  @keyframes projCardTopPulse {
+    0%, 100% { opacity: 0.35; filter: brightness(1); }
+    50% { opacity: 1; filter: brightness(1.4); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero::after,
+    .hero-orbit,
+    .hero-orbit::before,
+    .hero-scan,
+    .hero-scan-2,
+    .hud-corner,
+    .hero-status,
+    .hero h1,
+    .hero h1 em,
+    .terminal-card,
+    .section-eyebrow,
+    .expertise-card::before,
+    .proj-featured-card::before,
+    .proj-number {
+      animation: none !important;
+    }
+    .hero h1 { filter: none !important; }
+    .hero h1 em { filter: none !important; }
+  }
   </style>
 </head>
 <body>
@@ -462,7 +608,9 @@
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="hero">
   <canvas id="particleCanvas"></canvas>
+  <div class="hero-orbit" aria-hidden="true"></div>
   <div class="hero-scan"></div>
+  <div class="hero-scan-2" aria-hidden="true"></div>
   <div class="hud hud-tl"><div class="hud-corner"></div></div>
   <div class="hud hud-tr"><div class="hud-corner"></div></div>
   <div class="hud hud-bl"><div class="hud-corner"></div></div>
@@ -1164,7 +1312,7 @@
 (function () {
   var s = document.createElement('script');
   s.defer = true;
-  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=12';
+  s.src = (window.__SITE_ROOT__ || '') + 'main.js?v=13';
   document.body.appendChild(s);
 })();
 </script>
