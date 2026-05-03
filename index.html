@@ -35,14 +35,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
-    }
-  }
-  </script>
-  <link rel="stylesheet" href="style.css?v=35"/>
+  <link rel="stylesheet" href="style.css?v=39"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1455,6 +1448,9 @@
 </script>
 
 <script src="main.js?v=21"></script>
+<!-- Three.js UMD + vaisseau : scripts classiques (évite import() / import map bloqués sur certains PC) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js" crossorigin="anonymous"></script>
+<script src="intro-spaceship.js?v=6"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
@@ -1470,8 +1466,8 @@
     return;
   }
 
-  var useSpaceship3d = !reduce;
-  if (reduce && animForce) useSpaceship3d = false;
+  /* Vaisseau 3D : actif dès que l’intro est affichée (y compris « anim portfolio » + OS reduced-motion) */
+  var useSpaceship3d = !reduce || animForce;
 
   const html = document.documentElement;
   const main = document.querySelector('main');
@@ -1569,26 +1565,27 @@
 
     if (useSpaceship3d) {
       intro.classList.add('site-intro--exit-ship');
-      var rootBase = typeof window.__SITE_ROOT__ === 'string' ? window.__SITE_ROOT__ : '';
-      import(rootBase + 'intro-spaceship.js?v=2')
-        .then(function (mod) {
-          if (introDone || !intro.parentNode) return;
-          try {
-            mod.runSpaceshipTransition({
-              onComplete: function () {
-                intro.classList.remove('site-intro--exit-ship');
-                cleanup();
-              },
-            });
-          } catch (err2) {
-            console.warn('[intro] exécution vaisseau', err2);
-            fallbackCssExit();
-          }
-        })
-        .catch(function (err) {
-          console.warn('[intro] vaisseau 3D indisponible, repli CSS', err);
+      if (window.__portfolioSpaceship && typeof window.__portfolioSpaceship.run === 'function') {
+        try {
+          window.__portfolioSpaceship.run({
+            introEl: intro,
+            onComplete: function () {
+              intro.classList.remove('site-intro--exit-ship');
+              intro.classList.remove('site-intro--ship-smoke');
+              intro.classList.remove('site-intro--ship-smoke-peak');
+              cleanup();
+            },
+          });
+        } catch (err2) {
+          console.warn('[intro] exécution vaisseau', err2);
+          intro.classList.remove('site-intro--exit-ship');
           fallbackCssExit();
-        });
+        }
+      } else {
+        console.warn('[intro] THREE ou intro-spaceship.js non chargé — repli CSS');
+        intro.classList.remove('site-intro--exit-ship');
+        fallbackCssExit();
+      }
       return;
     }
 
@@ -1625,7 +1622,7 @@
   }
 
   function tickLoad(now) {
-    if (introDone || intro.classList.contains('site-intro--exit')) return;
+    if (introDone || intro.classList.contains('site-intro--exit') || intro.classList.contains('site-intro--exit-ship')) return;
     if (!loadT0) loadT0 = now;
     var raw = Math.min(1, (now - loadT0) / loadDuration);
     setLoadVisual(easeOutQuart(raw));
