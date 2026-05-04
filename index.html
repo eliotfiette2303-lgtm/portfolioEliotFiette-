@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=46"/>
+  <link rel="stylesheet" href="style.css?v=47"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1004,7 +1004,7 @@
     </div>
     <div class="proj-featured-grid">
 
-      <a href="projet-gsb-visiteurs-reseau.html" class="proj-featured-card">
+      <a href="projet-gsb-visiteurs-reseau.html" class="proj-featured-card" data-projet-gsb="1">
         <div class="proj-number">01</div>
         <div class="proj-meta">Projet École — BTS SIO</div>
         <div class="proj-name">Projet GSB</div>
@@ -1145,7 +1145,7 @@
               <span class="tag tag-green">PowerShell</span>
             </div>
             <p style="margin-top:1.35rem;margin-bottom:0">
-              <a href="projet-gsb-visiteurs-reseau.html" class="btn btn-outline">Fiche détaillée : visiteurs médicaux &amp; réseau →</a>
+              <a href="projet-gsb-visiteurs-reseau.html" class="btn btn-outline" data-projet-gsb="1">Fiche détaillée : visiteurs médicaux &amp; réseau →</a>
             </p>
           </div>
           <div class="proj-detail">
@@ -1498,6 +1498,16 @@
 </section>
 
 </main>
+<script>
+(function () {
+  var r = typeof window.__SITE_ROOT__ === 'string' ? window.__SITE_ROOT__ : '';
+  var file = 'projet-gsb-visiteurs-reseau.html';
+  var u = r ? r.replace(/\/?$/, '/') + file : file;
+  document.querySelectorAll('a[data-projet-gsb="1"]').forEach(function (a) {
+    a.setAttribute('href', u);
+  });
+})();
+</script>
 
 <footer>
   <span>© 2026 Eliot Fiette</span>
@@ -1533,7 +1543,7 @@
 })();
 </script>
 
-<script src="main.js?v=26"></script>
+<script src="main.js?v=27"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
