@@ -1032,7 +1032,7 @@
         <div class="proj-link">Voir le projet →</div>
       </a>
 
-      <a href="#migration-erp" class="proj-featured-card">
+      <a href="projet-migration-erp-max-sap.html" class="proj-featured-card" data-projet-erp="1">
         <div class="proj-number">03</div>
         <div class="proj-meta">Projet Entreprise</div>
         <div class="proj-name">Migration d'ERP</div>
@@ -1045,7 +1045,7 @@
         <div class="proj-link">Voir le détail →</div>
       </a>
 
-      <a href="#demenagement-jacquemus" class="proj-featured-card">
+      <a href="projet-demenagement-jacquemus.html" class="proj-featured-card" data-projet-jacquemus="1">
         <div class="proj-number">04</div>
         <div class="proj-meta">Projet Entreprise</div>
         <div class="proj-name">Déménagement Jacquemus</div>
@@ -1255,6 +1255,9 @@
             Participation à la migration : préparation des environnements, contrôle des flux et des données, phases de test,
             bascule et support utilisateurs pour limiter l’impact sur l’activité.
           </p>
+          <p style="margin-top:1.35rem;margin-bottom:0">
+            <a href="projet-migration-erp-max-sap.html" class="btn btn-outline" data-projet-erp="1">Fiche détaillée : migration ERP →</a>
+          </p>
         </div>
       </article>
 
@@ -1278,6 +1281,9 @@
           <p class="exp-pair__proj-body">
             Inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services
             et vérification des accès sur le nouveau site.
+          </p>
+          <p style="margin-top:1.35rem;margin-bottom:0">
+            <a href="projet-demenagement-jacquemus.html" class="btn btn-outline" data-projet-jacquemus="1">Fiche détaillée : déménagement Jacquemus →</a>
           </p>
         </div>
       </article>
@@ -1508,11 +1514,21 @@
   var gsbUrl = r ? r.replace(/\/?$/, '/') + gsbFile : gsbFile;
   var m2lFile = 'projet-m2l-supervision-logs.html';
   var m2lUrl = r ? r.replace(/\/?$/, '/') + m2lFile : m2lFile;
+  var erpFile = 'projet-migration-erp-max-sap.html';
+  var erpUrl = r ? r.replace(/\/?$/, '/') + erpFile : erpFile;
+  var jacquemusFile = 'projet-demenagement-jacquemus.html';
+  var jacquemusUrl = r ? r.replace(/\/?$/, '/') + jacquemusFile : jacquemusFile;
   document.querySelectorAll('a[data-projet-gsb="1"]').forEach(function (a) {
     a.setAttribute('href', gsbUrl);
   });
   document.querySelectorAll('a[data-projet-m2l="1"]').forEach(function (a) {
     a.setAttribute('href', m2lUrl);
+  });
+  document.querySelectorAll('a[data-projet-erp="1"]').forEach(function (a) {
+    a.setAttribute('href', erpUrl);
+  });
+  document.querySelectorAll('a[data-projet-jacquemus="1"]').forEach(function (a) {
+    a.setAttribute('href', jacquemusUrl);
   });
 })();
 </script>

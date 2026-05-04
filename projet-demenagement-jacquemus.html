@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <script>
+  (function () {
+    try {
+      if (localStorage.getItem('portfolioAnim') !== '0') {
+        document.documentElement.classList.add('portfolio-anim-force');
+      }
+    } catch (e) {
+      try {
+        document.documentElement.classList.add('portfolio-anim-force');
+      } catch (e2) {}
+    }
+  })();
+  </script>
+  <script>
+  (function () {
+    window.__SITE_ROOT__ = '';
+    if (location.protocol === 'file:') return;
+    var host = location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return;
+    if (!host.endsWith('github.io')) return;
+    var parts = location.pathname.split('/').filter(Boolean);
+    var seg = parts[0];
+    if (!seg || /\.html$/i.test(seg)) return;
+    window.__SITE_ROOT__ = '/' + seg + '/';
+    var base = document.createElement('base');
+    base.href = location.origin + window.__SITE_ROOT__;
+    document.head.appendChild(base);
+  })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projet Entreprise : Déménagement Jacquemus — Eliot Fiette</title>
+  <link rel="stylesheet" href="style.css?v=51"/>
+  <style>
+  .project-page .expertise-header { margin-bottom: 2.25rem; }
+  .project-page .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .project-page .section-title {
+    font-family: var(--display);
+    font-size: clamp(1.35rem, 3.2vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    max-width: 52rem;
+  }
+  .project-page .project-meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.25rem;
+  }
+  .project-page .project-back { margin-bottom: 1.75rem; }
+  </style>
+</head>
+<body>
+<header class="site-nav">
+  <div class="nav-top">
+    <a href="index.html#hero" class="nav-logo">Eliot Fiette</a>
+  </div>
+  <div class="nav-tabs-strip" role="navigation" aria-label="Navigation principale">
+    <ul class="nav-tabs">
+      <li><a href="index.html#hero">Accueil</a></li>
+      <li><a href="index.html#parcours">Parcours</a></li>
+      <li><a href="index.html#competences">Compétences</a></li>
+      <li><a href="index.html#projets" class="active">Projets</a></li>
+      <li><a href="index.html#ecole">École</a></li>
+      <li><a href="index.html#entreprise">Entreprise</a></li>
+      <li><a href="index.html#veille">Veille</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section id="entreprise" class="single-section project-page" aria-labelledby="projet-jacquemus-title">
+    <div class="container">
+      <p class="project-back">
+        <a href="projets.html" class="btn btn-outline">Retour aux projets</a>
+      </p>
+
+      <div class="expertise-header">
+        <div class="section-eyebrow">Projet mené en entreprise</div>
+        <h1 class="section-title" id="projet-jacquemus-title">Déménagement Jacquemus</h1>
+        <div class="project-meta-tags" aria-label="Thématiques du projet">
+          <span class="tag tag-brown">Infrastructure</span>
+          <span class="tag tag-green">Réseau</span>
+          <span class="tag tag-orange">Logistique IT</span>
+          <span class="tag tag-brown">Remise en service</span>
+        </div>
+      </div>
+
+      <div class="proj-detail">
+        <p class="proj-body" style="margin-bottom:0">
+          Mission conduite dans le cadre d'un déménagement de site client (Jacquemus) chez Kuehne+Nagel. L'objectif était d'assurer la continuité des services IT durant le transfert physique des équipements, puis la remise en fonctionnement rapide et fiable sur le nouveau site.
+        </p>
+      </div>
+
+      <div class="proj-detail">
+        <div class="proj-section-title">Contexte</div>
+        <ul class="obj-list">
+          <li>Transfert de postes de travail, équipements réseau et périphériques</li>
+          <li>Coordination entre logistique terrain et exigences techniques IT</li>
+          <li>Impératif de reprise d'activité rapide sur le nouveau site</li>
+        </ul>
+      </div>
+
+      <div class="proj-detail">
+        <div class="proj-section-title">Missions réalisées</div>
+        <ul class="obj-list">
+          <li>Inventaire et préparation des équipements à déplacer</li>
+          <li>Déconnexion et sécurisation du matériel avant transfert</li>
+          <li>Participation au recâblage et à la remise en réseau sur le nouveau site</li>
+          <li>Remise en service des postes et vérification des accès utilisateurs</li>
+          <li>Contrôles fonctionnels finaux pour valider la continuité des services</li>
+        </ul>
+      </div>
+
+      <div class="proj-detail">
+        <div class="proj-section-title">Résultats</div>
+        <p class="proj-body" style="margin-bottom:0">
+          Le projet a permis un redémarrage opérationnel structuré sur le nouveau site avec une remise en service contrôlée des infrastructures et des accès. Cette mission a consolidé mes compétences en interventions terrain, organisation de migration physique et validation réseau post-déploiement.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Eliot Fiette</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
+  <span class="footer-anim" id="footerAnimWrap">
+    <button type="button" class="footer-anim-btn" id="footerAnimToggle" aria-pressed="true">Désactiver les animations du site</button>
+  </span>
+</footer>
+<script>
+(function () {
+  var wrap = document.getElementById('footerAnimWrap');
+  var btn = document.getElementById('footerAnimToggle');
+  if (!wrap || !btn) return;
+  function syncToggle() {
+    var on = document.documentElement.classList.contains('portfolio-anim-force');
+    btn.textContent = on
+      ? 'Désactiver les animations du site'
+      : 'Activer les animations du site';
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('footer-anim-btn--ghost', !on);
+  }
+  syncToggle();
+  btn.addEventListener('click', function () {
+    try {
+      if (document.documentElement.classList.contains('portfolio-anim-force')) localStorage.setItem('portfolioAnim', '0');
+      else localStorage.removeItem('portfolioAnim');
+    } catch (e) {}
+    location.reload();
+  });
+})();
+</script>
+<script src="main.js?v=28"></script>
+</body>
+</html>
