@@ -639,11 +639,10 @@
   }
   </style>
   <style>
-  /* Data Materialization Loader — SaaS / AI init screen (GPU-friendly, no heavy blur) */
+  /* Loader — même palette que style.css (fond marine, accent #3b82f6, halos bleu + violet type hero) */
   #loader {
-    --loader-cyan: #7df9ff;
-    --loader-base: #050507;
-    --loader-crescendo-flash: rgba(220, 252, 255, 0.11);
+    --loader-base: #03060e;
+    --loader-crescendo-flash: rgba(96, 165, 250, 0.13);
     position: fixed;
     inset: 0;
     /* Sous l’intro plein écran (25000) ; au-dessus du reste du site une fois l’intro terminée */
@@ -655,13 +654,14 @@
     transform: translateZ(0);
     background-color: var(--loader-base);
     background-image:
-      radial-gradient(ellipse 100% 80% at 50% 0%, rgba(30, 58, 90, 0.22) 0%, transparent 58%),
-      radial-gradient(ellipse 90% 70% at 50% 100%, rgba(12, 74, 110, 0.12) 0%, transparent 55%),
-      linear-gradient(180deg, rgba(14, 18, 28, 0.5) 0%, transparent 38%, rgba(5, 5, 7, 0.85) 100%);
-    color: #e8eef8;
+      radial-gradient(ellipse 100% 75% at 50% -10%, rgba(59, 130, 246, 0.17) 0%, transparent 54%),
+      radial-gradient(ellipse 88% 62% at 100% 34%, rgba(139, 92, 246, 0.11) 0%, transparent 52%),
+      radial-gradient(ellipse 78% 58% at 0% 72%, rgba(59, 130, 246, 0.07) 0%, transparent 48%),
+      linear-gradient(172deg, #050910 0%, #0a1424 40%, #080c14 58%, #060a12 100%);
+    color: var(--text, #e1e7f5);
   }
 
-  /* Grid + vignette + cyan wash + micro-noise — single composited layer above canvas */
+  /* Grille + vignette + micro-halos (lisibles avec le body du site) */
   #loader::before {
     content: "";
     position: absolute;
@@ -671,22 +671,22 @@
     transform: translateZ(0);
     opacity: 1;
     background-image:
-      radial-gradient(ellipse 75% 65% at 50% 50%, transparent 0%, rgba(5, 5, 7, 0.42) 62%, rgba(5, 5, 7, 0.94) 100%),
-      radial-gradient(ellipse 95% 55% at 50% 115%, rgba(34, 211, 238, 0.07) 0%, transparent 52%),
-      radial-gradient(ellipse 70% 50% at 50% -5%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+      radial-gradient(ellipse 75% 65% at 50% 50%, transparent 0%, rgba(5, 9, 16, 0.46) 62%, rgba(3, 6, 14, 0.93) 100%),
+      radial-gradient(ellipse 95% 55% at 50% 115%, rgba(59, 130, 246, 0.07) 0%, transparent 52%),
+      radial-gradient(ellipse 70% 50% at 50% -5%, rgba(139, 92, 246, 0.06) 0%, transparent 45%),
       repeating-linear-gradient(
         0deg,
         transparent 0,
         transparent 47px,
-        rgba(125, 249, 255, 0.035) 47px,
-        rgba(125, 249, 255, 0.035) 48px
+        rgba(59, 130, 246, 0.038) 47px,
+        rgba(59, 130, 246, 0.038) 48px
       ),
       repeating-linear-gradient(
         90deg,
         transparent 0,
         transparent 47px,
-        rgba(125, 249, 255, 0.035) 47px,
-        rgba(125, 249, 255, 0.035) 48px
+        rgba(59, 130, 246, 0.038) 47px,
+        rgba(59, 130, 246, 0.038) 48px
       ),
       repeating-radial-gradient(circle at 20% 30%, transparent 0, transparent 2px, rgba(255, 255, 255, 0.012) 2px, rgba(255, 255, 255, 0.012) 3px);
     background-size: auto, auto, auto, 48px 48px, 48px 48px, 7px 7px;
@@ -694,7 +694,7 @@
     mix-blend-mode: normal;
   }
 
-  /* Crescendo: soft luminance lift (GSAP drives opacity) */
+  /* Crescendo : léger lift bleu (GSAP pilote l’opacité) */
   .loader-crescendo {
     position: absolute;
     inset: 0;
@@ -704,7 +704,7 @@
     transform: translateZ(0);
     background:
       radial-gradient(ellipse 72% 58% at 50% 46%, var(--loader-crescendo-flash) 0%, transparent 62%),
-      radial-gradient(ellipse 100% 85% at 50% 50%, rgba(125, 249, 255, 0.06) 0%, transparent 55%);
+      radial-gradient(ellipse 100% 85% at 50% 50%, rgba(59, 130, 246, 0.065) 0%, transparent 55%);
     mix-blend-mode: screen;
   }
 
@@ -718,28 +718,9 @@
     opacity: 0.42;
     transform: translateZ(0);
     contain: strict;
-    box-shadow: inset 0 0 80px rgba(34, 211, 238, 0.06), inset 0 0 140px rgba(56, 189, 248, 0.04);
-  }
-
-  .loader-ui {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    pointer-events: none;
-    transform: translateZ(0);
-    will-change: opacity;
-  }
-
-  .loader-text {
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: clamp(0.62rem, 1.35vw, 0.8rem);
-    font-weight: 500;
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    color: rgba(125, 249, 255, 0.92);
-    text-shadow:
-      0 0 18px rgba(125, 249, 255, 0.22),
-      0 0 36px rgba(45, 212, 191, 0.12);
+    box-shadow:
+      inset 0 0 80px rgba(59, 130, 246, 0.075),
+      inset 0 0 140px rgba(139, 92, 246, 0.055);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -750,21 +731,25 @@
   </style>
 </head>
 <body>
-<div id="loader" aria-busy="true" aria-live="polite">
+<div id="loader" aria-busy="true" aria-live="polite" aria-label="Chargement">
   <canvas id="dataCanvas"></canvas>
   <div class="loader-crescendo" aria-hidden="true"></div>
-  <div class="loader-ui">
-    <div class="loader-text">INITIALIZING DATA...</div>
-  </div>
 </div>
 <script>
-/* #dataCanvas — premium : vagues de spawn, 800–1200 pts, profondeur simulée, convergence forte */
+/* #dataCanvas — une séquence : éclat central → grille ; puis implosion / flash (climax). */
 (function () {
   'use strict';
   var canvas = document.getElementById('dataCanvas');
   if (!canvas) return;
   var ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   if (!ctx) return;
+
+  /* Couleurs = tokens site (style.css : --accent / --accent2 / --accent3, fond #03060e) */
+  var C_BG_TRAIL = '5, 9, 16';
+  var C_ACC = '59, 130, 246';
+  var C_ACC2 = '96, 165, 250';
+  var C_ACC3 = '147, 197, 253';
+  var C_HI = '236, 244, 255';
 
   var dpr = 1;
   var W = 0;
@@ -780,24 +765,15 @@
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   } catch (e) {}
 
-  var CHAOS_MS = 2000;
-  var STRUCT_MS = 1280;
-  var PHYS_TOTAL_MS = CHAOS_MS + STRUCT_MS;
-  var FADE_MS = 520;
-  var TRAIL_ALPHA = 0.078;
-  var MAX_LINK_DIST = 102;
-  var CELL = 114;
-  var VMAX_BASE = 3.55;
-  var EDGE_CAP = 4;
-  var BKEY_MUL = 10007;
-  var NUM_WAVES = 20;
-  var WAVE_STEP_MS = 34;
-  var WAVE_JITTER_MS = 14;
-  var bucketStore = {};
-  var activeKeys = [];
+  /** Une idée : explosion depuis le centre → convergence nette vers la grille → climax court (implosion / éclair). */
+  var PHYS_TOTAL_MS = 1180;
+  var FADE_MS = 240;
+  var TRAIL_ALPHA = 0.072;
+  var VMAX_BASE = 5.2;
+  var GOLD = 0.6180339887498949;
   var TWO_PI = 6.283185307179586;
   var crescendoT0 = 0;
-  var CRESC_TOTAL = 0.56;
+  var CRESC_TOTAL = 0.42;
   var smoothDtNorm = 1;
 
   function clamp(n, a, b) {
@@ -814,23 +790,20 @@
     return t * t * (3 - 2 * t);
   }
 
-  function shuffle(arr) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = (Math.random() * (i + 1)) | 0;
-      var t = arr[i];
-      arr[i] = arr[j];
-      arr[j] = t;
-    }
-    return arr;
+  /** Quintic ease in-out (Apple-like smooth acceleration / deceleration) */
+  function easeInOutQuint(t) {
+    t = clamp(t, 0, 1);
+    return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
+  }
+
+  function fracGolden(n) {
+    var x = (n * GOLD) % 1;
+    return x < 0 ? x + 1 : x;
   }
 
   function particleCountMax() {
     var area = W * H;
-    return clamp(Math.round(area / 5800), 720, 1000) | 0;
-  }
-
-  function cellKey(ix, iy) {
-    return (ix + 4096) * BKEY_MUL + (iy + 4096);
+    return clamp(Math.round(area / 17500), 96, 168) | 0;
   }
 
   function layGridTargets() {
@@ -849,39 +822,35 @@
         pts.push({ tx: tx, ty: ty });
       }
     }
-    shuffle(pts);
     for (var i = 0; i < NMax; i++) {
       particles[i].tx = pts[i].tx;
       particles[i].ty = pts[i].ty;
     }
   }
 
-  function burstSpawn(p, elapsed) {
+  function burstSpawn(p) {
     var cx = W * 0.5;
     var cy = H * 0.48;
-    var ring = Math.min(W, H) * (0.28 + p.pz * 0.12);
-    var ang = p.phase * 2.17;
-    p.x = cx + Math.cos(ang) * ring * (0.75 + Math.random() * 0.45);
-    p.y = cy + Math.sin(ang * 0.93) * ring * (0.75 + Math.random() * 0.45);
-    var burst = 2.1 + p.pz * 2.4;
-    p.vx = (Math.random() - 0.5) * burst;
-    p.vy = (Math.random() - 0.5) * burst;
+    var ang = p.phase;
+    p.x = cx;
+    p.y = cy;
+    var burst = 3.4 + p.pz * 3.1;
+    p.vx = Math.cos(ang) * burst;
+    p.vy = Math.sin(ang) * burst;
     p.spawned = true;
   }
 
   function initParticles() {
     NMax = particleCountMax();
     particles = [];
-    var order = [];
     var k = 0;
-    for (k = 0; k < NMax; k++) order.push(k);
-    shuffle(order);
-    var perWave = Math.max(1, Math.ceil(NMax / NUM_WAVES));
     for (k = 0; k < NMax; k++) {
-      var wave = (k / perWave) | 0;
-      var bornAt = wave * WAVE_STEP_MS + Math.random() * WAVE_JITTER_MS;
-      var idx = order[k];
-      particles[idx] = {
+      var bornAt = 0;
+      var pz = fracGolden(k + 3);
+      var glow = 0.56 + pz * 0.42;
+      var r0 = 0.4 + fracGolden(k + 17) * 0.52;
+      var phase = (k * GOLD * TWO_PI) % TWO_PI;
+      particles[k] = {
         bornAt: bornAt,
         spawned: false,
         x: 0,
@@ -890,10 +859,10 @@
         vy: 0,
         tx: 0,
         ty: 0,
-        pz: Math.random(),
-        glow: 0.52 + Math.pow(Math.random(), 0.65) * 0.48,
-        r0: 0.38 + Math.random() * 0.55,
-        phase: Math.random() * TWO_PI,
+        pz: pz,
+        glow: glow,
+        r0: r0 * 1.35,
+        phase: phase,
       };
     }
     layGridTargets();
@@ -949,102 +918,6 @@
     resize();
   }
 
-  function resetBuckets() {
-    for (var z = 0; z < activeKeys.length; z++) {
-      bucketStore[activeKeys[z]].length = 0;
-    }
-    activeKeys.length = 0;
-  }
-
-  function pushCell(ix, iy, id) {
-    var k = cellKey(ix, iy);
-    var arr = bucketStore[k];
-    if (!arr) {
-      arr = [];
-      bucketStore[k] = arr;
-    }
-    if (arr.length === 0) activeKeys.push(k);
-    arr.push(id);
-  }
-
-  function buildBuckets(getx, gety, elapsed) {
-    resetBuckets();
-    var i = 0;
-    for (i = 0; i < NMax; i++) {
-      var p = particles[i];
-      if (elapsed < p.bornAt || !p.spawned) continue;
-      var x = getx(p);
-      var y = gety(p);
-      pushCell((x / CELL) | 0, (y / CELL) | 0, i);
-    }
-    return bucketStore;
-  }
-
-  function getList(buckets, ix, iy) {
-    return buckets[cellKey(ix, iy)];
-  }
-
-  function drawNetwork(buckets, ease, fade, useTargets, elapsed, linkPulse, crescMul) {
-    var maxD = MAX_LINK_DIST;
-    var maxD2 = maxD * maxD;
-    var lp = linkPulse == null ? 1 : linkPulse;
-    var cm = crescMul == null ? 1 : crescMul;
-    var reach = maxD * (0.12 + ease * ease * 0.88) * lp;
-    var reach2 = reach * reach;
-    var linkRamp = smoothstep(0.06, 0.78, ease) * fade * cm;
-    var dens = 0.16 + ease * ease * 0.68;
-
-    ctx.save();
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = 0.26;
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(120, 240, 255, 0.48)';
-
-    var i = 0;
-    for (i = 0; i < NMax; i++) {
-      var p = particles[i];
-      if (elapsed < p.bornAt || !p.spawned) continue;
-      var px = useTargets ? p.tx : p.x;
-      var py = useTargets ? p.ty : p.y;
-      var ix = (px / CELL) | 0;
-      var iy = (py / CELL) | 0;
-      var drawn = 0;
-
-      for (var ox = -1; ox <= 1 && drawn < EDGE_CAP; ox++) {
-        for (var oy = -1; oy <= 1 && drawn < EDGE_CAP; oy++) {
-          var list = getList(buckets, ix + ox, iy + oy);
-          if (!list) continue;
-          var t = 0;
-          for (t = 0; t < list.length && drawn < EDGE_CAP; t++) {
-            var j = list[t];
-            if (j <= i) continue;
-            var q = particles[j];
-            if (elapsed < q.bornAt || !q.spawned) continue;
-            var qx = useTargets ? q.tx : q.x;
-            var qy = useTargets ? q.ty : q.y;
-            var dx = qx - px;
-            var dy = qy - py;
-            var d2 = dx * dx + dy * dy;
-            if (d2 > maxD2 || d2 > reach2) continue;
-            var d = Math.sqrt(d2);
-            var fall = 1 - d / maxD;
-            var a = linkRamp * dens * fall * fall * (0.032 + p.pz * 0.01 + q.pz * 0.01);
-            if (a < 0.0018) continue;
-            ctx.globalAlpha = a;
-            ctx.beginPath();
-            ctx.moveTo(px, py);
-            ctx.lineTo(qx, qy);
-            ctx.stroke();
-            drawn++;
-          }
-        }
-      }
-    }
-
-    ctx.restore();
-  }
-
   function capVelocity(p, mul) {
     var m = mul == null ? 1 : mul;
     var vmax = VMAX_BASE * (0.72 + p.pz * 0.55) * m;
@@ -1057,20 +930,12 @@
   }
 
   function stepPhysics(elapsed, dtNorm) {
-    var wander = 0;
-    var attract = 0;
-    var damp = 0.985;
-    var snap = 0;
-    var vmaxMul = 1;
-    var tSec = elapsed * 0.001;
     var lock = elapsed >= PHYS_TOTAL_MS;
-
     if (lock) {
       var iL = 0;
       for (iL = 0; iL < NMax; iL++) {
         var pL = particles[iL];
-        if (elapsed < pL.bornAt) continue;
-        if (!pL.spawned) burstSpawn(pL, elapsed);
+        if (!pL.spawned) burstSpawn(pL);
         pL.x = pL.tx;
         pL.y = pL.ty;
         pL.vx = 0;
@@ -1079,45 +944,21 @@
       return;
     }
 
-    if (elapsed < CHAOS_MS) {
-      var u = elapsed / CHAOS_MS;
-      var ue = smootherstep(0, 1, u);
-      wander = 0.5 * (1 - ue * 0.8);
-      attract = 0.00028 + ue * ue * 0.00072;
-      damp = 0.988;
-    } else {
-      var v = clamp((elapsed - CHAOS_MS) / STRUCT_MS, 0, 1);
-      var ve = smootherstep(0, 1, v);
-      var accel = Math.sin(Math.PI * clamp(v / 0.52, 0, 1)) * (1 - smoothstep(0.56, 0.94, v));
-      var accelMul = 1 + 2.05 * accel;
-      vmaxMul = 1 + 0.42 * accel;
-      wander = 0.055 * (1 - smoothstep(0, 0.38, v)) * (1 - ve);
-      attract = (0.0038 + ve * ve * 0.042) * accelMul;
-      damp = 0.966 + smoothstep(0, 1, v) * 0.03;
-      snap = smoothstep(0.44, 1, v) * (0.09 + v * 0.44);
-    }
-
-    wander *= dtNorm;
-    attract *= dtNorm;
+    var t = clamp(elapsed / PHYS_TOTAL_MS, 0, 1);
+    var settle = easeInOutQuint(t);
+    var pullRamp = smootherstep(0.06, 0.94, t);
+    var attract = (0.00038 + pullRamp * pullRamp * 0.092) * dtNorm;
+    var damp = 0.971 + settle * 0.025;
+    var snap = smootherstep(0.56, 1, t) * (0.2 + settle * 0.55);
 
     var i = 0;
     for (i = 0; i < NMax; i++) {
       var p = particles[i];
-      if (elapsed < p.bornAt) continue;
-      if (!p.spawned) burstSpawn(p, elapsed);
+      if (!p.spawned) burstSpawn(p);
 
-      var dz = 0.76 + p.pz * 0.44;
+      var dz = 0.78 + p.pz * 0.42;
       var dx = p.tx - p.x;
       var dy = p.ty - p.y;
-      var dist2 = dx * dx + dy * dy;
-      var guided = 0.018 * dtNorm * dz * (1 - smoothstep(0, CHAOS_MS * 0.88, elapsed));
-      p.vx += dx * guided;
-      p.vy += dy * guided;
-
-      var env = elapsed < CHAOS_MS ? 1 : 1 - smootherstep(CHAOS_MS, CHAOS_MS + STRUCT_MS * 0.55, elapsed);
-      var wob = wander * 0.026 * (0.82 + (1 - p.pz) * 0.28) * (0.72 + 0.28 * env);
-      p.vx += Math.sin(p.phase + tSec * (1.32 + p.pz * 0.38)) * wob;
-      p.vy += Math.cos(p.phase * 1.09 + tSec * (1.1 + p.pz * 0.33)) * wob;
 
       p.vx *= damp;
       p.vy *= damp;
@@ -1125,80 +966,64 @@
       p.vx += dx * attract * dz;
       p.vy += dy * attract * dz;
 
-      var step = dz * (0.92 + p.pz * 0.1);
-      p.x += p.vx * step;
-      p.y += p.vy * step;
+      p.x += p.vx * dz * 0.96;
+      p.y += p.vy * dz * 0.96;
 
       if (snap > 0) {
-        var sk = snap * (0.9 + p.pz * 0.1);
+        var sk = snap * dz;
         p.x += dx * sk;
         p.y += dy * sk;
       }
 
-      if (elapsed >= CHAOS_MS && dist2 < 2.25) {
-        var pull = smoothstep(CHAOS_MS + STRUCT_MS * 0.62, PHYS_TOTAL_MS - 40, elapsed);
-        p.x += dx * (0.14 + pull * 0.58);
-        p.y += dy * (0.14 + pull * 0.58);
-        p.vx *= 0.82 - pull * 0.12;
-        p.vy *= 0.82 - pull * 0.12;
-      }
-
-      capVelocity(p, vmaxMul);
+      capVelocity(p, 1 + 0.62 * pullRamp);
     }
   }
 
   function initCrescendoDirs() {
-    var cx = W * 0.5;
-    var cy = H * 0.48;
     var i = 0;
     for (i = 0; i < NMax; i++) {
       var p = particles[i];
       if (!p.spawned) continue;
       p.x = p.tx;
       p.y = p.ty;
-      var dx = p.tx - cx;
-      var dy = p.ty - cy;
-      var d = Math.sqrt(dx * dx + dy * dy) || 1;
-      p._crux = dx / d;
-      p._cruy = dy / d;
     }
   }
 
   function crescShape(age) {
-    var u = clamp(age / CRESC_TOTAL, 0, 1.08);
-    var collapseK = smootherstep(0, 0.54, u);
-    var burstK = smootherstep(0.34, 0.52, u) * (1 - smootherstep(0.5, 0.72, u));
-    var dissK = smootherstep(0.54, 1, u);
-    var linkFade = 1 - smootherstep(0.4, 0.94, u);
-    return { u: u, collapseK: collapseK, burstK: burstK, dissK: dissK, linkFade: linkFade };
+    var u = clamp(age / CRESC_TOTAL, 0, 1.12);
+    var pull = smootherstep(0.03, 0.44, u) * (1 - smootherstep(0.46, 0.88, u));
+    var pop = smootherstep(0.4, 0.54, u) * (1 - smootherstep(0.5, 0.74, u));
+    var dissK = smootherstep(0.52, 1, u);
+    var glowPulse = smootherstep(0.26, 0.46, u) * (1 - smootherstep(0.48, 0.82, u));
+    return {
+      u: u,
+      pull: pull,
+      pop: pop,
+      dissK: dissK,
+      glowPulse: glowPulse,
+    };
   }
 
   function syncCrescendoPositions(cv) {
     var cx = W * 0.5;
     var cy = H * 0.48;
     var minWH = Math.min(W, H);
-    var collapseK = cv.collapseK;
-    var burstK = cv.burstK;
-    var u = cv.u;
-    var drift = smoothstep(0.66, 1, u) * minWH * 0.011;
+    var pull = cv.pull;
+    var pop = cv.pop;
     var i = 0;
     for (i = 0; i < NMax; i++) {
       var p = particles[i];
       if (!p.spawned) continue;
-      var ux = p._crux;
-      var uy = p._cruy;
-      if (ux == null || uy == null) {
-        var ddx = p.tx - cx;
-        var ddy = p.ty - cy;
-        var dd = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
-        ux = ddx / dd;
-        uy = ddy / dd;
-      }
-      var xC = p.tx + (cx - p.tx) * collapseK;
-      var yC = p.ty + (cy - p.ty) * collapseK;
-      var rBurst = minWH * (0.03 + p.pz * 0.042) * burstK;
-      p.x = xC + ux * (rBurst + drift);
-      p.y = yC + uy * (rBurst + drift);
+      var dx = p.tx - cx;
+      var dy = p.ty - cy;
+      var d = Math.sqrt(dx * dx + dy * dy) || 1;
+      var ux = dx / d;
+      var uy = dy / d;
+      var bx = p.tx - ux * d * pull * 0.9;
+      var by = p.ty - uy * d * pull * 0.9;
+      var popR = minWH * 0.052 * pop;
+      p.x = bx + ux * popR;
+      p.y = by + uy * popR;
     }
   }
 
@@ -1223,101 +1048,65 @@
     lastFrameT = now;
     if (rawDt > 64) rawDt = 64;
     var targetNorm = clamp(rawDt / 16.6667, 0.81, 1.19);
-    smoothDtNorm += (targetNorm - smoothDtNorm) * 0.28;
+    smoothDtNorm += (targetNorm - smoothDtNorm) * 0.2;
     var dtNorm = smoothDtNorm;
 
     var elapsed = now - t0;
     var cAge = crescendoT0 > 0 ? (now - crescendoT0) * 0.001 : -1;
     var cv = cAge >= 0 ? crescShape(cAge) : null;
 
-    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 300), 0, 1);
-    var alignEase = smootherstep(0, 1, alignProg);
-    if (cv) alignEase = alignEase * (1 - 0.55 * cv.dissK);
+    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 80), 0, 1);
+    var alignEase = easeInOutQuint(alignProg);
+    if (cv) alignEase = alignEase * (1 - 0.52 * cv.dissK);
     var fade = smootherstep(0, FADE_MS, elapsed);
-    var post = Math.max(0, elapsed - PHYS_TOTAL_MS);
-    var breath = 1 + 0.024 * Math.sin(post * 0.00135 + 0.2);
-    var linkPulse = elapsed >= PHYS_TOTAL_MS && !cv ? 1 + 0.012 * Math.sin(post * 0.001) : 1;
-    if (cv) linkPulse = 1 + 0.012 * cv.burstK;
 
-    ctx.fillStyle = 'rgba(5, 5, 7, ' + (cv ? TRAIL_ALPHA + 0.028 * cv.burstK : TRAIL_ALPHA) + ')';
+    ctx.fillStyle =
+      'rgba(' +
+      C_BG_TRAIL +
+      ', ' +
+      (cv ? TRAIL_ALPHA + 0.048 * cv.pop + 0.028 * (cv.glowPulse || 0) : TRAIL_ALPHA) +
+      ')';
     ctx.fillRect(0, 0, W, H);
 
     if (cv) syncCrescendoPositions(cv);
     else stepPhysics(elapsed, dtNorm);
 
-    var buckets = buildBuckets(
-      function (p) {
-        return p.x;
-      },
-      function (p) {
-        return p.y;
-      },
-      elapsed,
-    );
-    drawNetwork(buckets, alignEase, fade, false, elapsed, linkPulse, cv ? cv.linkFade : 1);
-
-    var i = 0;
-    var hi = [];
-    var lo = [];
-    for (i = 0; i < NMax; i++) {
-      var pi = particles[i];
-      if (elapsed < pi.bornAt || !pi.spawned) continue;
-      if (pi.glow > 0.88) hi.push(i);
-      else lo.push(i);
-    }
+    var glowExtra = cv && cv.glowPulse ? cv.glowPulse * 9 : 0;
 
     ctx.save();
-    ctx.shadowBlur = 3;
-    ctx.shadowColor = 'rgba(45, 212, 191, 0.22)';
-    for (i = 0; i < lo.length; i++) {
-      var pi = particles[lo[i]];
-      var rad = pi.r0 * (0.58 + pi.pz * 0.82) * (elapsed >= PHYS_TOTAL_MS && !cv ? breath : 1);
+    ctx.shadowBlur = 5 + glowExtra;
+    ctx.shadowColor =
+      'rgba(' +
+      C_ACC +
+      ', ' +
+      (0.24 + (cv && cv.glowPulse ? cv.glowPulse * 0.2 : 0)) +
+      ')';
+
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
+      var pi = particles[i];
+      if (!pi.spawned) continue;
+
+      var rad = pi.r0 * (0.62 + pi.pz * 0.38);
       if (cv) {
-        rad *= (1 - 0.3 * cv.collapseK) * (1 + 0.12 * cv.burstK) * (0.82 + 0.18 * (1 - cv.dissK));
+        rad *=
+          (1 - 0.44 * cv.pull) * (1 + 0.26 * cv.pop) * (0.82 + 0.18 * (1 - cv.dissK));
       }
-      var tw = 0.46 + 0.52 * alignEase;
+      var tw = 0.4 + 0.6 * alignEase;
       var alpha =
         fade *
         tw *
         (cv
-          ? (0.52 + 0.26 * cv.burstK) * (1 - 0.94 * Math.pow(cv.dissK, 0.62))
-          : elapsed >= PHYS_TOTAL_MS
-            ? 0.56 + 0.08 * Math.sin(pi.phase * 0.08 + post * 0.0012)
-            : 0.5 + 0.18 * Math.sin(pi.phase + elapsed * 0.00105)) *
+          ? (0.54 + 0.28 * cv.pop + 0.15 * (cv.glowPulse || 0)) *
+            (1 - 0.93 * Math.pow(cv.dissK, 0.58))
+          : 0.54 + 0.2 * smootherstep(0, PHYS_TOTAL_MS, elapsed)) *
         pi.glow;
       alpha = clamp(alpha, 0, 1);
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = 'rgba(210, 248, 255, 0.88)';
+      ctx.fillStyle =
+        pi.glow > 0.88 ? 'rgba(' + C_HI + ', 0.96)' : 'rgba(' + C_ACC3 + ', 0.92)';
       ctx.beginPath();
       ctx.arc(pi.x, pi.y, rad, 0, TWO_PI);
-      ctx.fill();
-    }
-    ctx.restore();
-
-    ctx.save();
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = 'rgba(125, 249, 255, 0.32)';
-    for (i = 0; i < hi.length; i++) {
-      var ph = particles[hi[i]];
-      var radh = ph.r0 * (0.62 + ph.pz * 0.95) * (elapsed >= PHYS_TOTAL_MS && !cv ? breath : 1);
-      if (cv) {
-        radh *= (1 - 0.28 * cv.collapseK) * (1 + 0.14 * cv.burstK) * (0.82 + 0.18 * (1 - cv.dissK));
-      }
-      var twh = 0.52 + 0.46 * alignEase;
-      var alph =
-        fade *
-        twh *
-        (cv
-          ? (0.62 + 0.32 * cv.burstK) * (1 - 0.92 * Math.pow(cv.dissK, 0.6))
-          : elapsed >= PHYS_TOTAL_MS
-            ? 0.66 + 0.1 * Math.sin(ph.phase * 0.07 + post * 0.00115)
-            : 0.62 + 0.2 * Math.sin(ph.phase + elapsed * 0.00125)) *
-        ph.glow;
-      alph = clamp(alph, 0, 1);
-      ctx.globalAlpha = alph;
-      ctx.fillStyle = 'rgba(245, 255, 255, 0.95)';
-      ctx.beginPath();
-      ctx.arc(ph.x, ph.y, radh, 0, TWO_PI);
       ctx.fill();
     }
     ctx.restore();
@@ -1332,27 +1121,17 @@
       particles[si].spawned = true;
       particles[si].bornAt = 0;
     }
-    ctx.fillStyle = '#050507';
+    ctx.fillStyle = '#050910';
     ctx.fillRect(0, 0, W, H);
-    var bk = buildBuckets(
-      function (p) {
-        return p.tx;
-      },
-      function (p) {
-        return p.ty;
-      },
-      1e9,
-    );
-    drawNetwork(bk, 1, 1, true, 1e9, 1, 1);
     ctx.save();
-    ctx.shadowBlur = 4;
-    ctx.shadowColor = 'rgba(125, 249, 255, 0.32)';
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = 'rgba(' + C_ACC2 + ', 0.38)';
     var i = 0;
     for (i = 0; i < NMax; i++) {
       var p = particles[i];
-      var rad = p.r0 * (0.58 + p.pz * 0.82);
-      ctx.globalAlpha = 0.72 * p.glow;
-      ctx.fillStyle = 'rgba(210, 255, 255, 0.9)';
+      var rad = p.r0 * (0.62 + p.pz * 0.38);
+      ctx.globalAlpha = 0.78 * p.glow;
+      ctx.fillStyle = 'rgba(' + C_ACC3 + ', 0.92)';
       ctx.beginPath();
       ctx.arc(p.tx, p.ty, rad, 0, TWO_PI);
       ctx.fill();
@@ -1384,8 +1163,8 @@
     'portfolio:loaderCrescendo',
     function (e) {
       var d = e && e.detail && e.detail.durationMs;
-      if (typeof d === 'number' && d >= 280 && d <= 680) CRESC_TOTAL = d * 0.001;
-      else CRESC_TOTAL = 0.56;
+      if (typeof d === 'number' && d >= 300 && d <= 520) CRESC_TOTAL = d * 0.001;
+      else CRESC_TOTAL = 0.42;
       crescendoT0 = performance.now();
       initCrescendoDirs();
     },
@@ -2636,6 +2415,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.min.js?v=42" defer></script>
+<script src="main.min.js?v=44" defer></script>
 </body>
 </html>

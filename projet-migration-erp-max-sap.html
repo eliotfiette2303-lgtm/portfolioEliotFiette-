@@ -63,6 +63,79 @@
     margin-top: 0.25rem;
   }
   .project-page .project-back { margin-bottom: 1.75rem; }
+
+  /* Alignement cartes / titres / listes comme les fiches projet (#ecole) — scope isolé */
+  #page-projet-erp .divider {
+    margin: 2rem 0;
+    border: none;
+    height: 1px;
+    background: var(--border);
+  }
+  #page-projet-erp .proj-detail {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 2.5rem;
+    margin-bottom: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  #page-projet-erp .proj-detail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+  }
+  #page-projet-erp .proj-detail:hover { border-color: var(--border2); }
+  #page-projet-erp .proj-body {
+    color: var(--text2);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+  #page-projet-erp .proj-section-title {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  #page-projet-erp .obj-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  #page-projet-erp .obj-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  #page-projet-erp .obj-list li::before {
+    content: '\2192';
+    color: var(--accent2);
+    font-family: var(--mono);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  #page-projet-erp .proj-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
   </style>
 </head>
 <body>
@@ -84,8 +157,8 @@
   </div>
 </header>
 
-<main>
-  <section id="entreprise" class="single-section project-page" aria-labelledby="projet-erp-title">
+<main id="page-projet-erp">
+  <section class="single-section project-page" aria-labelledby="projet-erp-title">
     <div class="container">
       <p class="project-back">
         <a href="projets.html" class="btn btn-outline">Retour aux projets</a>
@@ -99,40 +172,58 @@
           <span class="tag tag-green">Migration</span>
           <span class="tag tag-orange">Recette</span>
           <span class="tag tag-brown">Support utilisateurs</span>
+          <span class="tag tag-green">GPO</span>
+          <span class="tag tag-orange">WDS</span>
         </div>
       </div>
 
-      <div class="proj-detail">
-        <p class="proj-body" style="margin-bottom:0">
-          Projet réalisé dans un contexte industriel chez SPS Medical, avec une transition de l'ERP historique MAX vers SAP. L'objectif principal était d'assurer une migration maîtrisée, sans rupture d'activité, en coordonnant la préparation technique, la validation des données et l'accompagnement des équipes.
-        </p>
-      </div>
+      <div class="proj-stack">
+        <div class="proj-detail">
+          <p class="proj-body">
+            Projet réalisé dans un contexte industriel chez SPS Medical, avec une transition de l'ERP historique MAX vers SAP.
+            L'objectif principal était d'assurer une migration maîtrisée, sans rupture d'activité, en coordonnant la préparation technique,
+            la validation des données et l'accompagnement des équipes.
+          </p>
+        </div>
 
-      <div class="proj-detail">
-        <div class="proj-section-title">Contexte</div>
-        <ul class="obj-list">
-          <li>Environnement critique : qualité, traçabilité et continuité de production</li>
-          <li>ERP central pour les flux opérationnels et administratifs</li>
-          <li>Coexistence temporaire des procédures MAX et SAP durant la bascule</li>
-        </ul>
-      </div>
+        <div class="divider" aria-hidden="true"></div>
 
-      <div class="proj-detail">
-        <div class="proj-section-title">Missions réalisées</div>
-        <ul class="obj-list">
-          <li>Préparation des environnements et vérification des prérequis techniques</li>
-          <li>Contrôle des flux et des données avant migration</li>
-          <li>Participation aux phases de test (recette) et suivi des anomalies</li>
-          <li>Contribution à la bascule opérationnelle MAX → SAP</li>
-          <li>Support utilisateurs pendant et après la transition</li>
-        </ul>
-      </div>
+        <div class="proj-detail">
+          <h2 class="proj-section-title">Contexte</h2>
+          <ul class="obj-list">
+            <li>Environnement critique : qualité, traçabilité et continuité de production</li>
+            <li>ERP central pour les flux opérationnels et administratifs</li>
+            <li>Coexistence temporaire des procédures MAX et SAP durant la bascule</li>
+          </ul>
+        </div>
 
-      <div class="proj-detail">
-        <div class="proj-section-title">Résultats</div>
-        <p class="proj-body" style="margin-bottom:0">
-          La migration a permis de sécuriser le passage vers SAP avec une transition contrôlée et un accompagnement terrain efficace. Cette mission m'a permis de renforcer mes compétences en coordination de projet, validation technique et support utilisateurs en environnement sensible.
-        </p>
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="proj-detail">
+          <h2 class="proj-section-title">Missions réalisées</h2>
+          <ul class="obj-list">
+            <li>Création de GPO de test pour préparer la bascule SAP</li>
+            <li>Configuration de plus de 20 PC portables via un serveur WDS en modifiant l'ordre de boot dans le BIOS ; ces PC ont été configurés pour les formations SAP de l'entreprise</li>
+            <li>Personnalisation des profils utilisateurs SAP en leur attribuant le bon mandant selon leur métier (mandant qualité, production, etc.)</li>
+            <li>Participation aux réunions de Plan de Reprise d'Activité (PRA)</li>
+            <li>Préparation des environnements et vérification des prérequis techniques</li>
+            <li>Contrôle des flux et des données avant migration</li>
+            <li>Participation aux phases de test (recette) et suivi des anomalies</li>
+            <li>Contribution à la bascule opérationnelle MAX → SAP</li>
+            <li>Support utilisateurs pendant et après la transition</li>
+          </ul>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="proj-detail">
+          <h2 class="proj-section-title">Résultats</h2>
+          <p class="proj-body">
+            La migration a permis de sécuriser le passage vers SAP avec une transition contrôlée et un accompagnement terrain efficace.
+            Cette mission m'a permis de renforcer mes compétences en coordination de projet, validation technique, configuration système
+            et support utilisateurs en environnement sensible.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -168,6 +259,6 @@
   });
 })();
 </script>
-<script src="main.min.js?v=41"></script>
+<script src="main.min.js?v=42" defer></script>
 </body>
 </html>

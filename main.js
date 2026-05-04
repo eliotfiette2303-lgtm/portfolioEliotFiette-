@@ -563,28 +563,28 @@ window.addEventListener('resize', () => {
     });
 
     /**
-     * Data materialization — courbes non linéaires (power / expo / sine), micro-délais de lecture,
-     * CRESC_MS alignée avec le canvas (index).
+     * Data materialization — chaos + structure puis climax court (~420 ms) : ruée → compression → éclair / dissolve.
+     * CRESC_MS synchronisée avec index (#dataCanvas).
      */
     const phaseHold = { _: 0 };
-    const ANT_START = 2.1;
-    const CRESC_START = 2.78;
-    const CRESC_MS = 560;
+    const ANT_START = 0.06;
+    const CRESC_START = 1.46;
+    const CRESC_MS = 420;
     const CRESC_END = CRESC_START + CRESC_MS * 0.001;
-    const CANVAS_STOP = CRESC_END + 0.28;
-    const REVEAL_T = CRESC_END + 0.42;
-    const LOADER_FADE_START = CRESC_END + 0.1;
+    const CANVAS_STOP = CRESC_END + 0.1;
+    const REVEAL_T = 1.48;
+    const LOADER_FADE_START = CRESC_END + 0.03;
     const revealEase = 'expo.out';
 
-    tl.to(phaseHold, { _: 1, duration: 4.28, ease: 'none' }, 0);
+    tl.to(phaseHold, { _: 1, duration: 2.55, ease: 'none' }, 0);
 
     if (dataCanvas) {
-      tl.to(dataCanvas, { opacity: 0.49, duration: 0.32, ease: 'power3.out' }, ANT_START);
-      tl.to(dataCanvas, { opacity: 0.33, duration: 0.26, ease: 'expo.in' }, ANT_START + 0.28);
+      tl.to(dataCanvas, { opacity: 0.47, duration: 0.16, ease: 'power3.out' }, ANT_START);
+      tl.to(dataCanvas, { opacity: 0.34, duration: 0.14, ease: 'expo.in' }, ANT_START + 0.14);
     }
     if (loaderUi) {
-      tl.fromTo(loaderUi, { scale: 1 }, { scale: 1.016, duration: 0.26, ease: 'power2.out' }, ANT_START + 0.06);
-      tl.to(loaderUi, { scale: 1, duration: 0.3, ease: 'power3.in' }, ANT_START + 0.3);
+      tl.fromTo(loaderUi, { scale: 1 }, { scale: 1.012, duration: 0.14, ease: 'power2.out' }, ANT_START + 0.04);
+      tl.to(loaderUi, { scale: 1, duration: 0.16, ease: 'power3.in' }, ANT_START + 0.16);
     }
 
     tl.add(() => {
@@ -602,19 +602,25 @@ window.addEventListener('resize', () => {
       tl.fromTo(
         loaderFlash,
         { opacity: 0 },
-        { opacity: 0.17, duration: 0.1, ease: 'power3.out' },
-        CRESC_START + 0.24,
+        { opacity: 0.13, duration: 0.06, ease: 'power3.out' },
+        CRESC_START + 0.1,
       );
-      tl.to(loaderFlash, { opacity: 0, duration: 0.52, ease: 'expo.out' }, CRESC_START + 0.3);
+      tl.to(loaderFlash, { opacity: 0, duration: 0.28, ease: 'expo.out' }, CRESC_START + 0.14);
+    }
+
+    if (loader) {
+      tl.set(loader, { filter: 'blur(0px)' }, CRESC_START);
+      tl.to(loader, { filter: 'blur(0.65px)', duration: 0.05, ease: 'sine.inOut' }, CRESC_START + 0.08);
+      tl.to(loader, { filter: 'blur(0px)', duration: 0.11, ease: 'power2.out' }, CRESC_START + 0.12);
     }
 
     if (dataCanvas) {
-      tl.to(dataCanvas, { opacity: 0.56, duration: 0.36, ease: 'power3.out' }, CRESC_START - 0.02);
-      tl.to(dataCanvas, { opacity: 0.93, duration: 0.12, ease: 'expo.in' }, CRESC_START + 0.22);
-      tl.to(dataCanvas, { filter: 'brightness(1.12)', duration: 0.1, ease: 'sine.out' }, CRESC_START + 0.17);
-      tl.to(dataCanvas, { filter: 'brightness(1)', duration: 0.42, ease: 'power3.out' }, CRESC_START + 0.25);
-      tl.to(dataCanvas, { opacity: 0.2, duration: 0.18, ease: 'power2.inOut' }, CRESC_START + 0.34);
-      tl.to(dataCanvas, { opacity: 0, duration: 1.08, ease: 'expo.out' }, CRESC_START + 0.46);
+      tl.to(dataCanvas, { opacity: 0.52, duration: 0.18, ease: 'power3.out' }, CRESC_START - 0.02);
+      tl.to(dataCanvas, { opacity: 0.9, duration: 0.08, ease: 'expo.in' }, CRESC_START + 0.11);
+      tl.to(dataCanvas, { filter: 'brightness(1.14)', duration: 0.06, ease: 'sine.out' }, CRESC_START + 0.09);
+      tl.to(dataCanvas, { filter: 'brightness(1)', duration: 0.22, ease: 'power3.out' }, CRESC_START + 0.14);
+      tl.to(dataCanvas, { opacity: 0.16, duration: 0.1, ease: 'power2.inOut' }, CRESC_START + 0.2);
+      tl.to(dataCanvas, { opacity: 0, duration: 0.44, ease: 'expo.out' }, CRESC_START + 0.26);
     }
 
     tl.add(() => {
@@ -624,7 +630,7 @@ window.addEventListener('resize', () => {
     }, CANVAS_STOP);
 
     if (loaderText) {
-      tl.to(loaderText, { opacity: 0, duration: 0.54, ease: 'power4.in' }, CRESC_START + 0.1);
+      tl.to(loaderText, { opacity: 0, duration: 0.28, ease: 'power3.in' }, CRESC_START + 0.04);
     }
 
     if (app && revealTargets.length) {
@@ -635,8 +641,8 @@ window.addEventListener('resize', () => {
             opacity: 1,
             filter: 'blur(0px)',
             y: 0,
-            duration: 1.12,
-            stagger: { amount: 0.48, from: 'start', ease: 'power2.inOut' },
+            duration: 0.52,
+            stagger: { amount: 0.14, from: 'start', ease: 'power2.inOut' },
             ease: revealEase,
           },
           REVEAL_T,
@@ -648,8 +654,8 @@ window.addEventListener('resize', () => {
           {
             opacity: 1,
             y: 0,
-            duration: 0.94,
-            stagger: { amount: 0.42, from: 'start', ease: 'power2.inOut' },
+            duration: 0.46,
+            stagger: { amount: 0.12, from: 'start', ease: 'power2.inOut' },
             ease: 'expo.out',
           },
           REVEAL_T,
@@ -662,7 +668,7 @@ window.addEventListener('resize', () => {
           opacity: 1,
           filter: animOn ? 'blur(0px)' : 'none',
           scale: 1,
-          duration: animOn ? 1.08 : 0.86,
+          duration: animOn ? 0.52 : 0.44,
           ease: revealEase,
         },
         REVEAL_T,
@@ -670,12 +676,12 @@ window.addEventListener('resize', () => {
     }
 
     if (loader) {
-      tl.set(loader, { pointerEvents: 'none' }, LOADER_FADE_START - 0.1);
-      tl.to(loader, { opacity: 0, duration: 0.88, ease: 'expo.out' }, LOADER_FADE_START);
+      tl.set(loader, { pointerEvents: 'none' }, LOADER_FADE_START - 0.08);
+      tl.to(loader, { opacity: 0, duration: 0.42, ease: 'expo.out' }, LOADER_FADE_START);
     }
   }
 
-  const POST_LOAD_DELAY_MS = 400;
+  const POST_LOAD_DELAY_MS = 150;
   let loadPhaseScheduled = false;
 
   function beginDataMaterializationAndTimeline() {
