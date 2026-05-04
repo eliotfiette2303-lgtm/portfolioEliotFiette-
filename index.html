@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.min.css?v=53"/>
+  <link rel="stylesheet" href="style.min.css?v=54"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -639,29 +639,37 @@
   }
   </style>
   <style>
-  /* Loader — même palette que style.css (fond marine, accent #3b82f6, halos bleu + violet type hero) */
+  /* Loader = prolongation du body (style.css) : mêmes tokens, pas d’effet « HUD / sci-fi » isolé */
   #loader {
-    --loader-base: #03060e;
-    --loader-crescendo-flash: rgba(96, 165, 250, 0.13);
+    --loader-crescendo-flash: rgba(96, 165, 250, 0.12);
     position: fixed;
     inset: 0;
-    /* Sous l’intro plein écran (25000) ; au-dessus du reste du site une fois l’intro terminée */
     z-index: 15000;
     display: grid;
     place-items: center;
     overflow: hidden;
     contain: strict;
     transform: translateZ(0);
-    background-color: var(--loader-base);
+    background-color: #03060e;
     background-image:
-      radial-gradient(ellipse 100% 75% at 50% -10%, rgba(59, 130, 246, 0.17) 0%, transparent 54%),
-      radial-gradient(ellipse 88% 62% at 100% 34%, rgba(139, 92, 246, 0.11) 0%, transparent 52%),
-      radial-gradient(ellipse 78% 58% at 0% 72%, rgba(59, 130, 246, 0.07) 0%, transparent 48%),
-      linear-gradient(172deg, #050910 0%, #0a1424 40%, #080c14 58%, #060a12 100%);
-    color: var(--text, #e1e7f5);
+      radial-gradient(rgba(59, 130, 246, 0.055) 1.1px, transparent 1.2px),
+      radial-gradient(ellipse 115% 90% at 50% -12%, rgba(59, 130, 246, 0.17), transparent 52%),
+      radial-gradient(ellipse 80% 65% at 100% 32%, rgba(124, 58, 237, 0.12), transparent 52%),
+      radial-gradient(ellipse 75% 60% at 0% 68%, rgba(14, 165, 233, 0.08), transparent 50%),
+      radial-gradient(ellipse 55% 45% at 72% 88%, rgba(59, 130, 246, 0.06), transparent 48%),
+      linear-gradient(172deg, #050910 0%, #0a1424 38%, #080c14 58%, #060a12 100%);
+    background-size:
+      30px 30px,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%;
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    background-position: center, center top, center, center, center, center;
+    color: var(--text);
   }
 
-  /* Grille + vignette + micro-halos (lisibles avec le body du site) */
   #loader::before {
     content: "";
     position: absolute;
@@ -671,30 +679,11 @@
     transform: translateZ(0);
     opacity: 1;
     background-image:
-      radial-gradient(ellipse 75% 65% at 50% 50%, transparent 0%, rgba(5, 9, 16, 0.46) 62%, rgba(3, 6, 14, 0.93) 100%),
-      radial-gradient(ellipse 95% 55% at 50% 115%, rgba(59, 130, 246, 0.07) 0%, transparent 52%),
-      radial-gradient(ellipse 70% 50% at 50% -5%, rgba(139, 92, 246, 0.06) 0%, transparent 45%),
-      repeating-linear-gradient(
-        0deg,
-        transparent 0,
-        transparent 47px,
-        rgba(59, 130, 246, 0.038) 47px,
-        rgba(59, 130, 246, 0.038) 48px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent 0,
-        transparent 47px,
-        rgba(59, 130, 246, 0.038) 47px,
-        rgba(59, 130, 246, 0.038) 48px
-      ),
-      repeating-radial-gradient(circle at 20% 30%, transparent 0, transparent 2px, rgba(255, 255, 255, 0.012) 2px, rgba(255, 255, 255, 0.012) 3px);
-    background-size: auto, auto, auto, 48px 48px, 48px 48px, 7px 7px;
-    background-position: center, center, center, center, center, 0 0;
+      radial-gradient(ellipse 78% 68% at 50% 50%, transparent 0%, rgba(8, 12, 20, 0.42) 58%, rgba(3, 6, 14, 0.88) 100%),
+      radial-gradient(ellipse 92% 52% at 50% 108%, rgba(59, 130, 246, 0.055) 0%, transparent 54%);
     mix-blend-mode: normal;
   }
 
-  /* Crescendo : léger lift bleu (GSAP pilote l’opacité) */
   .loader-crescendo {
     position: absolute;
     inset: 0;
@@ -703,8 +692,8 @@
     opacity: 0;
     transform: translateZ(0);
     background:
-      radial-gradient(ellipse 72% 58% at 50% 46%, var(--loader-crescendo-flash) 0%, transparent 62%),
-      radial-gradient(ellipse 100% 85% at 50% 50%, rgba(59, 130, 246, 0.065) 0%, transparent 55%);
+      radial-gradient(ellipse 68% 54% at 50% 44%, var(--loader-crescendo-flash) 0%, transparent 58%),
+      radial-gradient(ellipse 100% 88% at 50% 52%, var(--accent-dim) 0%, transparent 56%);
     mix-blend-mode: screen;
   }
 
@@ -715,18 +704,375 @@
     width: 100%;
     height: 100%;
     display: block;
-    opacity: 0.42;
+    opacity: 0.4;
     transform: translateZ(0);
     contain: strict;
     box-shadow:
-      inset 0 0 80px rgba(59, 130, 246, 0.075),
-      inset 0 0 140px rgba(139, 92, 246, 0.055);
+      inset 0 0 72px rgba(59, 130, 246, 0.055),
+      inset 0 0 120px rgba(124, 58, 237, 0.045);
   }
 
   @media (prefers-reduced-motion: reduce) {
     #dataCanvas {
-      opacity: 0.35;
+      opacity: 0.36;
     }
+  }
+  </style>
+  <style>
+  /* ══ Veille — tableau de bord (couleurs = tokens site, scope #veille uniquement) ══ */
+  #veille.veille-dashboard .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  #veille.veille-dashboard .veille-dash__container {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  #veille.veille-dashboard .veille-dash__head {
+    margin-bottom: 2rem;
+  }
+  #veille.veille-dashboard .veille-dash__title {
+    font-family: var(--display);
+    font-size: clamp(1.35rem, 3.2vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin: 0 0 0.75rem;
+    color: var(--text);
+  }
+  #veille.veille-dashboard .veille-dash__subtitle {
+    font-size: 0.95rem;
+    color: var(--text2);
+    line-height: 1.65;
+    margin: 0 0 1rem;
+    max-width: 42rem;
+  }
+  #veille.veille-dashboard .veille-dash__role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: rgba(59, 130, 246, 0.06);
+  }
+  #veille.veille-dashboard .veille-dash__kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 900px) {
+    #veille.veille-dashboard .veille-dash__kpis {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    #veille.veille-dashboard .veille-dash__kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+  #veille.veille-dashboard .veille-dash__kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #veille.veille-dashboard .veille-dash__kpi:hover {
+    border-color: var(--border2);
+    box-shadow: var(--glow);
+  }
+  #veille.veille-dashboard .veille-dash__kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  #veille.veille-dashboard .veille-dash__kpi-icon--mint {
+    background: rgba(52, 211, 153, 0.1);
+    border-color: rgba(52, 211, 153, 0.22);
+  }
+  #veille.veille-dashboard .veille-dash__kpi-icon--amber {
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.22);
+  }
+  #veille.veille-dashboard .veille-dash__kpi-icon--rose {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.22);
+  }
+  #veille.veille-dashboard .veille-dash__kpi-val {
+    font-family: var(--display);
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1;
+  }
+  #veille.veille-dashboard .veille-dash__kpi-label {
+    font-size: 0.72rem;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.35rem;
+  }
+  #veille.veille-dashboard .veille-dash__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+  #veille.veille-dashboard .veille-dash__search {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.65rem 1rem;
+    font-family: var(--body);
+    font-size: 0.9rem;
+    color: var(--text);
+    background: rgba(13, 22, 42, 0.65);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #veille.veille-dashboard .veille-dash__search:focus {
+    border-color: var(--border2);
+  }
+  #veille.veille-dashboard .veille-dash__toolbar .btn {
+    white-space: nowrap;
+  }
+  #veille.veille-dashboard .veille-dash__filter-block {
+    margin-bottom: 1.35rem;
+  }
+  #veille.veille-dashboard .veille-dash__filter-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text3);
+    margin-bottom: 0.55rem;
+    display: block;
+  }
+  #veille.veille-dashboard .veille-dash__chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  #veille.veille-dashboard .veille-dash__chip {
+    font-family: var(--body);
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  #veille.veille-dashboard .veille-dash__chip:hover {
+    color: var(--text);
+    border-color: var(--border2);
+  }
+  #veille.veille-dashboard .veille-dash__chip.is-active {
+    color: var(--accent2);
+    border-color: rgba(59, 130, 246, 0.45);
+    background: rgba(59, 130, 246, 0.12);
+  }
+  #veille.veille-dashboard .veille-dash__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.15rem;
+  }
+  @media (max-width: 960px) {
+    #veille.veille-dashboard .veille-dash__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    #veille.veille-dashboard .veille-dash__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  #veille.veille-dashboard .veille-dash__card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.18s;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  #veille.veille-dashboard .veille-dash__card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), rgba(139, 92, 246, 0.8));
+    opacity: 0.85;
+  }
+  #veille.veille-dashboard .veille-dash__card:hover {
+    border-color: var(--border2);
+    box-shadow: var(--glow);
+    transform: translateY(-2px);
+  }
+  #veille.veille-dashboard .veille-dash__card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  #veille.veille-dashboard .veille-dash__card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+  #veille.veille-dashboard .veille-dash__shield {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  #veille.veille-dashboard .veille-dash__shield--high {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.28);
+  }
+  #veille.veille-dashboard .veille-dash__shield--mid {
+    background: rgba(249, 115, 22, 0.1);
+    border: 1px solid rgba(249, 115, 22, 0.28);
+  }
+  #veille.veille-dashboard .veille-dash__badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: flex-end;
+  }
+  #veille.veille-dashboard .veille-dash__badge-new {
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--accent2);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+  }
+  #veille.veille-dashboard .veille-dash__crit {
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  #veille.veille-dashboard .veille-dash__crit--high {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+  }
+  #veille.veille-dashboard .veille-dash__crit--mid {
+    background: rgba(249, 115, 22, 0.12);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+  }
+  #veille.veille-dashboard .veille-dash__card-title {
+    font-family: var(--display);
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    color: var(--text);
+    margin: 0;
+  }
+  #veille.veille-dashboard .veille-dash__meta {
+    font-size: 0.78rem;
+    color: var(--text3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    align-items: center;
+  }
+  #veille.veille-dashboard .veille-dash__meta strong {
+    color: var(--text2);
+    font-weight: 500;
+  }
+  #veille.veille-dashboard .veille-dash__excerpt {
+    font-size: 0.85rem;
+    color: var(--text2);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #veille.veille-dashboard .veille-dash__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  #veille.veille-dashboard .veille-dash__tag {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(59, 130, 246, 0.08);
+    color: var(--accent2);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+  }
+  #veille.veille-dashboard .veille-dash__card-cta {
+    margin-top: auto;
+    padding-top: 0.25rem;
+  }
+  #veille.veille-dashboard .veille-dash__card-cta span {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent2);
+  }
+  #veille.veille-dashboard .veille-dash__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text2);
+    font-size: 0.95rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius2);
+    background: rgba(13, 22, 42, 0.35);
   }
   </style>
 </head>
@@ -736,7 +1082,7 @@
   <div class="loader-crescendo" aria-hidden="true"></div>
 </div>
 <script>
-/* #dataCanvas — une séquence : éclat central → grille ; puis implosion / flash (climax). */
+/* #dataCanvas — formation « data core » pseudo-3D : orbite → convergence → cœur → implosion / burst (< 2,2 s) */
 (function () {
   'use strict';
   var canvas = document.getElementById('dataCanvas');
@@ -744,12 +1090,12 @@
   var ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   if (!ctx) return;
 
-  /* Couleurs = tokens site (style.css : --accent / --accent2 / --accent3, fond #03060e) */
-  var C_BG_TRAIL = '5, 9, 16';
+  /* RGB alignés sur style.css : --bg #080c14, --accent / --accent2 / --accent3, --text */
+  var C_BG_TRAIL = '8, 12, 20';
   var C_ACC = '59, 130, 246';
   var C_ACC2 = '96, 165, 250';
   var C_ACC3 = '147, 197, 253';
-  var C_HI = '236, 244, 255';
+  var C_HI = '225, 231, 245';
 
   var dpr = 1;
   var W = 0;
@@ -765,15 +1111,21 @@
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   } catch (e) {}
 
-  /** Une idée : explosion depuis le centre → convergence nette vers la grille → climax court (implosion / éclair). */
-  var PHYS_TOTAL_MS = 1180;
-  var FADE_MS = 240;
-  var TRAIL_ALPHA = 0.072;
-  var VMAX_BASE = 5.2;
+  /**
+   * Phases (ms), durée totale ≤ 2,2 s : P1 orbite · P2 convergence · P3 verrou grille · P4 impact.
+   * P2 et P3 comprimés ; impact conserve ~0,44 s pour le « wow » sans dépasser le plafond.
+   */
+  var P1 = 400;
+  var P2 = 900;
+  var P3 = 1240;
+  var P4 = 1680;
+  var IMPACT_MS = P4 - P3;
+  var IMPACT_SNAP_MS = 34;
+  var PHYS_TOTAL_MS = P4;
+  var FADE_MS = 140;
+  var TRAIL_ALPHA = 0.082;
   var GOLD = 0.6180339887498949;
   var TWO_PI = 6.283185307179586;
-  var crescendoT0 = 0;
-  var CRESC_TOTAL = 0.42;
   var smoothDtNorm = 1;
 
   function clamp(n, a, b) {
@@ -790,10 +1142,67 @@
     return t * t * (3 - 2 * t);
   }
 
-  /** Quintic ease in-out (Apple-like smooth acceleration / deceleration) */
   function easeInOutQuint(t) {
     t = clamp(t, 0, 1);
     return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
+  }
+
+  function easeOutCubic(t) {
+    t = clamp(t, 0, 1);
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function easeInQuart(t) {
+    t = clamp(t, 0, 1);
+    return t * t * t * t;
+  }
+
+  function mixEaseP2(uRaw, sharp) {
+    var sm = easeInOutQuint(uRaw);
+    var sn = easeInQuart(uRaw);
+    var snap = easeOutCubic(uRaw);
+    return sm * (1 - sharp) + (sn * 0.45 + snap * 0.55) * sharp;
+  }
+
+  /** Intrinsic z → motion multiplier (closer / higher z = faster). */
+  function depthSpeedMul(z) {
+    return 0.62 + 0.52 * z;
+  }
+
+  /**
+   * Screen-space depth: combines particle z with radial “bowl” so center reads farther (deeper)
+   * than edges — sells perspective on a flat canvas.
+   */
+  function effectiveDepth(p, cx, cy, minWH) {
+    var nx = p.x - cx;
+    var ny = p.y - cy;
+    var dist = Math.sqrt(nx * nx + ny * ny);
+    var dn = clamp(dist / (minWH * 0.52), 0, 1.15);
+    var bowl = 1 - dn;
+    return clamp(p.z - 0.26 * bowl * bowl + 0.14 * dn * dn, 0.06, 1);
+  }
+
+  /** Project world x,y + depth into 2D screen coords: subtle radial scale + camera parallax. */
+  function projectParticleScreen(p, elapsed, cx, cy, minWH, zEff) {
+    var nx = p.x - cx;
+    var ny = p.y - cy;
+    var dn = 0;
+    var d = Math.sqrt(nx * nx + ny * ny);
+    if (d > 1e-4) {
+      dn = clamp(d / (minWH * 0.5), 0, 1);
+    }
+    var zScale = 0.94 + 0.06 * zEff;
+    var edgePull = 1 - 0.04 * dn * (1 - zEff * 0.85);
+    var sx = cx + nx * zScale * edgePull;
+    var sy = cy + ny * (0.96 + 0.04 * zEff) * (1 - 0.025 * dn * dn);
+
+    var camT = elapsed * 0.00158;
+    var camX = Math.sin(camT) * minWH * 0.0088 + Math.sin(camT * 2.05) * minWH * 0.0031;
+    var camY = Math.cos(camT * 1.11) * minWH * 0.0068 + Math.cos(camT * 1.73) * minWH * 0.0024;
+    var parallaxW = 0.24 + 0.76 * (1 - zEff);
+    sx += camX * parallaxW;
+    sy += camY * parallaxW * 0.92;
+    return { sx: sx, sy: sy };
   }
 
   function fracGolden(n) {
@@ -803,7 +1212,7 @@
 
   function particleCountMax() {
     var area = W * H;
-    return clamp(Math.round(area / 17500), 96, 168) | 0;
+    return clamp(Math.round(area / 12000), 130, 220) | 0;
   }
 
   function layGridTargets() {
@@ -828,44 +1237,61 @@
     }
   }
 
-  function burstSpawn(p) {
+  function initBurstDirs() {
     var cx = W * 0.5;
     var cy = H * 0.48;
-    var ang = p.phase;
-    p.x = cx;
-    p.y = cy;
-    var burst = 3.4 + p.pz * 3.1;
-    p.vx = Math.cos(ang) * burst;
-    p.vy = Math.sin(ang) * burst;
-    p.spawned = true;
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
+      var p = particles[i];
+      var rdx = p.tx - cx;
+      var rdy = p.ty - cy;
+      var rl = Math.sqrt(rdx * rdx + rdy * rdy) || 1;
+      p.outx = rdx / rl;
+      p.outy = rdy / rl;
+    }
   }
 
   function initParticles() {
     NMax = particleCountMax();
     particles = [];
+    var minWH = Math.min(W, H);
+    var cx = W * 0.5;
+    var cy = H * 0.48;
     var k = 0;
     for (k = 0; k < NMax; k++) {
-      var bornAt = 0;
-      var pz = fracGolden(k + 3);
-      var glow = 0.56 + pz * 0.42;
-      var r0 = 0.4 + fracGolden(k + 17) * 0.52;
-      var phase = (k * GOLD * TWO_PI) % TWO_PI;
+      var z = fracGolden(k + 2);
+      var glow = 0.52 + z * 0.46;
+      var r0 = 0.42 + fracGolden(k + 19) * 0.48;
+      var ang = (k * GOLD * TWO_PI) % TWO_PI;
+      var speedMul = 0.58 + fracGolden(k + 31) * 0.92;
+      var orbitDir = fracGolden(k + 47) < 0.42 ? -1 : 1;
       particles[k] = {
-        bornAt: bornAt,
-        spawned: false,
-        x: 0,
-        y: 0,
+        spawned: true,
+        x: cx,
+        y: cy,
         vx: 0,
         vy: 0,
         tx: 0,
         ty: 0,
-        pz: pz,
+        z: z,
         glow: glow,
-        r0: r0 * 1.35,
-        phase: phase,
+        r0: r0 * 1.28,
+        ang: ang,
+        rOrb: minWH * (0.055 + 0.135 * z) * (0.88 + 0.28 * fracGolden(k + 53)),
+        outx: 0,
+        outy: 0,
+        speedMul: speedMul,
+        orbitDir: orbitDir,
+        wobblePh: TWO_PI * fracGolden(k + 61),
+        chaosSeed: TWO_PI * fracGolden(k + 67),
+        burstSeed: TWO_PI * fracGolden(k + 71),
+        precess: (fracGolden(k + 79) - 0.5) * 0.0011,
+        easeSharp: 0.15 + fracGolden(k + 83) * 0.85,
+        pullBias: 0.82 + fracGolden(k + 89) * 0.38,
       };
     }
     layGridTargets();
+    initBurstDirs();
   }
 
   function resize() {
@@ -892,13 +1318,15 @@
         p.y *= sy;
         p.tx *= sx;
         p.ty *= sy;
-        p.vx *= 0.95;
-        p.vy *= 0.95;
+        p.vx *= 0.92;
+        p.vy *= 0.92;
+        p.rOrb *= (sx + sy) * 0.5;
       }
       var newMax = particleCountMax();
       if (newMax !== NMax) initParticles();
       else {
         layGridTargets();
+        initBurstDirs();
       }
     } else {
       initParticles();
@@ -918,113 +1346,144 @@
     resize();
   }
 
-  function capVelocity(p, mul) {
-    var m = mul == null ? 1 : mul;
-    var vmax = VMAX_BASE * (0.72 + p.pz * 0.55) * m;
-    var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-    if (sp > vmax) {
-      var inv = vmax / sp;
-      p.vx *= inv;
-      p.vy *= inv;
-    }
-  }
-
-  function stepPhysics(elapsed, dtNorm) {
-    var lock = elapsed >= PHYS_TOTAL_MS;
-    if (lock) {
-      var iL = 0;
-      for (iL = 0; iL < NMax; iL++) {
-        var pL = particles[iL];
-        if (!pL.spawned) burstSpawn(pL);
-        pL.x = pL.tx;
-        pL.y = pL.ty;
-        pL.vx = 0;
-        pL.vy = 0;
-      }
-      return;
-    }
-
-    var t = clamp(elapsed / PHYS_TOTAL_MS, 0, 1);
-    var settle = easeInOutQuint(t);
-    var pullRamp = smootherstep(0.06, 0.94, t);
-    var attract = (0.00038 + pullRamp * pullRamp * 0.092) * dtNorm;
-    var damp = 0.971 + settle * 0.025;
-    var snap = smootherstep(0.56, 1, t) * (0.2 + settle * 0.55);
-
-    var i = 0;
-    for (i = 0; i < NMax; i++) {
-      var p = particles[i];
-      if (!p.spawned) burstSpawn(p);
-
-      var dz = 0.78 + p.pz * 0.42;
-      var dx = p.tx - p.x;
-      var dy = p.ty - p.y;
-
-      p.vx *= damp;
-      p.vy *= damp;
-
-      p.vx += dx * attract * dz;
-      p.vy += dy * attract * dz;
-
-      p.x += p.vx * dz * 0.96;
-      p.y += p.vy * dz * 0.96;
-
-      if (snap > 0) {
-        var sk = snap * dz;
-        p.x += dx * sk;
-        p.y += dy * sk;
-      }
-
-      capVelocity(p, 1 + 0.62 * pullRamp);
-    }
-  }
-
-  function initCrescendoDirs() {
-    var i = 0;
-    for (i = 0; i < NMax; i++) {
-      var p = particles[i];
-      if (!p.spawned) continue;
-      p.x = p.tx;
-      p.y = p.ty;
-    }
-  }
-
-  function crescShape(age) {
-    var u = clamp(age / CRESC_TOTAL, 0, 1.12);
-    var pull = smootherstep(0.03, 0.44, u) * (1 - smootherstep(0.46, 0.88, u));
-    var pop = smootherstep(0.4, 0.54, u) * (1 - smootherstep(0.5, 0.74, u));
-    var dissK = smootherstep(0.52, 1, u);
-    var glowPulse = smootherstep(0.26, 0.46, u) * (1 - smootherstep(0.48, 0.82, u));
-    return {
-      u: u,
-      pull: pull,
-      pop: pop,
-      dissK: dissK,
-      glowPulse: glowPulse,
-    };
-  }
-
-  function syncCrescendoPositions(cv) {
+  function advanceCore(elapsed, dtNorm) {
     var cx = W * 0.5;
     var cy = H * 0.48;
     var minWH = Math.min(W, H);
-    var pull = cv.pull;
-    var pop = cv.pop;
+    if (elapsed >= PHYS_TOTAL_MS) return;
+
     var i = 0;
     for (i = 0; i < NMax; i++) {
       var p = particles[i];
-      if (!p.spawned) continue;
-      var dx = p.tx - cx;
-      var dy = p.ty - cy;
-      var d = Math.sqrt(dx * dx + dy * dy) || 1;
-      var ux = dx / d;
-      var uy = dy / d;
-      var bx = p.tx - ux * d * pull * 0.9;
-      var by = p.ty - uy * d * pull * 0.9;
-      var popR = minWH * 0.052 * pop;
-      p.x = bx + ux * popR;
-      p.y = by + uy * popR;
+      var z = p.z;
+      var zz = 0.38 + 0.62 * z;
+      var sm = p.speedMul;
+      var od = p.orbitDir;
+      var zVel = depthSpeedMul(z);
+      var orbitFast = 1.05 + z * 0.42;
+
+      if (elapsed < P1) {
+        var spawn = smootherstep(0, 165, elapsed);
+        var tP1 = elapsed / P1;
+        var ramp = 1 + easeOutCubic(tP1) * 0.62;
+        var burstCore = Math.pow(Math.max(0, Math.sin(elapsed * 0.051 + p.burstSeed)), 14);
+        var burstSide = Math.pow(Math.max(0, Math.sin(elapsed * 0.079 + p.chaosSeed * 1.7)), 22);
+        var angVel =
+          (0.0105 + 0.024 * z) *
+          sm *
+          od *
+          orbitFast *
+          ramp *
+          zVel *
+          (1 + burstCore * (1.15 + 0.85 * sm) + burstSide * 0.55);
+        p.ang += angVel * dtNorm;
+        p.ang += p.precess * elapsed * dtNorm * 0.018 * zVel;
+        var wobR =
+          1 +
+          0.085 * Math.sin(elapsed * 0.012 + p.wobblePh) +
+          0.062 * Math.sin(elapsed * 0.028 + p.ang * 2.1) +
+          0.04 * Math.sin(elapsed * 0.019 + p.chaosSeed);
+        var r = p.rOrb * spawn * wobR * (0.9 + 0.1 * Math.sin(elapsed * 0.0165 + p.ang));
+        var ell = 0.875 + 0.07 * z + 0.02 * Math.sin(elapsed * 0.009 + p.wobblePh);
+        var tilt = 0.03 * Math.sin(elapsed * 0.014 + p.chaosSeed * 0.5);
+        var ca = Math.cos(p.ang + tilt);
+        var sa = Math.sin(p.ang + tilt);
+        var chaosAmp = minWH * 0.014 * spawn * (0.55 + 0.45 * sm) * zVel;
+        var cxo = chaosAmp * Math.sin(elapsed * 0.033 + p.chaosSeed);
+        var cyo = chaosAmp * Math.cos(elapsed * 0.024 + p.chaosSeed * 1.27);
+        var micro = chaosAmp * 0.35 * Math.sin(elapsed * 0.067 + p.burstSeed * 0.3);
+        p.x = cx + ca * r * zz + cxo + micro * od;
+        p.y = cy + sa * r * ell * zz + cyo;
+        p.vx = 0;
+        p.vy = 0;
+      } else if (elapsed < P2) {
+        var span = P2 - P1;
+        var uRaw = clamp((elapsed - P1) / span, 0, 1);
+        var u = mixEaseP2(uRaw, p.easeSharp);
+        var spiral = (1 - uRaw) * (1 - uRaw);
+        var orbitLeg = spiral * spiral * (0.62 + 0.38 * z);
+        var burstOrbit = Math.pow(Math.max(0, Math.sin(elapsed * 0.062 + p.burstSeed)), 16);
+        p.ang +=
+          (0.0048 + 0.017 * z) *
+          sm *
+          od *
+          dtNorm *
+          orbitLeg *
+          orbitFast *
+          zVel *
+          (1 + burstOrbit * 0.95);
+        var radShrink = 0.26 + 0.74 * uRaw;
+        var ox = cx + Math.cos(p.ang) * p.rOrb * zz * radShrink;
+        var oy = cy + Math.sin(p.ang) * p.rOrb * 0.89 * zz * radShrink;
+        var uwWire = u * u * (1.22 - 0.22 * u);
+        var uw = uwWire * (0.92 + 0.08 * easeOutCubic(uRaw));
+        p.x = ox + (p.tx - ox) * uw;
+        p.y = oy + (p.ty - oy) * uw;
+        var chDec = (1 - uRaw) * (1 - uRaw);
+        var chAmp = minWH * 0.0095 * chDec * (0.8 + 0.5 * sm) * zVel;
+        p.x += chAmp * Math.sin(elapsed * 0.044 + p.chaosSeed);
+        p.y += chAmp * Math.cos(elapsed * 0.038 + p.chaosSeed * 0.91);
+        p.x += chAmp * 0.45 * Math.sin(elapsed * 0.103 + p.wobblePh);
+      } else if (elapsed < P3) {
+        var span3 = P3 - P2;
+        var u2raw = (elapsed - P2) / span3;
+        var u2mix =
+          easeInOutQuint(u2raw) * (1 - p.easeSharp * 0.35) +
+          easeOutCubic(u2raw) * (p.easeSharp * 0.35);
+        var u2 = u2mix;
+        var k = (0.085 + u2 * u2 * 0.74) * zz * p.pullBias * zVel;
+        var burstPull = Math.pow(Math.max(0, Math.sin(elapsed * 0.088 + p.burstSeed)), 20);
+        k *= 1 + burstPull * 0.22 * sm;
+        var dx = p.tx - p.x;
+        var dy = p.ty - p.y;
+        p.vx = dx * k;
+        p.vy = dy * k;
+        var slam = 1 + smootherstep(0.5, 1, u2raw) * (0.72 + 0.35 * sm);
+        var stepMul = (1.38 + 0.22 * sm) * zVel;
+        p.x += p.vx * dtNorm * slam * stepMul;
+        p.y += p.vy * dtNorm * slam * stepMul;
+      } else {
+        var tImp = elapsed - P3;
+        var snapU = clamp(tImp / IMPACT_SNAP_MS, 0, 1);
+        var collapse = 1 - Math.pow(1 - snapU, 4.2);
+        var bx = p.tx + (cx - p.tx) * collapse;
+        var by = p.ty + (cy - p.ty) * collapse;
+        var post = Math.max(0, tImp - IMPACT_SNAP_MS * 0.45);
+        var burstEnv = smootherstep(0, 42, post) * (1 - smootherstep(95, 205, post));
+        var br =
+          minWH *
+          (0.048 + 0.048 * z) *
+          burstEnv *
+          (0.92 + 0.12 * sm) *
+          (0.88 + 0.14 * zVel);
+        p.x = bx + p.outx * br;
+        p.y = by + p.outy * br * 0.88;
+      }
     }
+  }
+
+  /** Pic d’énergie court sur les halos particules (phase impact). */
+  function impactGlowStrength(elapsed) {
+    if (elapsed < P3) return 0;
+    var t = elapsed - P3;
+    return smootherstep(0, 32, t) * (1 - smootherstep(200, IMPACT_MS, t)) * 1.2;
+  }
+
+  /** Les points s’éteignent vite après le flash — pas de traîne longue. */
+  function impactParticleFade(elapsed) {
+    if (elapsed < P3) return 1;
+    var t = elapsed - P3;
+    return clamp(1 - smootherstep(145, IMPACT_MS - 25, t), 0, 1);
+  }
+
+  /** Flash plein écran sobre (screen), pic ~60–160 ms après P3. */
+  function impactScreenFlashAlpha(elapsed) {
+    if (elapsed < P3) return 0;
+    var t = elapsed - P3;
+    var rise = smootherstep(0, 52, t);
+    var body = smootherstep(48, 155, t) * (1 - smootherstep(145, 300, t));
+    var fall = 1 - smootherstep(280, IMPACT_MS + 20, t);
+    return rise * (0.35 + 0.65 * body) * fall;
   }
 
   function drawFrame(now) {
@@ -1046,68 +1505,86 @@
     }
     var rawDt = now - lastFrameT;
     lastFrameT = now;
-    if (rawDt > 64) rawDt = 64;
-    var targetNorm = clamp(rawDt / 16.6667, 0.81, 1.19);
-    smoothDtNorm += (targetNorm - smoothDtNorm) * 0.2;
+    if (rawDt > 48) rawDt = 48;
+    var targetNorm = clamp(rawDt / 16.6667, 0.82, 1.18);
+    smoothDtNorm += (targetNorm - smoothDtNorm) * 0.28;
     var dtNorm = smoothDtNorm;
 
     var elapsed = now - t0;
-    var cAge = crescendoT0 > 0 ? (now - crescendoT0) * 0.001 : -1;
-    var cv = cAge >= 0 ? crescShape(cAge) : null;
-
-    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 80), 0, 1);
-    var alignEase = easeInOutQuint(alignProg);
-    if (cv) alignEase = alignEase * (1 - 0.52 * cv.dissK);
+    var glowFlash = impactGlowStrength(elapsed);
+    var impactFade = impactParticleFade(elapsed);
     var fade = smootherstep(0, FADE_MS, elapsed);
+    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 36), 0, 1);
+    var alignEase = easeInOutQuint(alignProg);
 
-    ctx.fillStyle =
-      'rgba(' +
-      C_BG_TRAIL +
-      ', ' +
-      (cv ? TRAIL_ALPHA + 0.048 * cv.pop + 0.028 * (cv.glowPulse || 0) : TRAIL_ALPHA) +
-      ')';
+    var trailBoost =
+      TRAIL_ALPHA +
+      glowFlash * 0.065 +
+      (elapsed >= P3 ? 0.045 + smootherstep(P3, P3 + 95, elapsed) * 0.035 : 0);
+    ctx.fillStyle = 'rgba(' + C_BG_TRAIL + ', ' + trailBoost + ')';
     ctx.fillRect(0, 0, W, H);
 
-    if (cv) syncCrescendoPositions(cv);
-    else stepPhysics(elapsed, dtNorm);
+    advanceCore(elapsed, dtNorm);
 
-    var glowExtra = cv && cv.glowPulse ? cv.glowPulse * 9 : 0;
+    var cxD = W * 0.5;
+    var cyD = H * 0.48;
+    var minWHD = Math.min(W, H);
+    var depthOrder = [];
+    var jd = 0;
+    for (jd = 0; jd < NMax; jd++) {
+      depthOrder.push({
+        idx: jd,
+        zEff: effectiveDepth(particles[jd], cxD, cyD, minWHD),
+      });
+    }
+    depthOrder.sort(function (a, b) {
+      return a.zEff - b.zEff;
+    });
 
     ctx.save();
-    ctx.shadowBlur = 5 + glowExtra;
-    ctx.shadowColor =
-      'rgba(' +
-      C_ACC +
-      ', ' +
-      (0.24 + (cv && cv.glowPulse ? cv.glowPulse * 0.2 : 0)) +
-      ')';
 
-    var i = 0;
-    for (i = 0; i < NMax; i++) {
-      var pi = particles[i];
+    for (jd = 0; jd < depthOrder.length; jd++) {
+      var entry = depthOrder[jd];
+      var pi = particles[entry.idx];
       if (!pi.spawned) continue;
-
-      var rad = pi.r0 * (0.62 + pi.pz * 0.38);
-      if (cv) {
-        rad *=
-          (1 - 0.44 * cv.pull) * (1 + 0.26 * cv.pop) * (0.82 + 0.18 * (1 - cv.dissK));
-      }
-      var tw = 0.4 + 0.6 * alignEase;
+      var zEff = entry.zEff;
+      var pr = projectParticleScreen(pi, elapsed, cxD, cyD, minWHD, zEff);
+      var depthScale = 0.36 + 0.64 * Math.pow(zEff, 1.08);
+      var rad = pi.r0 * (0.52 + zEff * 0.48) * depthScale;
+      var tw = 0.38 + 0.62 * alignEase;
+      var brightMul = 0.44 + 0.56 * zEff;
       var alpha =
         fade *
+        impactFade *
         tw *
-        (cv
-          ? (0.54 + 0.28 * cv.pop + 0.15 * (cv.glowPulse || 0)) *
-            (1 - 0.93 * Math.pow(cv.dissK, 0.58))
-          : 0.54 + 0.2 * smootherstep(0, PHYS_TOTAL_MS, elapsed)) *
+        brightMul *
+        (0.52 + 0.28 * smootherstep(P2, P3, elapsed) + glowFlash * 0.26) *
         pi.glow;
       alpha = clamp(alpha, 0, 1);
       ctx.globalAlpha = alpha;
-      ctx.fillStyle =
-        pi.glow > 0.88 ? 'rgba(' + C_HI + ', 0.96)' : 'rgba(' + C_ACC3 + ', 0.92)';
+      ctx.shadowBlur = 3.5 + zEff * 11 + glowFlash * (13 + zEff * 4);
+      ctx.shadowColor = 'rgba(' + C_ACC + ', ' + (0.12 + 0.26 * zEff + glowFlash * 0.34) + ')';
+      var hi = pi.glow > 0.88 && zEff > 0.72;
+      ctx.fillStyle = hi
+        ? 'rgba(' + C_HI + ', ' + (0.84 + 0.14 * zEff) + ')'
+        : 'rgba(' + C_ACC3 + ', ' + (0.48 + 0.46 * zEff) + ')';
       ctx.beginPath();
-      ctx.arc(pi.x, pi.y, rad, 0, TWO_PI);
+      ctx.arc(pr.sx, pr.sy, rad, 0, TWO_PI);
       ctx.fill();
+    }
+
+    var flashA = impactScreenFlashAlpha(elapsed);
+    if (flashA > 0.004) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      var rg = ctx.createRadialGradient(cxD, cyD, 0, cxD, cyD, minWHD * 0.72);
+      rg.addColorStop(0, 'rgba(225, 231, 245, ' + (flashA * 0.085) + ')');
+      rg.addColorStop(0.38, 'rgba(147, 197, 253, ' + (flashA * 0.055) + ')');
+      rg.addColorStop(0.68, 'rgba(167, 139, 250, ' + (flashA * 0.032) + ')');
+      rg.addColorStop(1, 'rgba(8, 12, 20, 0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
     }
     ctx.restore();
 
@@ -1119,21 +1596,42 @@
     var si = 0;
     for (si = 0; si < NMax; si++) {
       particles[si].spawned = true;
-      particles[si].bornAt = 0;
     }
-    ctx.fillStyle = '#050910';
+    ctx.fillStyle = '#080c14';
     ctx.fillRect(0, 0, W, H);
-    ctx.save();
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = 'rgba(' + C_ACC2 + ', 0.38)';
+    var cxS = W * 0.5;
+    var cyS = H * 0.48;
+    var minWHS = Math.min(W, H);
+    var orderS = [];
     var i = 0;
     for (i = 0; i < NMax; i++) {
-      var p = particles[i];
-      var rad = p.r0 * (0.62 + p.pz * 0.38);
-      ctx.globalAlpha = 0.78 * p.glow;
-      ctx.fillStyle = 'rgba(' + C_ACC3 + ', 0.92)';
+      var pp = particles[i];
+      var fake = { x: pp.tx, y: pp.ty, z: pp.z };
+      orderS.push({
+        p: pp,
+        zEff: effectiveDepth(fake, cxS, cyS, minWHS),
+      });
+    }
+    orderS.sort(function (a, b) {
+      return a.zEff - b.zEff;
+    });
+    ctx.save();
+    for (i = 0; i < orderS.length; i++) {
+      var row = orderS[i];
+      var p = row.p;
+      var zEff = row.zEff;
+      var pr = projectParticleScreen({ x: p.tx, y: p.ty, z: p.z }, 0, cxS, cyS, minWHS, zEff);
+      var depthScale = 0.36 + 0.64 * Math.pow(zEff, 1.08);
+      var rad = p.r0 * (0.52 + zEff * 0.48) * depthScale;
+      ctx.globalAlpha = 0.78 * p.glow * (0.5 + 0.5 * zEff);
+      ctx.shadowBlur = 4 + zEff * 8;
+      ctx.shadowColor = 'rgba(' + C_ACC2 + ', ' + (0.22 + 0.28 * zEff) + ')';
+      ctx.fillStyle =
+        zEff > 0.75 && p.glow > 0.88
+          ? 'rgba(' + C_HI + ', ' + (0.82 + 0.14 * zEff) + ')'
+          : 'rgba(' + C_ACC3 + ', ' + (0.52 + 0.42 * zEff) + ')';
       ctx.beginPath();
-      ctx.arc(p.tx, p.ty, rad, 0, TWO_PI);
+      ctx.arc(pr.sx, pr.sy, rad, 0, TWO_PI);
       ctx.fill();
     }
     ctx.restore();
@@ -1159,17 +1657,6 @@
     }
     window.addEventListener('portfolio:dataLoaderStart', kick, { passive: true });
   }
-  window.addEventListener(
-    'portfolio:loaderCrescendo',
-    function (e) {
-      var d = e && e.detail && e.detail.durationMs;
-      if (typeof d === 'number' && d >= 300 && d <= 520) CRESC_TOTAL = d * 0.001;
-      else CRESC_TOTAL = 0.42;
-      crescendoT0 = performance.now();
-      initCrescendoDirs();
-    },
-    { passive: true },
-  );
   armStartAfterIntro();
 })();
 </script>
@@ -1581,12 +2068,12 @@
       <a href="projet-demenagement-jacquemus.html" class="proj-featured-card" data-projet-jacquemus="1">
         <div class="proj-number">04</div>
         <div class="proj-meta">Projet Entreprise</div>
-        <div class="proj-name">Déménagement Jacquemus</div>
-        <p class="proj-text">Déménagement des infrastructures IT : transfert du matériel, remise en réseau et validation des services sur le nouveau site.</p>
+        <div class="proj-name">Déménagement IT – Jacquemus</div>
+        <p class="proj-text">Déploiement de la cellule client chez SPS Medical : postes, imprimantes, PRA et continuité d'activité sur le nouvel emplacement.</p>
         <div class="proj-tech">
           <span class="tag tag-brown">Infrastructure</span>
-          <span class="tag tag-green">Réseau</span>
-          <span class="tag tag-orange">Déménagement</span>
+          <span class="tag tag-green">Helpdesk</span>
+          <span class="tag tag-orange">Imprimantes</span>
         </div>
         <div class="proj-link">Voir le détail →</div>
       </a>
@@ -1794,29 +2281,29 @@
         </div>
       </article>
 
-      <article class="exp-pair exp-pair--logistics" id="demenagement-jacquemus">
-        <div class="exp-pair__rail exp-pair__rail--warm" aria-hidden="true"></div>
+      <article class="exp-pair" id="demenagement-jacquemus">
+        <div class="exp-pair__rail" aria-hidden="true"></div>
         <aside class="exp-pair__company">
-          <span class="exp-pair__kicker">Kuehne+Nagel · alternance depuis septembre 2025</span>
-          <h3 class="exp-pair__brand">Kuehne+Nagel</h3>
-          <p class="exp-pair__sector">Logistique &amp; supply chain · opérations terrain</p>
+          <span class="exp-pair__kicker">SPS Médicale · projet client terrain</span>
+          <h3 class="exp-pair__brand">SPS Medical</h3>
+          <p class="exp-pair__sector">Industrie médicale · qualité &amp; traçabilité</p>
           <ul class="exp-pair__chips" aria-label="Contexte">
-            <li>Transfert de site</li>
-            <li>Infrastructure client</li>
+            <li>Cellule client</li>
+            <li>Continuité d'activité</li>
           </ul>
         </aside>
         <div class="exp-pair__project">
           <span class="exp-pair__proj-kicker">Projet mené en entreprise</span>
-          <h4 class="exp-pair__proj-title">Déménagement Jacquemus</h4>
+          <h4 class="exp-pair__proj-title">Déménagement IT – Client Jacquemus</h4>
           <p class="exp-pair__proj-lede">
-            Mission IT pour le <strong>déménagement de site</strong> d’une marque cliente : coordination logistique et remise en service des services.
+            <strong>Déménagement informatique</strong> de la cellule client vers un nouvel espace : reconfiguration du parc, helpdesk et validation métier.
           </p>
           <p class="exp-pair__proj-body">
-            Inventaire et déconnexion du matériel, transfert des postes et équipements réseau, recâblage, remise en service des services
-            et vérification des accès sur le nouveau site.
+            Installation des postes et imprimantes (Zebra, HP), résolution des incidents logiciels post-transfert (Infolog, Excel, applications métier),
+            intégration au parc existant et participation aux réunions de Plan de Reprise d'Activité (PRA).
           </p>
           <p style="margin-top:1.35rem;margin-bottom:0">
-            <a href="projet-demenagement-jacquemus.html" class="btn btn-outline" data-projet-jacquemus="1">Fiche détaillée : déménagement Jacquemus →</a>
+            <a href="projet-demenagement-jacquemus.html" class="btn btn-outline" data-projet-jacquemus="1">Fiche détaillée : déménagement IT Jacquemus →</a>
           </p>
         </div>
       </article>
@@ -1828,143 +2315,386 @@
   </div>
 </section>
 
-<!-- ══════════ VEILLE ══════════ -->
-<section id="veille" class="single-section veille-page">
-  <div class="container" style="max-width:1000px;margin:0 auto;">
-    <div class="expertise-header">
+<!-- ══════════ VEILLE (tableau de bord) ══════════ -->
+<section id="veille" class="single-section veille-page veille-dashboard" aria-labelledby="veille-dash-title">
+  <div class="container veille-dash__container">
+    <header class="veille-dash__head">
       <div class="section-eyebrow">Veille technologique</div>
-      <h2 class="section-title">Cybersécurité dans les infrastructures réseau</h2>
-      <p class="section-desc">Suivi des menaces, vulnérabilités et bonnes pratiques de sécurisation des réseaux d'entreprise.</p>
-    </div>
-    <div class="theme-banner">
-      <div class="theme-icon">🛡️</div>
-      <div>
-        <div class="theme-label">Thème de veille</div>
-        <div class="theme-title">La cybersécurité dans les infrastructures réseau</div>
-      </div>
-    </div>
-    <div class="veille-intro">
-      <p>
-        Les infrastructures réseau constituent le système nerveux de toute organisation. Pare-feux, routeurs, commutateurs, VPN, systèmes de détection d'intrusion — chacun de ces composants est une surface d'attaque potentielle. Je surveille en continu les nouvelles vulnérabilités, les techniques d'attaque émergentes et les recommandations des organismes spécialisés (ANSSI, CERT-FR) pour anticiper les risques et appliquer les bonnes pratiques de sécurisation.
+      <h2 id="veille-dash-title" class="veille-dash__title">🛡️ Veille Cybersécurité dans les Infrastructures Réseau</h2>
+      <p class="veille-dash__subtitle">
+        Tableau de bord de veille — Menaces, vulnérabilités et actualités réseau en temps réel
       </p>
-    </div>
-    <h3 class="veille-block-title">Sujets surveillés</h3>
-    <div class="veille-grid">
-      <div class="veille-card">
-        <div class="veille-topic">
-          <div class="veille-topic-icon">🔥</div>
-          <div class="veille-topic-title">Menaces &amp; Attaques réseau</div>
+      <span class="veille-dash__role-badge">BTS SIO SISR · Réseaux &amp; Cybersécurité</span>
+    </header>
+
+    <div class="veille-dash__kpis" role="region" aria-label="Indicateurs de veille" id="veille-kpis">
+      <div class="veille-dash__kpi">
+        <div class="veille-dash__kpi-icon" aria-hidden="true">📚</div>
+        <div>
+          <div class="veille-dash__kpi-val" id="veille-kpi-total">0</div>
+          <div class="veille-dash__kpi-label">Articles totaux</div>
         </div>
-        <ul class="veille-items">
-          <li>Attaques DDoS et nouvelles techniques d'amplification (DNS, NTP)</li>
-          <li>Man-in-the-Middle (MitM) sur les réseaux d'entreprise</li>
-          <li>Intrusions via équipements réseau (CVE Cisco, Fortinet, Juniper…)</li>
-          <li>Lateral movement et pivoting post-compromission</li>
-        </ul>
       </div>
-      <div class="veille-card">
-        <div class="veille-topic">
-          <div class="veille-topic-icon">🔒</div>
-          <div class="veille-topic-title">Sécurisation &amp; Bonnes pratiques</div>
+      <div class="veille-dash__kpi">
+        <div class="veille-dash__kpi-icon veille-dash__kpi-icon--mint" aria-hidden="true">🕐</div>
+        <div>
+          <div class="veille-dash__kpi-val" id="veille-kpi-recent">0</div>
+          <div class="veille-dash__kpi-label">Articles récents (&lt;7j)</div>
         </div>
-        <ul class="veille-items">
-          <li>Zero Trust Network Access (ZTNA) : mise en œuvre en entreprise</li>
-          <li>Segmentation réseau et micro-segmentation</li>
-          <li>Durcissement des équipements (hardening Cisco, guides ANSSI)</li>
-          <li>Chiffrement des flux : TLS 1.3, MACsec, IPsec</li>
-        </ul>
       </div>
-      <div class="veille-card">
-        <div class="veille-topic">
-          <div class="veille-topic-icon">📡</div>
-          <div class="veille-topic-title">Détection &amp; Supervision</div>
+      <div class="veille-dash__kpi">
+        <div class="veille-dash__kpi-icon veille-dash__kpi-icon--rose" aria-hidden="true">⚠️</div>
+        <div>
+          <div class="veille-dash__kpi-val" id="veille-kpi-high">0</div>
+          <div class="veille-dash__kpi-label">Criticité élevée</div>
         </div>
-        <ul class="veille-items">
-          <li>IDS/IPS : évolution des signatures et détection comportementale</li>
-          <li>SIEM et corrélation d'événements réseau</li>
-          <li>NDR (Network Detection &amp; Response) et analyse de flux</li>
-          <li>Threat Intelligence appliquée aux IOC réseau</li>
-        </ul>
       </div>
-      <div class="veille-card">
-        <div class="veille-topic">
-          <div class="veille-topic-icon">⚠️</div>
-          <div class="veille-topic-title">Vulnérabilités &amp; CVE</div>
+      <div class="veille-dash__kpi">
+        <div class="veille-dash__kpi-icon veille-dash__kpi-icon--amber" aria-hidden="true">🔗</div>
+        <div>
+          <div class="veille-dash__kpi-val" id="veille-kpi-sources">0</div>
+          <div class="veille-dash__kpi-label">Sources actives</div>
         </div>
-        <ul class="veille-items">
-          <li>Suivi des CVE critiques affectant les équipements réseau</li>
-          <li>Bulletins de sécurité CERT-FR et alertes ANSSI</li>
-          <li>Correctifs et contournements pour les failles zero-day</li>
-          <li>Exploitation active de vulnérabilités dans la nature</li>
-        </ul>
-      </div>
-      <div class="veille-card">
-        <div class="veille-topic">
-          <div class="veille-topic-icon">🏛️</div>
-          <div class="veille-topic-title">Réglementations &amp; Conformité</div>
-        </div>
-        <ul class="veille-items">
-          <li>Directive NIS2 : obligations pour les opérateurs critiques</li>
-          <li>Référentiel PRIS et qualification ANSSI</li>
-          <li>RGPD et sécurité des données en transit</li>
-          <li>ISO 27001 / IEC 62443 pour les environnements industriels</li>
-        </ul>
-      </div>
-      <div class="veille-card">
-        <div class="veille-topic">
-          <div class="veille-topic-icon">🌐</div>
-          <div class="veille-topic-title">Tendances émergentes</div>
-        </div>
-        <ul class="veille-items">
-          <li>SASE (Secure Access Service Edge) : convergence réseau &amp; sécurité</li>
-          <li>SD-WAN sécurisé et chiffrement des liens WAN</li>
-          <li>Sécurité des réseaux OT/IoT industriels</li>
-          <li>BGP hijacking et sécurisation du routage Internet</li>
-        </ul>
       </div>
     </div>
-    <div class="sources-section">
-      <div class="section-title">Sources principales</div>
-      <div class="source-cards">
-        <a href="https://feedly.com/i/threatLandscape" target="_blank" rel="noopener noreferrer" class="source-card">
-          <div class="source-card-header">
-            <div class="source-card-icon">📰</div>
-            <div>
-              <div class="source-card-name">Feedly Threat Intelligence</div>
-              <span class="source-card-tag">Flux RSS &amp; Threat Intel</span>
-            </div>
-          </div>
-          <div class="source-card-desc">Agrégateur de flux spécialisé en cybersécurité. Suivi en temps réel des menaces, IOC et actualités sécurité provenant de centaines de sources expertes.</div>
-          <div class="source-card-url">feedly.com/i/threatLandscape</div>
-        </a>
-        <a href="https://www.cert.ssi.gouv.fr/" target="_blank" rel="noopener noreferrer" class="source-card">
-          <div class="source-card-header">
-            <div class="source-card-icon">🏛️</div>
-            <div>
-              <div class="source-card-name">CERT-FR / ANSSI</div>
-              <span class="source-card-tag">Alertes officielles</span>
-            </div>
-          </div>
-          <div class="source-card-desc">Centre Gouvernemental de Veille, d'Alerte et de Réponse aux Attaques Informatiques. Bulletins de vulnérabilités et recommandations officielles pour la France.</div>
-          <div class="source-card-url">cert.ssi.gouv.fr</div>
-        </a>
+
+    <div class="veille-dash__toolbar">
+      <label class="visually-hidden" for="veille-search-input">Rechercher un article</label>
+      <input
+        type="search"
+        id="veille-search-input"
+        class="veille-dash__search"
+        placeholder="Rechercher un article…"
+        autocomplete="off"
+      />
+      <button type="button" class="btn btn-outline" id="veille-btn-sort" aria-pressed="true">Plus récents</button>
+      <button type="button" class="btn btn-outline" id="veille-btn-refresh">Actualiser</button>
+    </div>
+
+    <div class="veille-dash__filter-block">
+      <span class="veille-dash__filter-label">Catégories</span>
+      <div class="veille-dash__chip-row" id="veille-filters-cat" role="group" aria-label="Filtrer par catégorie">
+        <button type="button" class="veille-dash__chip is-active" data-veille-cat="all">Toutes</button>
+        <button type="button" class="veille-dash__chip" data-veille-cat="ransomware">Ransomware</button>
+        <button type="button" class="veille-dash__chip" data-veille-cat="malware">Malware</button>
+        <button type="button" class="veille-dash__chip" data-veille-cat="phishing">Phishing</button>
+        <button type="button" class="veille-dash__chip" data-veille-cat="faille">Faille de sécurité</button>
       </div>
     </div>
-    <div class="sources-section">
-      <div class="section-title">Autres sources consultées</div>
-      <div class="sources-grid">
-        <a href="https://www.anssi.gouv.fr" target="_blank" rel="noopener noreferrer" class="source-chip">ANSSI</a>
-        <a href="https://nvd.nist.gov" target="_blank" rel="noopener noreferrer" class="source-chip">NVD / CVE Database</a>
-        <a href="https://thehackernews.com" target="_blank" rel="noopener noreferrer" class="source-chip">The Hacker News</a>
-        <a href="https://www.securityweek.com" target="_blank" rel="noopener noreferrer" class="source-chip">SecurityWeek</a>
-        <a href="https://blog.cisco.com/security" target="_blank" rel="noopener noreferrer" class="source-chip">Cisco Security Blog</a>
-        <a href="https://www.bleepingcomputer.com" target="_blank" rel="noopener noreferrer" class="source-chip">BleepingComputer</a>
-        <a href="https://www.lemag-it.com" target="_blank" rel="noopener noreferrer" class="source-chip">LeMagIT</a>
-        <a href="https://www.zdnet.fr" target="_blank" rel="noopener noreferrer" class="source-chip">ZDNet France</a>
+
+    <div class="veille-dash__filter-block">
+      <span class="veille-dash__filter-label">Sources</span>
+      <div class="veille-dash__chip-row" id="veille-filters-src" role="group" aria-label="Filtrer par source">
+        <button type="button" class="veille-dash__chip is-active" data-veille-src="all">Toutes</button>
+        <button type="button" class="veille-dash__chip" data-veille-src="anssi">ANSSI</button>
+        <button type="button" class="veille-dash__chip" data-veille-src="cert-fr">CERT-FR</button>
+        <button type="button" class="veille-dash__chip" data-veille-src="zdnet">ZDNet</button>
+        <button type="button" class="veille-dash__chip" data-veille-src="lmi">Le Monde Informatique</button>
       </div>
     </div>
+
+    <div class="veille-dash__grid" id="veille-articles-root"></div>
   </div>
 </section>
+<script>
+(function () {
+  'use strict';
+  var REF_NOW = new Date('2026-05-04T12:00:00');
+  var MS_DAY = 864e5;
+
+  var ARTICLES = [
+    {
+      id: 'v1',
+      title: "Alerte : nouvelle campagne de ransomware ciblant les collectivités",
+      source: 'ANSSI',
+      sourceKey: 'anssi',
+      dateISO: '2026-05-03',
+      dateLabel: '3 mai 2026',
+      criticite: 'high',
+      category: 'ransomware',
+      tags: ['ransomware', 'infrastructure', 'VPN'],
+      summary:
+        "L'ANSSI met en garde contre une vague d'attaques par ransomware visant les collectivités territoriales et les établissements de santé.",
+      url: 'https://www.cert.ssi.gouv.fr/',
+    },
+    {
+      id: 'v2',
+      title: 'Vulnérabilité critique dans FortiGate : patch de sécurité urgent',
+      source: 'CERT-FR',
+      sourceKey: 'cert-fr',
+      dateISO: '2026-05-02',
+      dateLabel: '2 mai 2026',
+      criticite: 'high',
+      category: 'faille',
+      tags: ['faille de sécurité', 'zero-day', 'pare-feu'],
+      summary:
+        'Une faille zero-day découverte dans les pare-feu FortiGate permet une exécution de code à distance. Fortinet recommande une mise à jour immédiate.',
+      url: 'https://www.cert.ssi.gouv.fr/',
+    },
+    {
+      id: 'v3',
+      title: "Phishing par IA : les deepfakes vocaux piègent les entreprises",
+      source: 'ZDNet',
+      sourceKey: 'zdnet',
+      dateISO: '2026-05-01',
+      dateLabel: '1 mai 2026',
+      criticite: 'high',
+      category: 'phishing',
+      tags: ['phishing', 'IA', 'deepfake'],
+      summary:
+        "Des cybercriminels utilisent l'IA pour cloner la voix de dirigeants d'entreprise et ordonner des virements frauduleux.",
+      url: 'https://www.zdnet.fr/',
+    },
+    {
+      id: 'v4',
+      title: 'Le malware Lumma Stealer se propage via de fausses mises à jour',
+      source: 'Le Monde Informatique',
+      sourceKey: 'lmi',
+      dateISO: '2026-04-30',
+      dateLabel: '30 avril 2026',
+      criticite: 'medium',
+      category: 'malware',
+      tags: ['malware', 'stealer', 'navigateur'],
+      summary:
+        'Un nouveau vecteur de distribution du malware Lumma Stealer a été identifié. Les victimes sont incitées à télécharger une fausse mise à jour de navigateur.',
+      url: 'https://www.lemondeinformatique.fr/',
+    },
+    {
+      id: 'v5',
+      title: 'Rapport ANSSI 2025 : hausse de 30% des incidents cyber en France',
+      source: 'ANSSI',
+      sourceKey: 'anssi',
+      dateISO: '2026-04-29',
+      dateLabel: '29 avril 2026',
+      criticite: 'medium',
+      category: 'ransomware',
+      tags: ['ransomware', 'phishing', 'statistiques'],
+      summary:
+        "Le rapport annuel de l'ANSSI révèle une augmentation significative des cyberattaques en 2024, avec une prédominance des ransomwares.",
+      url: 'https://www.ssi.gouv.fr/',
+    },
+    {
+      id: 'v6',
+      title: 'Docker Hub compromis : des images malveillantes détectées',
+      source: 'ZDNet',
+      sourceKey: 'zdnet',
+      dateISO: '2026-04-26',
+      dateLabel: '26 avril 2026',
+      criticite: 'medium',
+      category: 'malware',
+      tags: ['malware', 'Docker', 'supply chain'],
+      summary:
+        "Des chercheurs en sécurité ont découvert des centaines d'images Docker contenant des cryptomineurs et des backdoors.",
+      url: 'https://www.zdnet.fr/',
+    },
+  ];
+
+  function daysBetween(a, b) {
+    return Math.floor((a.getTime() - b.getTime()) / MS_DAY);
+  }
+
+  function isRecent(article) {
+    var d = new Date(article.dateISO + 'T12:00:00');
+    return daysBetween(REF_NOW, d) < 7;
+  }
+
+  var state = {
+    cat: 'all',
+    src: 'all',
+    q: '',
+    sortDesc: true,
+  };
+
+  function norm(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function matchesFilters(a) {
+    if (state.cat !== 'all' && a.category !== state.cat) return false;
+    if (state.src !== 'all' && a.sourceKey !== state.src) return false;
+    if (state.q) {
+      var n = norm(state.q);
+      if (!norm(a.title).includes(n) && !norm(a.summary).includes(n)) return false;
+    }
+    return true;
+  }
+
+  function getFiltered() {
+    return ARTICLES.filter(matchesFilters).sort(function (x, y) {
+      if (state.sortDesc) return y.dateISO.localeCompare(x.dateISO);
+      return x.dateISO.localeCompare(y.dateISO);
+    });
+  }
+
+  function countDistinctSources(list) {
+    var seen = {};
+    list.forEach(function (a) {
+      seen[a.sourceKey] = 1;
+    });
+    return Object.keys(seen).length;
+  }
+
+  function updateKpis(list) {
+    var elTotal = document.getElementById('veille-kpi-total');
+    var elRecent = document.getElementById('veille-kpi-recent');
+    var elHigh = document.getElementById('veille-kpi-high');
+    var elSrc = document.getElementById('veille-kpi-sources');
+    if (!elTotal) return;
+    var recent = list.filter(isRecent).length;
+    var high = list.filter(function (a) {
+      return a.criticite === 'high';
+    }).length;
+    elTotal.textContent = String(list.length);
+    elRecent.textContent = String(recent);
+    elHigh.textContent = String(high);
+    elSrc.textContent = String(list.length ? countDistinctSources(list) : 0);
+  }
+
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function render() {
+    var root = document.getElementById('veille-articles-root');
+    if (!root) return;
+    var list = getFiltered();
+    updateKpis(list);
+
+    if (!list.length) {
+      root.innerHTML =
+        '<p class="veille-dash__empty" role="status">Aucun article ne correspond aux filtres sélectionnés.</p>';
+      return;
+    }
+
+    var html = list
+      .map(function (a) {
+        var shieldClass =
+          a.criticite === 'high' ? 'veille-dash__shield--high' : 'veille-dash__shield--mid';
+        var critClass =
+          a.criticite === 'high' ? 'veille-dash__crit--high' : 'veille-dash__crit--mid';
+        var critLabel = a.criticite === 'high' ? 'Élevé' : 'Moyen';
+        var nouveau = isRecent(a)
+          ? '<span class="veille-dash__badge-new">Nouveau</span>'
+          : '';
+        var tags = a.tags
+          .map(function (t) {
+            return '<span class="veille-dash__tag">' + esc(t) + '</span>';
+          })
+          .join('');
+        return (
+          '<button type="button" class="veille-dash__card" data-veille-url="' +
+          esc(a.url) +
+          '" aria-label="Ouvrir : ' +
+          esc(a.title) +
+          '">' +
+          '<div class="veille-dash__card-top">' +
+          '<span class="veille-dash__shield ' +
+          shieldClass +
+          '" aria-hidden="true">🛡️</span>' +
+          '<div class="veille-dash__badges-row">' +
+          nouveau +
+          '<span class="veille-dash__crit ' +
+          critClass +
+          '">' +
+          critLabel +
+          '</span></div></div>' +
+          '<h3 class="veille-dash__card-title">' +
+          esc(a.title) +
+          '</h3>' +
+          '<div class="veille-dash__meta"><strong>' +
+          esc(a.source) +
+          '</strong><span aria-hidden="true">·</span><span>' +
+          esc(a.dateLabel) +
+          '</span></div>' +
+          '<p class="veille-dash__excerpt">' +
+          esc(a.summary) +
+          '</p>' +
+          '<div class="veille-dash__tags">' +
+          tags +
+          '</div>' +
+          '<div class="veille-dash__card-cta"><span>Lire l\'article →</span></div>' +
+          '</button>'
+        );
+      })
+      .join('');
+    root.innerHTML = html;
+
+    root.querySelectorAll('.veille-dash__card').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var u = btn.getAttribute('data-veille-url');
+        if (u) window.open(u, '_blank', 'noopener,noreferrer');
+      });
+    });
+  }
+
+  function setActiveChips(container, attr, value) {
+    if (!container) return;
+    container.querySelectorAll('[data-' + attr + ']').forEach(function (b) {
+      b.classList.toggle('is-active', b.getAttribute('data-' + attr) === value);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var search = document.getElementById('veille-search-input');
+    var btnSort = document.getElementById('veille-btn-sort');
+    var btnRef = document.getElementById('veille-btn-refresh');
+    var catRow = document.getElementById('veille-filters-cat');
+    var srcRow = document.getElementById('veille-filters-src');
+
+    if (search) {
+      search.addEventListener('input', function () {
+        state.q = search.value.trim();
+        render();
+      });
+    }
+
+    if (btnSort) {
+      btnSort.addEventListener('click', function () {
+        state.sortDesc = true;
+        btnSort.setAttribute('aria-pressed', 'true');
+        render();
+      });
+    }
+
+    if (btnRef) {
+      btnRef.addEventListener('click', function () {
+        state.cat = 'all';
+        state.src = 'all';
+        state.q = '';
+        state.sortDesc = true;
+        if (search) search.value = '';
+        setActiveChips(catRow, 'veille-cat', 'all');
+        setActiveChips(srcRow, 'veille-src', 'all');
+        render();
+      });
+    }
+
+    if (catRow) {
+      catRow.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-veille-cat]');
+        if (!t) return;
+        state.cat = t.getAttribute('data-veille-cat');
+        setActiveChips(catRow, 'veille-cat', state.cat);
+        render();
+      });
+    }
+
+    if (srcRow) {
+      srcRow.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-veille-src]');
+        if (!t) return;
+        state.src = t.getAttribute('data-veille-src');
+        setActiveChips(srcRow, 'veille-src', state.src);
+        render();
+      });
+    }
+
+    render();
+  });
+})();
+</script>
 
 <!-- ══════════ CONTACT ══════════ -->
 <section id="contact" class="single-section">
@@ -2415,6 +3145,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.min.js?v=44" defer></script>
+<script src="main.min.js?v=47" defer></script>
 </body>
 </html>

@@ -32,8 +32,8 @@
   })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projet Entreprise : Déménagement Jacquemus — Eliot Fiette</title>
-  <link rel="stylesheet" href="style.min.css?v=53"/>
+  <title>Projet Entreprise : Déménagement IT Jacquemus — Eliot Fiette</title>
+  <link rel="stylesheet" href="style.min.css?v=54"/>
   <style>
   .project-page .expertise-header { margin-bottom: 2.25rem; }
   .project-page .section-eyebrow {
@@ -63,6 +63,79 @@
     margin-top: 0.25rem;
   }
   .project-page .project-back { margin-bottom: 1.75rem; }
+
+  /* Alignement cartes / titres / listes comme la fiche Migration ERP — scope isolé */
+  #page-projet-jacquemus .divider {
+    margin: 2rem 0;
+    border: none;
+    height: 1px;
+    background: var(--border);
+  }
+  #page-projet-jacquemus .proj-detail {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 2.5rem;
+    margin-bottom: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  #page-projet-jacquemus .proj-detail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+  }
+  #page-projet-jacquemus .proj-detail:hover { border-color: var(--border2); }
+  #page-projet-jacquemus .proj-body {
+    color: var(--text2);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+  #page-projet-jacquemus .proj-section-title {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  #page-projet-jacquemus .obj-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  #page-projet-jacquemus .obj-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  #page-projet-jacquemus .obj-list li::before {
+    content: '\2192';
+    color: var(--accent2);
+    font-family: var(--mono);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  #page-projet-jacquemus .proj-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
   </style>
 </head>
 <body>
@@ -84,8 +157,8 @@
   </div>
 </header>
 
-<main>
-  <section id="entreprise" class="single-section project-page" aria-labelledby="projet-jacquemus-title">
+<main id="page-projet-jacquemus">
+  <section class="single-section project-page" aria-labelledby="projet-jacquemus-title">
     <div class="container">
       <p class="project-back">
         <a href="projets.html" class="btn btn-outline">Retour aux projets</a>
@@ -93,46 +166,58 @@
 
       <div class="expertise-header">
         <div class="section-eyebrow">Projet mené en entreprise</div>
-        <h1 class="section-title" id="projet-jacquemus-title">Déménagement Jacquemus</h1>
+        <h1 class="section-title" id="projet-jacquemus-title">Déménagement IT – Client Jacquemus</h1>
         <div class="project-meta-tags" aria-label="Thématiques du projet">
           <span class="tag tag-brown">Infrastructure</span>
-          <span class="tag tag-green">Réseau</span>
-          <span class="tag tag-orange">Logistique IT</span>
-          <span class="tag tag-brown">Remise en service</span>
+          <span class="tag tag-green">Helpdesk</span>
+          <span class="tag tag-orange">Imprimantes</span>
+          <span class="tag tag-brown">PRA</span>
+          <span class="tag tag-green">Installation poste</span>
         </div>
       </div>
 
-      <div class="proj-detail">
-        <p class="proj-body" style="margin-bottom:0">
-          Mission conduite dans le cadre d'un déménagement de site client (Jacquemus) chez Kuehne+Nagel. L'objectif était d'assurer la continuité des services IT durant le transfert physique des équipements, puis la remise en fonctionnement rapide et fiable sur le nouveau site.
-        </p>
-      </div>
+      <div class="proj-stack">
+        <div class="proj-detail">
+          <p class="proj-body">
+            Projet réalisé chez SPS Medical dans le cadre du déménagement informatique du client Jacquemus vers une nouvelle cellule.
+            L'objectif était d'assurer la continuité des opérations en reconfigurant l'ensemble du parc informatique dans le nouvel espace, sans interruption de l'activité.
+          </p>
+        </div>
 
-      <div class="proj-detail">
-        <div class="proj-section-title">Contexte</div>
-        <ul class="obj-list">
-          <li>Transfert de postes de travail, équipements réseau et périphériques</li>
-          <li>Coordination entre logistique terrain et exigences techniques IT</li>
-          <li>Impératif de reprise d'activité rapide sur le nouveau site</li>
-        </ul>
-      </div>
+        <div class="divider" aria-hidden="true"></div>
 
-      <div class="proj-detail">
-        <div class="proj-section-title">Missions réalisées</div>
-        <ul class="obj-list">
-          <li>Inventaire et préparation des équipements à déplacer</li>
-          <li>Déconnexion et sécurisation du matériel avant transfert</li>
-          <li>Participation au recâblage et à la remise en réseau sur le nouveau site</li>
-          <li>Remise en service des postes et vérification des accès utilisateurs</li>
-          <li>Contrôles fonctionnels finaux pour valider la continuité des services</li>
-        </ul>
-      </div>
+        <div class="proj-detail">
+          <h2 class="proj-section-title">Contexte</h2>
+          <ul class="obj-list">
+            <li>Déménagement complet d'une cellule client vers un nouvel espace</li>
+            <li>Parc informatique à réinstaller et reconfigurer entièrement</li>
+            <li>Environnement multi-logiciels sensibles (Infolog, Excel, etc.)</li>
+            <li>Nouveaux équipements à intégrer (postes, imprimantes)</li>
+          </ul>
+        </div>
 
-      <div class="proj-detail">
-        <div class="proj-section-title">Résultats</div>
-        <p class="proj-body" style="margin-bottom:0">
-          Le projet a permis un redémarrage opérationnel structuré sur le nouveau site avec une remise en service contrôlée des infrastructures et des accès. Cette mission a consolidé mes compétences en interventions terrain, organisation de migration physique et validation réseau post-déploiement.
-        </p>
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="proj-detail">
+          <h2 class="proj-section-title">Missions réalisées</h2>
+          <ul class="obj-list">
+            <li>Installation et configuration des nouveaux postes de travail dans la nouvelle cellule</li>
+            <li>Résolution de problèmes logiciels suite au déménagement (Infolog, Excel et autres applications métier)</li>
+            <li>Installation et configuration des imprimantes Zebra et HP dans le nouvel espace</li>
+            <li>Ajout et intégration des nouveaux postes au parc existant</li>
+            <li>Participation aux réunions de Plan de Reprise d'Activité (PRA)</li>
+          </ul>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="proj-detail">
+          <h2 class="proj-section-title">Résultats</h2>
+          <p class="proj-body">
+            Ce projet m'a permis de gérer concrètement un déménagement IT complet, en assurant la remise en service rapide des équipements et la continuité de l'activité pour le client.
+            J'ai renforcé mes compétences en installation de postes, support terrain, configuration d'imprimantes et gestion de parc en environnement professionnel réel.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -168,6 +253,6 @@
   });
 })();
 </script>
-<script src="main.min.js?v=41"></script>
+<script src="main.min.js?v=44" defer></script>
 </body>
 </html>

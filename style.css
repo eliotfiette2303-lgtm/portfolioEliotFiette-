@@ -127,15 +127,8 @@ nav {
 }
 
 .nav-logo::before {
-  content: '';
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent), 0 0 16px rgba(59,130,246,0.4);
-  flex-shrink: 0;
-  animation: pulseGlow 3s ease-in-out infinite;
+  content: none;
+  display: none;
 }
 
 .nav-logo:hover { color: var(--accent2); }
