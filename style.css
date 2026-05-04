@@ -886,6 +886,23 @@ html.site-intro-lock body {
   transition: none;
 }
 
+@keyframes siteIntroSimpleFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.995);
+    filter: blur(1.5px);
+  }
+}
+
+.site-intro--exit-simple {
+  animation: siteIntroSimpleFadeOut 0.62s ease forwards;
+}
+
 /* ── Sortie cinématique : coupe laser horizontale + chute des deux moitiés ── */
 .site-intro__cine-shard {
   position: absolute;

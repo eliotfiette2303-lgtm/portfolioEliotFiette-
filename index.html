@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=47"/>
+  <link rel="stylesheet" href="style.css?v=48"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1567,9 +1567,6 @@
     return;
   }
 
-  var useCinematicSplit = !reduce || animForce;
-  var cinematicReduced = reduce && animForce;
-
   const html = document.documentElement;
   const main = document.querySelector('main');
   const header = document.querySelector('header.site-nav');
@@ -1649,16 +1646,20 @@
   }
 
   function fallbackCssExit() {
-    intro.classList.remove('site-intro--exit-cinematic', 'site-intro--exit-cinematic--reduced');
-    intro.classList.add('site-intro--exit');
+    intro.classList.remove(
+      'site-intro--exit-cinematic',
+      'site-intro--exit-cinematic--reduced',
+      'site-intro--exit'
+    );
+    intro.classList.add('site-intro--exit-simple');
     function onExitAnim(e) {
       if (e.target !== intro) return;
-      if (e.animationName !== 'siteIntroHyperspaceExit' && e.animationName !== 'siteIntroHyperspaceExitReduced') return;
+      if (e.animationName !== 'siteIntroSimpleFadeOut') return;
       intro.removeEventListener('animationend', onExitAnim);
       cleanup();
     }
     intro.addEventListener('animationend', onExitAnim);
-    setTimeout(cleanup, 4200);
+    setTimeout(cleanup, 900);
   }
 
   function beginExit() {
@@ -1673,38 +1674,8 @@
     loadRaf = 0;
     setLoadVisual(1);
     if (hint) {
-      hint.textContent = useCinematicSplit
-        ? 'Synchronisation du faisceau — ouverture cinématique…'
-        : 'Saut en hyperespace — stabilisation du continuum…';
+      hint.textContent = 'Finalisation du chargement...';
       hint.classList.add('site-intro__hint--ready');
-    }
-
-    if (useCinematicSplit) {
-      var cineDone = false;
-      function finishCinematic() {
-        if (cineDone) return;
-        cineDone = true;
-        intro.removeEventListener('animationend', onCineAnim);
-        intro.classList.remove(
-          'site-intro--exit-cinematic',
-          'site-intro--exit-cinematic--reduced'
-        );
-        cleanup();
-      }
-      function onCineAnim(e) {
-        if (e.target !== intro) return;
-        if (
-          e.animationName !== 'siteIntroCinematicHost' &&
-          e.animationName !== 'siteIntroCinematicHostReduced'
-        )
-          return;
-        finishCinematic();
-      }
-      intro.addEventListener('animationend', onCineAnim);
-      if (cinematicReduced) intro.classList.add('site-intro--exit-cinematic--reduced');
-      else intro.classList.add('site-intro--exit-cinematic');
-      setTimeout(finishCinematic, cinematicReduced ? 1100 : 3200);
-      return;
     }
 
     fallbackCssExit();
