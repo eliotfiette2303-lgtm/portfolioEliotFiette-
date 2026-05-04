@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=51"/>
+  <link rel="stylesheet" href="style.css?v=52"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -645,7 +645,8 @@
     --loader-base: #050507;
     position: fixed;
     inset: 0;
-    z-index: 20000;
+    /* Sous l’intro plein écran (25000) ; au-dessus du reste du site une fois l’intro terminée */
+    z-index: 15000;
     display: grid;
     place-items: center;
     overflow: hidden;
@@ -1158,7 +1159,15 @@
     raf = requestAnimationFrame(drawFrame);
   }
 
-  start();
+  function armStartAfterIntro() {
+    function kick() {
+      window.removeEventListener('portfolio:dataLoaderStart', kick);
+      start();
+    }
+    if (window.__portfolioDataLoaderGateOpen) start();
+    else window.addEventListener('portfolio:dataLoaderStart', kick, { passive: true });
+  }
+  armStartAfterIntro();
 })();
 </script>
 <script>
@@ -2088,17 +2097,36 @@
 })();
 </script>
 <script>
-/* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
+/* ── INTRO PLEIN ÉCRAN (≈6,5 s) — puis phase loader « data materialization » (événement dédié) ── */
 (function () {
+  function signalDataLoaderPhase() {
+    try {
+      window.__portfolioDataLoaderGateOpen = true;
+      window.dispatchEvent(new CustomEvent('portfolio:dataLoaderStart', { bubbles: true }));
+    } catch (e) {}
+  }
+
   const intro = document.getElementById('site-intro');
-  if (!intro) return;
+  if (!intro) {
+    signalDataLoaderPhase();
+    return;
+  }
   var introSeenKey = 'portfolioIntroSeen';
+  try {
+    var navIntro = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    if (navIntro && navIntro.type === 'reload') {
+      sessionStorage.removeItem(introSeenKey);
+    } else if (typeof performance.navigation !== 'undefined' && performance.navigation.type === 1) {
+      sessionStorage.removeItem(introSeenKey);
+    }
+  } catch (e) {}
   var introSeen = false;
   try {
     introSeen = sessionStorage.getItem(introSeenKey) === '1';
   } catch (e) {}
   if (introSeen) {
     intro.remove();
+    signalDataLoaderPhase();
     return;
   }
   var reduce = false;
@@ -2108,6 +2136,7 @@
   var animForce = document.documentElement.classList.contains('portfolio-anim-force');
   if (!animForce || reduce) {
     intro.remove();
+    signalDataLoaderPhase();
     return;
   }
 
@@ -2149,6 +2178,7 @@
     } catch (e) {}
     intro.remove();
     unlock();
+    signalDataLoaderPhase();
     main?.removeAttribute('aria-hidden');
     header?.removeAttribute('aria-hidden');
     try {
@@ -2381,6 +2411,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.js?v=33" defer></script>
+<script src="main.js?v=36" defer></script>
 </body>
 </html>

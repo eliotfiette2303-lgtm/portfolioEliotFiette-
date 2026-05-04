@@ -450,7 +450,7 @@ window.addEventListener('resize', () => {
     loader?.remove();
   }
 
-  /** Pas de rejeu au refresh tant que l’onglet reste ouvert (sessionStorage). */
+  /** Évite de rejouer la séquence à chaque navigation interne ; un F5 (reload) efface la clé pour tout rejouer. */
   function markSessionDone() {
     try {
       sessionStorage.setItem(SESSION_KEY, '1');
@@ -463,11 +463,24 @@ window.addEventListener('resize', () => {
     markSessionDone();
   }
 
+  function isPageReload() {
+    try {
+      const ne = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      if (ne && ne.type === 'reload') return true;
+      if (typeof performance.navigation !== 'undefined' && performance.navigation.type === 1) return true;
+    } catch (_) {}
+    return false;
+  }
+
   /* Ne pas lier au pied de page « désactiver les animations » : sinon le loader disparaît sans timeline. */
   if (reduce) {
     finishImmediate();
     return;
   }
+
+  try {
+    if (isPageReload()) sessionStorage.removeItem(SESSION_KEY);
+  } catch (_) {}
 
   let alreadyDone = false;
   try {
@@ -483,73 +496,94 @@ window.addEventListener('resize', () => {
     return;
   }
 
-  if (app) {
-    if (animOn) {
-      gsap.set(app, {
-        opacity: 0,
-        filter: 'blur(20px)',
-        scale: 1.02,
-        transformOrigin: '50% 50%',
-      });
-    } else {
-      gsap.set(app, { opacity: 0, transformOrigin: '50% 50%' });
-    }
-  }
+  let materializationRan = false;
 
-  const tl = gsap.timeline({
-    onComplete: () => {
-      removeLoaderNode();
+  function runMaterializationTimeline() {
+    if (materializationRan) return;
+    if (!document.getElementById('loader')) {
       clearAppVisualState();
       markSessionDone();
-    },
-  });
+      return;
+    }
+    materializationRan = true;
 
-  /* 0–3s : vrai délai (tween sur un proxy — tl.to({}, durée) peut être ignoré / instantané) */
-  const phaseHold = { _: 0 };
-  tl.to(phaseHold, { _: 1, duration: 3, ease: 'none' }, 0);
+    if (app) {
+      if (animOn) {
+        gsap.set(app, {
+          opacity: 0,
+          filter: 'blur(20px)',
+          scale: 1.02,
+          transformOrigin: '50% 50%',
+        });
+      } else {
+        gsap.set(app, { opacity: 0, transformOrigin: '50% 50%' });
+      }
+    }
 
-  /* Materialisation : canvas d’abord, léger recul avant arrêt rAF pour éviter un frame “sec” */
-  if (dataCanvas) {
-    tl.fromTo(
-      dataCanvas,
-      { opacity: 0.42 },
-      { opacity: 0, duration: 1.05, ease: 'power2.inOut' },
-      3,
-    );
-  }
+    const tl = gsap.timeline({
+      onComplete: () => {
+        removeLoaderNode();
+        clearAppVisualState();
+        markSessionDone();
+      },
+    });
 
-  tl.add(() => {
-    try {
-      window.__portfolioLoaderStopCanvas = true;
-    } catch (_) {}
-  }, 3.12);
+    /* 0–3s : particules + réseau (après l’intro d’amorçage) */
+    const phaseHold = { _: 0 };
+    tl.to(phaseHold, { _: 1, duration: 3, ease: 'none' }, 0);
 
-  if (loaderText) {
-    tl.to(loaderText, { opacity: 0, duration: 0.72, ease: 'power3.out' }, 3.08);
-  }
-
-  /* Reveal #app après le pic du fade canvas (effet cinéma) */
-  if (app) {
-    if (animOn) {
-      tl.to(
-        app,
-        {
-          opacity: 1,
-          filter: 'blur(0px)',
-          scale: 1,
-          duration: 1.12,
-          ease: 'power3.out',
-        },
-        3.52,
+    if (dataCanvas) {
+      tl.fromTo(
+        dataCanvas,
+        { opacity: 0.42 },
+        { opacity: 0, duration: 1.05, ease: 'power2.inOut' },
+        3,
       );
-    } else {
-      tl.to(app, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out' }, 3.52);
+    }
+
+    tl.add(() => {
+      try {
+        window.__portfolioLoaderStopCanvas = true;
+      } catch (_) {}
+    }, 3.12);
+
+    if (loaderText) {
+      tl.to(loaderText, { opacity: 0, duration: 0.72, ease: 'power3.out' }, 3.08);
+    }
+
+    if (app) {
+      if (animOn) {
+        tl.to(
+          app,
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            scale: 1,
+            duration: 1.12,
+            ease: 'power3.out',
+          },
+          3.52,
+        );
+      } else {
+        tl.to(app, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out' }, 3.52);
+      }
+    }
+
+    if (loader) {
+      tl.to(loader, { opacity: 0, duration: 0.68, ease: 'power3.inOut' }, 4.05);
     }
   }
 
-  if (loader) {
-    tl.to(loader, { opacity: 0, duration: 0.68, ease: 'power3.inOut' }, 4.05);
+  function armLoaderAfterIntro() {
+    function onGate() {
+      window.removeEventListener('portfolio:dataLoaderStart', onGate);
+      runMaterializationTimeline();
+    }
+    if (window.__portfolioDataLoaderGateOpen) runMaterializationTimeline();
+    else window.addEventListener('portfolio:dataLoaderStart', onGate, { passive: true });
   }
+
+  armLoaderAfterIntro();
 })();
 
 /* Three.js (CDN) — scène minimale + sphère (désactivé si pas d’anim ou reduced-motion) */
