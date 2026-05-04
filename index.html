@@ -1557,6 +1557,15 @@
 (function () {
   const intro = document.getElementById('site-intro');
   if (!intro) return;
+  var introSeenKey = 'portfolioIntroSeen';
+  var introSeen = false;
+  try {
+    introSeen = sessionStorage.getItem(introSeenKey) === '1';
+  } catch (e) {}
+  if (introSeen) {
+    intro.remove();
+    return;
+  }
   var reduce = false;
   try {
     reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1600,6 +1609,9 @@
   function cleanup() {
     if (introDone) return;
     introDone = true;
+    try {
+      sessionStorage.setItem(introSeenKey, '1');
+    } catch (e) {}
     intro.remove();
     unlock();
     main?.removeAttribute('aria-hidden');
