@@ -420,3 +420,208 @@ window.addEventListener('resize', () => {
   window.addEventListener('hashchange', applyHash);
   applyHash();
 })();
+
+/* GSAP — transition loader → site (indépendant du toggle « animations du site » ; une fois par onglet) */
+(() => {
+  const SESSION_KEY = 'portfolioLoaderRevealV2';
+  const loader = document.getElementById('loader');
+  const app = document.getElementById('app');
+  const dataCanvas = document.getElementById('dataCanvas');
+  const loaderText = document.querySelector('#loader .loader-text');
+
+  const animOn = document.documentElement.classList.contains('portfolio-anim-force');
+  let reduce = false;
+  try {
+    reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (_) {}
+
+  function clearAppVisualState() {
+    if (!app) return;
+    if (typeof gsap !== 'undefined') {
+      gsap.set(app, { clearProps: 'opacity,filter,scale' });
+    } else {
+      app.style.removeProperty('opacity');
+      app.style.removeProperty('filter');
+      app.style.removeProperty('transform');
+    }
+  }
+
+  function removeLoaderNode() {
+    loader?.remove();
+  }
+
+  /** Pas de rejeu au refresh tant que l’onglet reste ouvert (sessionStorage). */
+  function markSessionDone() {
+    try {
+      sessionStorage.setItem(SESSION_KEY, '1');
+    } catch (_) {}
+  }
+
+  function finishImmediate() {
+    removeLoaderNode();
+    clearAppVisualState();
+    markSessionDone();
+  }
+
+  /* Ne pas lier au pied de page « désactiver les animations » : sinon le loader disparaît sans timeline. */
+  if (reduce) {
+    finishImmediate();
+    return;
+  }
+
+  let alreadyDone = false;
+  try {
+    alreadyDone = sessionStorage.getItem(SESSION_KEY) === '1';
+  } catch (_) {}
+  if (alreadyDone) {
+    finishImmediate();
+    return;
+  }
+
+  if (typeof gsap === 'undefined') {
+    finishImmediate();
+    return;
+  }
+
+  if (app) {
+    if (animOn) {
+      gsap.set(app, {
+        opacity: 0,
+        filter: 'blur(20px)',
+        scale: 1.02,
+        transformOrigin: '50% 50%',
+      });
+    } else {
+      gsap.set(app, { opacity: 0, transformOrigin: '50% 50%' });
+    }
+  }
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      removeLoaderNode();
+      clearAppVisualState();
+      markSessionDone();
+    },
+  });
+
+  /* 0–3s : vrai délai (tween sur un proxy — tl.to({}, durée) peut être ignoré / instantané) */
+  const phaseHold = { _: 0 };
+  tl.to(phaseHold, { _: 1, duration: 3, ease: 'none' }, 0);
+
+  /* Materialisation : canvas d’abord, léger recul avant arrêt rAF pour éviter un frame “sec” */
+  if (dataCanvas) {
+    tl.fromTo(
+      dataCanvas,
+      { opacity: 0.42 },
+      { opacity: 0, duration: 1.05, ease: 'power2.inOut' },
+      3,
+    );
+  }
+
+  tl.add(() => {
+    try {
+      window.__portfolioLoaderStopCanvas = true;
+    } catch (_) {}
+  }, 3.12);
+
+  if (loaderText) {
+    tl.to(loaderText, { opacity: 0, duration: 0.72, ease: 'power3.out' }, 3.08);
+  }
+
+  /* Reveal #app après le pic du fade canvas (effet cinéma) */
+  if (app) {
+    if (animOn) {
+      tl.to(
+        app,
+        {
+          opacity: 1,
+          filter: 'blur(0px)',
+          scale: 1,
+          duration: 1.12,
+          ease: 'power3.out',
+        },
+        3.52,
+      );
+    } else {
+      tl.to(app, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out' }, 3.52);
+    }
+  }
+
+  if (loader) {
+    tl.to(loader, { opacity: 0, duration: 0.68, ease: 'power3.inOut' }, 4.05);
+  }
+})();
+
+/* Three.js (CDN) — scène minimale + sphère (désactivé si pas d’anim ou reduced-motion) */
+(() => {
+  if (typeof THREE === 'undefined') return;
+  const animOn = document.documentElement.classList.contains('portfolio-anim-force');
+  let reduce = false;
+  try {
+    reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (_) {}
+  if (!animOn || reduce) return;
+
+  const W = 280;
+  const H = 200;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  canvas.setAttribute('aria-hidden', 'true');
+  Object.assign(canvas.style, {
+    position: 'fixed',
+    right: '10px',
+    bottom: '10px',
+    zIndex: '4',
+    opacity: '0.45',
+    pointerEvents: 'none',
+    borderRadius: '10px',
+    maxWidth: 'min(280px, 28vw)',
+  });
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (_) {
+    return;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(W, H, false);
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+  camera.position.z = 2.6;
+
+  const mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.65, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.25, roughness: 0.45 }),
+  );
+  scene.add(mesh);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.9);
+  dl.position.set(2, 2.5, 3);
+  scene.add(dl);
+
+  document.body.appendChild(canvas);
+
+  let raf = 0;
+  function tick() {
+    mesh.rotation.y += 0.018;
+    renderer.render(scene, camera);
+    raf = requestAnimationFrame(tick);
+  }
+  tick();
+
+  window.addEventListener(
+    'pagehide',
+    () => {
+      if (raf) cancelAnimationFrame(raf);
+      renderer.dispose();
+      mesh.geometry.dispose();
+      mesh.material.dispose();
+      canvas.remove();
+    },
+    { once: true },
+  );
+})();

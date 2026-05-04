@@ -638,8 +638,529 @@
     html:not(.portfolio-anim-force) .site-intro { display: none !important; }
   }
   </style>
+  <style>
+  /* Data Materialization Loader — SaaS / AI init screen (GPU-friendly, no heavy blur) */
+  #loader {
+    --loader-cyan: #7df9ff;
+    --loader-base: #050507;
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    contain: strict;
+    transform: translateZ(0);
+    background-color: var(--loader-base);
+    background-image:
+      radial-gradient(ellipse 100% 80% at 50% 0%, rgba(30, 58, 90, 0.22) 0%, transparent 58%),
+      radial-gradient(ellipse 90% 70% at 50% 100%, rgba(12, 74, 110, 0.12) 0%, transparent 55%),
+      linear-gradient(180deg, rgba(14, 18, 28, 0.5) 0%, transparent 38%, rgba(5, 5, 7, 0.85) 100%);
+    color: #e8eef8;
+  }
+
+  /* Grid + vignette + cyan wash + micro-noise — single composited layer above canvas */
+  #loader::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    transform: translateZ(0);
+    opacity: 1;
+    background-image:
+      radial-gradient(ellipse 75% 65% at 50% 50%, transparent 0%, rgba(5, 5, 7, 0.42) 62%, rgba(5, 5, 7, 0.94) 100%),
+      radial-gradient(ellipse 95% 55% at 50% 115%, rgba(34, 211, 238, 0.07) 0%, transparent 52%),
+      radial-gradient(ellipse 70% 50% at 50% -5%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 47px,
+        rgba(125, 249, 255, 0.035) 47px,
+        rgba(125, 249, 255, 0.035) 48px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 47px,
+        rgba(125, 249, 255, 0.035) 47px,
+        rgba(125, 249, 255, 0.035) 48px
+      ),
+      repeating-radial-gradient(circle at 20% 30%, transparent 0, transparent 2px, rgba(255, 255, 255, 0.012) 2px, rgba(255, 255, 255, 0.012) 3px);
+    background-size: auto, auto, auto, 48px 48px, 48px 48px, 7px 7px;
+    background-position: center, center, center, center, center, 0 0;
+    mix-blend-mode: normal;
+  }
+
+  #dataCanvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0.42;
+    transform: translateZ(0);
+    contain: strict;
+    box-shadow: inset 0 0 80px rgba(34, 211, 238, 0.06), inset 0 0 140px rgba(56, 189, 248, 0.04);
+  }
+
+  .loader-ui {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    pointer-events: none;
+    transform: translateZ(0);
+    will-change: opacity;
+  }
+
+  .loader-text {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(0.62rem, 1.35vw, 0.8rem);
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: rgba(125, 249, 255, 0.92);
+    text-shadow:
+      0 0 18px rgba(125, 249, 255, 0.22),
+      0 0 36px rgba(45, 212, 191, 0.12);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #dataCanvas {
+      opacity: 0.35;
+    }
+  }
+  </style>
 </head>
 <body>
+<div id="loader" aria-busy="true" aria-live="polite">
+  <canvas id="dataCanvas"></canvas>
+  <div class="loader-ui">
+    <div class="loader-text">INITIALIZING DATA...</div>
+  </div>
+</div>
+<script>
+/* #dataCanvas — materialisation guidée + maillage spatial réutilisé (60 fps cible) */
+(function () {
+  'use strict';
+  var canvas = document.getElementById('dataCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  if (!ctx) return;
+
+  var dpr = 1;
+  var W = 0;
+  var H = 0;
+  var N = 0;
+  var particles = [];
+  var t0 = 0;
+  var lastFrameT = 0;
+  var raf = 0;
+  var running = false;
+  var reduceMotion = false;
+  try {
+    reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+
+  var CHAOS_MS = 2000;
+  var STRUCT_MS = 1000;
+  var PHYS_TOTAL_MS = CHAOS_MS + STRUCT_MS;
+  var FADE_MS = 720;
+  var TRAIL_ALPHA = 0.1;
+  var MAX_LINK_DIST = 120;
+  var CELL = 120;
+  var VMAX = 3.2;
+  var EDGE_CAP = 6;
+  var BKEY_MUL = 10007;
+  var bucketStore = {};
+  var activeKeys = [];
+  var TWO_PI = 6.283185307179586;
+
+  function clamp(n, a, b) {
+    return n < a ? a : n > b ? b : n;
+  }
+
+  function smoothstep(edge0, edge1, x) {
+    var t = clamp((x - edge0) / Math.max(1e-6, edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = (Math.random() * (i + 1)) | 0;
+      var t = arr[i];
+      arr[i] = arr[j];
+      arr[j] = t;
+    }
+    return arr;
+  }
+
+  function particleCount() {
+    var area = W * H;
+    return clamp(Math.round(area / 10000), 300, 720) | 0;
+  }
+
+  function cellKey(ix, iy) {
+    return (ix + 4096) * BKEY_MUL + (iy + 4096);
+  }
+
+  function layGridTargets() {
+    if (!particles.length || W < 8 || H < 8) return;
+    var cols = Math.ceil(Math.sqrt((N * W) / Math.max(1, H)));
+    var rows = Math.ceil(N / cols);
+    var mx = W * 0.06;
+    var my = H * 0.1;
+    var gw = Math.max(1, W - 2 * mx);
+    var gh = Math.max(1, H - 2 * my);
+    var pts = [];
+    for (var r = 0; r < rows && pts.length < N; r++) {
+      for (var c = 0; c < cols && pts.length < N; c++) {
+        var tx = mx + (cols <= 1 ? gw * 0.5 : (c / (cols - 1)) * gw);
+        var ty = my + (rows <= 1 ? gh * 0.5 : (r / (rows - 1)) * gh);
+        pts.push({ tx: tx, ty: ty });
+      }
+    }
+    shuffle(pts);
+    for (var i = 0; i < N; i++) {
+      particles[i].tx = pts[i].tx;
+      particles[i].ty = pts[i].ty;
+    }
+  }
+
+  function scatterAroundTargets() {
+    var minR = Math.min(W, H) * 0.09;
+    var maxR = Math.min(W, H) * 0.2;
+    for (var i = 0; i < N; i++) {
+      var p = particles[i];
+      var ang = p.phase * 1.7;
+      var rad = minR + (maxR - minR) * (0.35 + 0.65 * ((i * 0.618034) % 1));
+      p.x = p.tx + Math.cos(ang) * rad;
+      p.y = p.ty + Math.sin(ang) * rad;
+      p.vx = Math.cos(ang + 1.1) * 0.55;
+      p.vy = Math.sin(ang + 1.1) * 0.55;
+    }
+  }
+
+  function initParticles() {
+    N = particleCount();
+    particles = [];
+    for (var i = 0; i < N; i++) {
+      particles.push({
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        tx: 0,
+        ty: 0,
+        r: 0.52 + Math.random() * 0.95,
+        phase: Math.random() * TWO_PI,
+      });
+    }
+    layGridTargets();
+    scatterAroundTargets();
+  }
+
+  function resize() {
+    if (!canvas.isConnected) {
+      stop();
+      return;
+    }
+    var prevW = W;
+    var prevH = H;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(1, canvas.clientWidth | 0);
+    H = Math.max(1, canvas.clientHeight | 0);
+    canvas.width = (W * dpr) | 0;
+    canvas.height = (H * dpr) | 0;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    if (prevW > 0 && prevH > 0 && particles.length) {
+      var sx = W / prevW;
+      var sy = H / prevH;
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x *= sx;
+        p.y *= sy;
+        p.tx *= sx;
+        p.ty *= sy;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+      }
+      var newN = particleCount();
+      if (newN !== N) {
+        initParticles();
+      } else {
+        layGridTargets();
+        scatterAroundTargets();
+      }
+    } else {
+      initParticles();
+    }
+  }
+
+  function stop() {
+    running = false;
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    lastFrameT = 0;
+    window.removeEventListener('resize', onResize);
+  }
+
+  function onResize() {
+    resize();
+  }
+
+  function resetBuckets() {
+    for (var z = 0; z < activeKeys.length; z++) {
+      bucketStore[activeKeys[z]].length = 0;
+    }
+    activeKeys.length = 0;
+  }
+
+  function pushCell(ix, iy, id) {
+    var k = cellKey(ix, iy);
+    var arr = bucketStore[k];
+    if (!arr) {
+      arr = [];
+      bucketStore[k] = arr;
+    }
+    if (arr.length === 0) activeKeys.push(k);
+    arr.push(id);
+  }
+
+  function buildBuckets(getx, gety) {
+    resetBuckets();
+    for (var i = 0; i < N; i++) {
+      var p = particles[i];
+      var x = getx(p);
+      var y = gety(p);
+      pushCell((x / CELL) | 0, (y / CELL) | 0, i);
+    }
+    return bucketStore;
+  }
+
+  function getList(buckets, ix, iy) {
+    return buckets[cellKey(ix, iy)];
+  }
+
+  function drawNetwork(buckets, ease, fade, useTargets) {
+    var maxD = MAX_LINK_DIST;
+    var maxD2 = maxD * maxD;
+    var reach = maxD * (0.14 + ease * ease * 0.86);
+    var reach2 = reach * reach;
+    var linkRamp = smoothstep(0.06, 0.82, ease) * fade;
+    var dens = 0.22 + ease * ease * 0.78;
+
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 0.28;
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = 'rgba(115, 238, 255, 0.5)';
+
+    for (var i = 0; i < N; i++) {
+      var p = particles[i];
+      var px = useTargets ? p.tx : p.x;
+      var py = useTargets ? p.ty : p.y;
+      var ix = (px / CELL) | 0;
+      var iy = (py / CELL) | 0;
+      var drawn = 0;
+
+      for (var ox = -1; ox <= 1 && drawn < EDGE_CAP; ox++) {
+        for (var oy = -1; oy <= 1 && drawn < EDGE_CAP; oy++) {
+          var list = getList(buckets, ix + ox, iy + oy);
+          if (!list) continue;
+          for (var t = 0; t < list.length && drawn < EDGE_CAP; t++) {
+            var j = list[t];
+            if (j <= i) continue;
+            var q = particles[j];
+            var qx = useTargets ? q.tx : q.x;
+            var qy = useTargets ? q.ty : q.y;
+            var dx = qx - px;
+            var dy = qy - py;
+            var d2 = dx * dx + dy * dy;
+            if (d2 > maxD2 || d2 > reach2) continue;
+            var d = Math.sqrt(d2);
+            var fall = 1 - d / maxD;
+            var a = linkRamp * dens * fall * fall * 0.042;
+            if (a < 0.0018) continue;
+            ctx.globalAlpha = a;
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(qx, qy);
+            ctx.stroke();
+            drawn++;
+          }
+        }
+      }
+    }
+
+    ctx.restore();
+  }
+
+  function capVelocity(p) {
+    var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+    if (sp > VMAX) {
+      var inv = VMAX / sp;
+      p.vx *= inv;
+      p.vy *= inv;
+    }
+  }
+
+  function stepPhysics(elapsed, dtNorm) {
+    var wander;
+    var attract;
+    var damp;
+    var snap = 0;
+    var tSec = elapsed * 0.001;
+
+    if (elapsed < CHAOS_MS) {
+      var u = elapsed / CHAOS_MS;
+      var ue = u * u * (3 - 2 * u);
+      wander = 0.38 * (1 - ue * 0.82);
+      attract = 0.00055 + ue * ue * 0.0011;
+      damp = 0.989;
+    } else {
+      var v = clamp((elapsed - CHAOS_MS) / STRUCT_MS, 0, 1);
+      var ve = v * v * (3 - 2 * v);
+      wander = 0.12 * (1 - ve);
+      attract = 0.00095 + ve * ve * 0.0128;
+      damp = 0.977 + (1 - ve) * 0.01;
+      if (v > 0.42) snap = 0.045 + (v - 0.42) * 0.34;
+    }
+
+    wander *= dtNorm;
+    attract *= dtNorm;
+
+    for (var i = 0; i < N; i++) {
+      var p = particles[i];
+      var dx = p.tx - p.x;
+      var dy = p.ty - p.y;
+      var guided = 0.018 * dtNorm * (1 - smoothstep(0, CHAOS_MS * 0.85, elapsed));
+      p.vx += dx * guided;
+      p.vy += dy * guided;
+
+      var wob = wander * 0.022;
+      p.vx += Math.sin(p.phase + tSec * 1.25) * wob;
+      p.vy += Math.cos(p.phase * 1.07 + tSec * 1.08) * wob;
+
+      p.vx *= damp;
+      p.vy *= damp;
+
+      p.vx += dx * attract;
+      p.vy += dy * attract;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (snap > 0) {
+        p.x += dx * snap * 0.92;
+        p.y += dy * snap * 0.92;
+      }
+
+      capVelocity(p);
+    }
+  }
+
+  function drawFrame(now) {
+    if (!canvas.isConnected) {
+      stop();
+      return;
+    }
+    if (!running) return;
+
+    if (window.__portfolioLoaderStopCanvas) {
+      stop();
+      return;
+    }
+
+    if (!t0) {
+      t0 = now;
+      lastFrameT = now;
+    }
+    var rawDt = now - lastFrameT;
+    lastFrameT = now;
+    var dtNorm = clamp(rawDt / 16.6667, 0.72, 1.35);
+
+    var elapsed = now - t0;
+    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 240), 0, 1);
+    var alignEase = alignProg * alignProg * (3 - 2 * alignProg);
+    var fade = clamp(elapsed / FADE_MS, 0, 1);
+
+    ctx.fillStyle = 'rgba(5, 5, 7, ' + TRAIL_ALPHA + ')';
+    ctx.fillRect(0, 0, W, H);
+
+    stepPhysics(elapsed, dtNorm);
+
+    var buckets = buildBuckets(function (p) {
+      return p.x;
+    }, function (p) {
+      return p.y;
+    });
+    drawNetwork(buckets, alignEase, fade, false);
+
+    ctx.save();
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = 'rgba(45, 212, 191, 0.38)';
+
+    for (var i = 0; i < N; i++) {
+      var p = particles[i];
+      var tw = 0.5 + 0.48 * alignEase;
+      var alpha = fade * tw * (0.58 + 0.28 * Math.sin(p.phase + elapsed * 0.00135));
+      alpha = clamp(alpha, 0, 1);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = 'rgba(235, 255, 255, 0.92)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, TWO_PI);
+      ctx.fill();
+    }
+
+    ctx.restore();
+
+    raf = requestAnimationFrame(drawFrame);
+  }
+
+  function drawStaticGrid() {
+    resize();
+    ctx.fillStyle = '#050507';
+    ctx.fillRect(0, 0, W, H);
+    var bk = buildBuckets(function (p) {
+      return p.tx;
+    }, function (p) {
+      return p.ty;
+    });
+    drawNetwork(bk, 1, 1, true);
+    ctx.save();
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = 'rgba(125, 249, 255, 0.32)';
+    for (var i = 0; i < N; i++) {
+      var p = particles[i];
+      ctx.globalAlpha = 0.76;
+      ctx.fillStyle = 'rgba(210, 255, 255, 0.88)';
+      ctx.beginPath();
+      ctx.arc(p.tx, p.ty, p.r, 0, TWO_PI);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function start() {
+    resize();
+    window.addEventListener('resize', onResize, { passive: true });
+    if (reduceMotion) {
+      drawStaticGrid();
+      return;
+    }
+    running = true;
+    t0 = 0;
+    lastFrameT = 0;
+    raf = requestAnimationFrame(drawFrame);
+  }
+
+  start();
+})();
+</script>
 <script>
 (function () {
   try {
@@ -724,7 +1245,7 @@
   </div>
 </header>
 
-<main>
+<main id="app">
 
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="hero">
@@ -1566,8 +2087,6 @@
   });
 })();
 </script>
-
-<script src="main.js?v=28"></script>
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) ── */
 (function () {
@@ -1859,5 +2378,9 @@
   });
 })();
 </script>
+<!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
+<script src="main.js?v=33" defer></script>
 </body>
 </html>
