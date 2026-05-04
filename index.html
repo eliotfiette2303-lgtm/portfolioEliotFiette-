@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=52"/>
+  <link rel="stylesheet" href="style.min.css?v=53"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -643,6 +643,7 @@
   #loader {
     --loader-cyan: #7df9ff;
     --loader-base: #050507;
+    --loader-crescendo-flash: rgba(220, 252, 255, 0.11);
     position: fixed;
     inset: 0;
     /* Sous l’intro plein écran (25000) ; au-dessus du reste du site une fois l’intro terminée */
@@ -693,6 +694,20 @@
     mix-blend-mode: normal;
   }
 
+  /* Crescendo: soft luminance lift (GSAP drives opacity) */
+  .loader-crescendo {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateZ(0);
+    background:
+      radial-gradient(ellipse 72% 58% at 50% 46%, var(--loader-crescendo-flash) 0%, transparent 62%),
+      radial-gradient(ellipse 100% 85% at 50% 50%, rgba(125, 249, 255, 0.06) 0%, transparent 55%);
+    mix-blend-mode: screen;
+  }
+
   #dataCanvas {
     position: absolute;
     inset: 0;
@@ -737,12 +752,13 @@
 <body>
 <div id="loader" aria-busy="true" aria-live="polite">
   <canvas id="dataCanvas"></canvas>
+  <div class="loader-crescendo" aria-hidden="true"></div>
   <div class="loader-ui">
     <div class="loader-text">INITIALIZING DATA...</div>
   </div>
 </div>
 <script>
-/* #dataCanvas — materialisation guidée + maillage spatial réutilisé (60 fps cible) */
+/* #dataCanvas — premium : vagues de spawn, 800–1200 pts, profondeur simulée, convergence forte */
 (function () {
   'use strict';
   var canvas = document.getElementById('dataCanvas');
@@ -753,7 +769,7 @@
   var dpr = 1;
   var W = 0;
   var H = 0;
-  var N = 0;
+  var NMax = 0;
   var particles = [];
   var t0 = 0;
   var lastFrameT = 0;
@@ -765,18 +781,23 @@
   } catch (e) {}
 
   var CHAOS_MS = 2000;
-  var STRUCT_MS = 1000;
+  var STRUCT_MS = 1280;
   var PHYS_TOTAL_MS = CHAOS_MS + STRUCT_MS;
-  var FADE_MS = 720;
-  var TRAIL_ALPHA = 0.1;
-  var MAX_LINK_DIST = 120;
-  var CELL = 120;
-  var VMAX = 3.2;
-  var EDGE_CAP = 6;
+  var FADE_MS = 520;
+  var TRAIL_ALPHA = 0.078;
+  var MAX_LINK_DIST = 102;
+  var CELL = 114;
+  var VMAX_BASE = 3.55;
+  var EDGE_CAP = 4;
   var BKEY_MUL = 10007;
+  var NUM_WAVES = 20;
+  var WAVE_STEP_MS = 34;
+  var WAVE_JITTER_MS = 20;
   var bucketStore = {};
   var activeKeys = [];
   var TWO_PI = 6.283185307179586;
+  var crescendoT0 = 0;
+  var CRESC_TOTAL = 0.5;
 
   function clamp(n, a, b) {
     return n < a ? a : n > b ? b : n;
@@ -797,9 +818,9 @@
     return arr;
   }
 
-  function particleCount() {
+  function particleCountMax() {
     var area = W * H;
-    return clamp(Math.round(area / 10000), 300, 720) | 0;
+    return clamp(Math.round(area / 5800), 720, 1000) | 0;
   }
 
   function cellKey(ix, iy) {
@@ -808,58 +829,68 @@
 
   function layGridTargets() {
     if (!particles.length || W < 8 || H < 8) return;
-    var cols = Math.ceil(Math.sqrt((N * W) / Math.max(1, H)));
-    var rows = Math.ceil(N / cols);
-    var mx = W * 0.06;
-    var my = H * 0.1;
+    var cols = Math.ceil(Math.sqrt((NMax * W) / Math.max(1, H)));
+    var rows = Math.ceil(NMax / cols);
+    var mx = W * 0.055;
+    var my = H * 0.095;
     var gw = Math.max(1, W - 2 * mx);
     var gh = Math.max(1, H - 2 * my);
     var pts = [];
-    for (var r = 0; r < rows && pts.length < N; r++) {
-      for (var c = 0; c < cols && pts.length < N; c++) {
+    for (var r = 0; r < rows && pts.length < NMax; r++) {
+      for (var c = 0; c < cols && pts.length < NMax; c++) {
         var tx = mx + (cols <= 1 ? gw * 0.5 : (c / (cols - 1)) * gw);
         var ty = my + (rows <= 1 ? gh * 0.5 : (r / (rows - 1)) * gh);
         pts.push({ tx: tx, ty: ty });
       }
     }
     shuffle(pts);
-    for (var i = 0; i < N; i++) {
+    for (var i = 0; i < NMax; i++) {
       particles[i].tx = pts[i].tx;
       particles[i].ty = pts[i].ty;
     }
   }
 
-  function scatterAroundTargets() {
-    var minR = Math.min(W, H) * 0.09;
-    var maxR = Math.min(W, H) * 0.2;
-    for (var i = 0; i < N; i++) {
-      var p = particles[i];
-      var ang = p.phase * 1.7;
-      var rad = minR + (maxR - minR) * (0.35 + 0.65 * ((i * 0.618034) % 1));
-      p.x = p.tx + Math.cos(ang) * rad;
-      p.y = p.ty + Math.sin(ang) * rad;
-      p.vx = Math.cos(ang + 1.1) * 0.55;
-      p.vy = Math.sin(ang + 1.1) * 0.55;
-    }
+  function burstSpawn(p, elapsed) {
+    var cx = W * 0.5;
+    var cy = H * 0.48;
+    var ring = Math.min(W, H) * (0.28 + p.pz * 0.12);
+    var ang = p.phase * 2.17;
+    p.x = cx + Math.cos(ang) * ring * (0.75 + Math.random() * 0.45);
+    p.y = cy + Math.sin(ang * 0.93) * ring * (0.75 + Math.random() * 0.45);
+    var burst = 2.1 + p.pz * 2.4;
+    p.vx = (Math.random() - 0.5) * burst;
+    p.vy = (Math.random() - 0.5) * burst;
+    p.spawned = true;
   }
 
   function initParticles() {
-    N = particleCount();
+    NMax = particleCountMax();
     particles = [];
-    for (var i = 0; i < N; i++) {
-      particles.push({
+    var order = [];
+    var k = 0;
+    for (k = 0; k < NMax; k++) order.push(k);
+    shuffle(order);
+    var perWave = Math.max(1, Math.ceil(NMax / NUM_WAVES));
+    for (k = 0; k < NMax; k++) {
+      var wave = (k / perWave) | 0;
+      var bornAt = wave * WAVE_STEP_MS + Math.random() * WAVE_JITTER_MS;
+      var idx = order[k];
+      particles[idx] = {
+        bornAt: bornAt,
+        spawned: false,
         x: 0,
         y: 0,
         vx: 0,
         vy: 0,
         tx: 0,
         ty: 0,
-        r: 0.52 + Math.random() * 0.95,
+        pz: Math.random(),
+        glow: 0.52 + Math.pow(Math.random(), 0.65) * 0.48,
+        r0: 0.38 + Math.random() * 0.55,
         phase: Math.random() * TWO_PI,
-      });
+      };
     }
     layGridTargets();
-    scatterAroundTargets();
   }
 
   function resize() {
@@ -879,21 +910,20 @@
     if (prevW > 0 && prevH > 0 && particles.length) {
       var sx = W / prevW;
       var sy = H / prevH;
-      for (var i = 0; i < particles.length; i++) {
+      var i = 0;
+      for (i = 0; i < NMax; i++) {
         var p = particles[i];
         p.x *= sx;
         p.y *= sy;
         p.tx *= sx;
         p.ty *= sy;
-        p.vx *= 0.96;
-        p.vy *= 0.96;
+        p.vx *= 0.95;
+        p.vy *= 0.95;
       }
-      var newN = particleCount();
-      if (newN !== N) {
-        initParticles();
-      } else {
+      var newMax = particleCountMax();
+      if (newMax !== NMax) initParticles();
+      else {
         layGridTargets();
-        scatterAroundTargets();
       }
     } else {
       initParticles();
@@ -930,10 +960,12 @@
     arr.push(id);
   }
 
-  function buildBuckets(getx, gety) {
+  function buildBuckets(getx, gety, elapsed) {
     resetBuckets();
-    for (var i = 0; i < N; i++) {
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
       var p = particles[i];
+      if (elapsed < p.bornAt || !p.spawned) continue;
       var x = getx(p);
       var y = gety(p);
       pushCell((x / CELL) | 0, (y / CELL) | 0, i);
@@ -945,23 +977,27 @@
     return buckets[cellKey(ix, iy)];
   }
 
-  function drawNetwork(buckets, ease, fade, useTargets) {
+  function drawNetwork(buckets, ease, fade, useTargets, elapsed, linkPulse, crescMul) {
     var maxD = MAX_LINK_DIST;
     var maxD2 = maxD * maxD;
-    var reach = maxD * (0.14 + ease * ease * 0.86);
+    var lp = linkPulse == null ? 1 : linkPulse;
+    var cm = crescMul == null ? 1 : crescMul;
+    var reach = maxD * (0.12 + ease * ease * 0.88) * lp;
     var reach2 = reach * reach;
-    var linkRamp = smoothstep(0.06, 0.82, ease) * fade;
-    var dens = 0.22 + ease * ease * 0.78;
+    var linkRamp = smoothstep(0.06, 0.78, ease) * fade * cm;
+    var dens = 0.16 + ease * ease * 0.68;
 
     ctx.save();
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.lineWidth = 0.28;
+    ctx.lineWidth = 0.26;
     ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(115, 238, 255, 0.5)';
+    ctx.strokeStyle = 'rgba(120, 240, 255, 0.48)';
 
-    for (var i = 0; i < N; i++) {
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
       var p = particles[i];
+      if (elapsed < p.bornAt || !p.spawned) continue;
       var px = useTargets ? p.tx : p.x;
       var py = useTargets ? p.ty : p.y;
       var ix = (px / CELL) | 0;
@@ -972,10 +1008,12 @@
         for (var oy = -1; oy <= 1 && drawn < EDGE_CAP; oy++) {
           var list = getList(buckets, ix + ox, iy + oy);
           if (!list) continue;
-          for (var t = 0; t < list.length && drawn < EDGE_CAP; t++) {
+          var t = 0;
+          for (t = 0; t < list.length && drawn < EDGE_CAP; t++) {
             var j = list[t];
             if (j <= i) continue;
             var q = particles[j];
+            if (elapsed < q.bornAt || !q.spawned) continue;
             var qx = useTargets ? q.tx : q.x;
             var qy = useTargets ? q.ty : q.y;
             var dx = qx - px;
@@ -984,7 +1022,7 @@
             if (d2 > maxD2 || d2 > reach2) continue;
             var d = Math.sqrt(d2);
             var fall = 1 - d / maxD;
-            var a = linkRamp * dens * fall * fall * 0.042;
+            var a = linkRamp * dens * fall * fall * (0.032 + p.pz * 0.01 + q.pz * 0.01);
             if (a < 0.0018) continue;
             ctx.globalAlpha = a;
             ctx.beginPath();
@@ -1000,67 +1038,160 @@
     ctx.restore();
   }
 
-  function capVelocity(p) {
+  function capVelocity(p, mul) {
+    var m = mul == null ? 1 : mul;
+    var vmax = VMAX_BASE * (0.72 + p.pz * 0.55) * m;
     var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-    if (sp > VMAX) {
-      var inv = VMAX / sp;
+    if (sp > vmax) {
+      var inv = vmax / sp;
       p.vx *= inv;
       p.vy *= inv;
     }
   }
 
   function stepPhysics(elapsed, dtNorm) {
-    var wander;
-    var attract;
-    var damp;
+    var wander = 0;
+    var attract = 0;
+    var damp = 0.985;
     var snap = 0;
+    var vmaxMul = 1;
     var tSec = elapsed * 0.001;
+    var lock = elapsed >= PHYS_TOTAL_MS;
+
+    if (lock) {
+      var iL = 0;
+      for (iL = 0; iL < NMax; iL++) {
+        var pL = particles[iL];
+        if (elapsed < pL.bornAt) continue;
+        if (!pL.spawned) burstSpawn(pL, elapsed);
+        pL.x = pL.tx;
+        pL.y = pL.ty;
+        pL.vx = 0;
+        pL.vy = 0;
+      }
+      return;
+    }
 
     if (elapsed < CHAOS_MS) {
       var u = elapsed / CHAOS_MS;
       var ue = u * u * (3 - 2 * u);
-      wander = 0.38 * (1 - ue * 0.82);
-      attract = 0.00055 + ue * ue * 0.0011;
-      damp = 0.989;
+      wander = 0.5 * (1 - ue * 0.8);
+      attract = 0.00028 + ue * ue * 0.00072;
+      damp = 0.988;
     } else {
       var v = clamp((elapsed - CHAOS_MS) / STRUCT_MS, 0, 1);
       var ve = v * v * (3 - 2 * v);
-      wander = 0.12 * (1 - ve);
-      attract = 0.00095 + ve * ve * 0.0128;
-      damp = 0.977 + (1 - ve) * 0.01;
-      if (v > 0.42) snap = 0.045 + (v - 0.42) * 0.34;
+      var accel = Math.sin(Math.PI * clamp(v / 0.52, 0, 1)) * (1 - smoothstep(0.56, 0.94, v));
+      var accelMul = 1 + 2.05 * accel;
+      vmaxMul = 1 + 0.42 * accel;
+      wander = 0.055 * (1 - smoothstep(0, 0.38, v)) * (1 - ve);
+      attract = (0.0038 + ve * ve * 0.042) * accelMul;
+      damp = 0.966 + smoothstep(0, 1, v) * 0.03;
+      snap = smoothstep(0.44, 1, v) * (0.09 + v * 0.44);
     }
 
     wander *= dtNorm;
     attract *= dtNorm;
 
-    for (var i = 0; i < N; i++) {
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
       var p = particles[i];
+      if (elapsed < p.bornAt) continue;
+      if (!p.spawned) burstSpawn(p, elapsed);
+
+      var dz = 0.76 + p.pz * 0.44;
       var dx = p.tx - p.x;
       var dy = p.ty - p.y;
-      var guided = 0.018 * dtNorm * (1 - smoothstep(0, CHAOS_MS * 0.85, elapsed));
+      var dist2 = dx * dx + dy * dy;
+      var guided = 0.018 * dtNorm * dz * (1 - smoothstep(0, CHAOS_MS * 0.88, elapsed));
       p.vx += dx * guided;
       p.vy += dy * guided;
 
-      var wob = wander * 0.022;
-      p.vx += Math.sin(p.phase + tSec * 1.25) * wob;
-      p.vy += Math.cos(p.phase * 1.07 + tSec * 1.08) * wob;
+      var wob = wander * 0.026 * (0.82 + (1 - p.pz) * 0.28);
+      p.vx += Math.sin(p.phase + tSec * (1.35 + p.pz * 0.4)) * wob;
+      p.vy += Math.cos(p.phase * 1.09 + tSec * (1.12 + p.pz * 0.35)) * wob;
 
       p.vx *= damp;
       p.vy *= damp;
 
-      p.vx += dx * attract;
-      p.vy += dy * attract;
+      p.vx += dx * attract * dz;
+      p.vy += dy * attract * dz;
 
-      p.x += p.vx;
-      p.y += p.vy;
+      var step = dz * (0.92 + p.pz * 0.1);
+      p.x += p.vx * step;
+      p.y += p.vy * step;
 
       if (snap > 0) {
-        p.x += dx * snap * 0.92;
-        p.y += dy * snap * 0.92;
+        var sk = snap * (0.9 + p.pz * 0.1);
+        p.x += dx * sk;
+        p.y += dy * sk;
       }
 
-      capVelocity(p);
+      if (elapsed >= CHAOS_MS && dist2 < 2.25) {
+        var pull = smoothstep(CHAOS_MS + STRUCT_MS * 0.62, PHYS_TOTAL_MS - 40, elapsed);
+        p.x += dx * (0.14 + pull * 0.58);
+        p.y += dy * (0.14 + pull * 0.58);
+        p.vx *= 0.82 - pull * 0.12;
+        p.vy *= 0.82 - pull * 0.12;
+      }
+
+      capVelocity(p, vmaxMul);
+    }
+  }
+
+  function initCrescendoDirs() {
+    var cx = W * 0.5;
+    var cy = H * 0.48;
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
+      var p = particles[i];
+      if (!p.spawned) continue;
+      p.x = p.tx;
+      p.y = p.ty;
+      var dx = p.tx - cx;
+      var dy = p.ty - cy;
+      var d = Math.sqrt(dx * dx + dy * dy) || 1;
+      p._crux = dx / d;
+      p._cruy = dy / d;
+    }
+  }
+
+  function crescShape(age) {
+    var u = clamp(age / CRESC_TOTAL, 0, 1.12);
+    var collapseK = smoothstep(0, 0.52, u);
+    collapseK *= collapseK * (1.04 - 0.04 * collapseK);
+    var burstK = smoothstep(0.36, 0.5, u) * (1 - smoothstep(0.48, 0.7, u));
+    var dissK = smoothstep(0.56, 1, u);
+    var linkFade = 1 - smoothstep(0.42, 0.94, u);
+    return { u: u, collapseK: collapseK, burstK: burstK, dissK: dissK, linkFade: linkFade };
+  }
+
+  function syncCrescendoPositions(cv) {
+    var cx = W * 0.5;
+    var cy = H * 0.48;
+    var minWH = Math.min(W, H);
+    var collapseK = cv.collapseK;
+    var burstK = cv.burstK;
+    var u = cv.u;
+    var drift = smoothstep(0.66, 1, u) * minWH * 0.011;
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
+      var p = particles[i];
+      if (!p.spawned) continue;
+      var ux = p._crux;
+      var uy = p._cruy;
+      if (ux == null || uy == null) {
+        var ddx = p.tx - cx;
+        var ddy = p.ty - cy;
+        var dd = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+        ux = ddx / dd;
+        uy = ddy / dd;
+      }
+      var xC = p.tx + (cx - p.tx) * collapseK;
+      var yC = p.ty + (cy - p.ty) * collapseK;
+      var rBurst = minWH * (0.03 + p.pz * 0.042) * burstK;
+      p.x = xC + ux * (rBurst + drift);
+      p.y = yC + uy * (rBurst + drift);
     }
   }
 
@@ -1082,41 +1213,103 @@
     }
     var rawDt = now - lastFrameT;
     lastFrameT = now;
-    var dtNorm = clamp(rawDt / 16.6667, 0.72, 1.35);
+    if (rawDt > 72) rawDt = 72;
+    var dtNorm = clamp(rawDt / 16.6667, 0.78, 1.22);
 
     var elapsed = now - t0;
-    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 240), 0, 1);
-    var alignEase = alignProg * alignProg * (3 - 2 * alignProg);
-    var fade = clamp(elapsed / FADE_MS, 0, 1);
+    var cAge = crescendoT0 > 0 ? (now - crescendoT0) * 0.001 : -1;
+    var cv = cAge >= 0 ? crescShape(cAge) : null;
 
-    ctx.fillStyle = 'rgba(5, 5, 7, ' + TRAIL_ALPHA + ')';
+    var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 300), 0, 1);
+    var alignEase = alignProg * alignProg * (3 - 2 * alignProg);
+    if (cv) alignEase = alignEase * (1 - 0.55 * cv.dissK);
+    var fade = clamp(elapsed / FADE_MS, 0, 1);
+    var post = Math.max(0, elapsed - PHYS_TOTAL_MS);
+    var breath = 1 + 0.024 * Math.sin(post * 0.00135 + 0.2);
+    var linkPulse = elapsed >= PHYS_TOTAL_MS && !cv ? 1 + 0.012 * Math.sin(post * 0.001) : 1;
+    if (cv) linkPulse = 1 + 0.012 * cv.burstK;
+
+    ctx.fillStyle = 'rgba(5, 5, 7, ' + (cv ? TRAIL_ALPHA + 0.028 * cv.burstK : TRAIL_ALPHA) + ')';
     ctx.fillRect(0, 0, W, H);
 
-    stepPhysics(elapsed, dtNorm);
+    if (cv) syncCrescendoPositions(cv);
+    else stepPhysics(elapsed, dtNorm);
 
-    var buckets = buildBuckets(function (p) {
-      return p.x;
-    }, function (p) {
-      return p.y;
-    });
-    drawNetwork(buckets, alignEase, fade, false);
+    var buckets = buildBuckets(
+      function (p) {
+        return p.x;
+      },
+      function (p) {
+        return p.y;
+      },
+      elapsed,
+    );
+    drawNetwork(buckets, alignEase, fade, false, elapsed, linkPulse, cv ? cv.linkFade : 1);
 
-    ctx.save();
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = 'rgba(45, 212, 191, 0.38)';
-
-    for (var i = 0; i < N; i++) {
-      var p = particles[i];
-      var tw = 0.5 + 0.48 * alignEase;
-      var alpha = fade * tw * (0.58 + 0.28 * Math.sin(p.phase + elapsed * 0.00135));
-      alpha = clamp(alpha, 0, 1);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = 'rgba(235, 255, 255, 0.92)';
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, TWO_PI);
-      ctx.fill();
+    var i = 0;
+    var hi = [];
+    var lo = [];
+    for (i = 0; i < NMax; i++) {
+      var pi = particles[i];
+      if (elapsed < pi.bornAt || !pi.spawned) continue;
+      if (pi.glow > 0.88) hi.push(i);
+      else lo.push(i);
     }
 
+    ctx.save();
+    ctx.shadowBlur = 3;
+    ctx.shadowColor = 'rgba(45, 212, 191, 0.22)';
+    for (i = 0; i < lo.length; i++) {
+      var pi = particles[lo[i]];
+      var rad = pi.r0 * (0.58 + pi.pz * 0.82) * (elapsed >= PHYS_TOTAL_MS && !cv ? breath : 1);
+      if (cv) {
+        rad *= (1 - 0.3 * cv.collapseK) * (1 + 0.12 * cv.burstK) * (0.82 + 0.18 * (1 - cv.dissK));
+      }
+      var tw = 0.46 + 0.52 * alignEase;
+      var alpha =
+        fade *
+        tw *
+        (cv
+          ? (0.52 + 0.26 * cv.burstK) * (1 - 0.94 * Math.pow(cv.dissK, 0.62))
+          : elapsed >= PHYS_TOTAL_MS
+            ? 0.56 + 0.08 * Math.sin(pi.phase * 0.08 + post * 0.0012)
+            : 0.5 + 0.18 * Math.sin(pi.phase + elapsed * 0.00105)) *
+        pi.glow;
+      alpha = clamp(alpha, 0, 1);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = 'rgba(210, 248, 255, 0.88)';
+      ctx.beginPath();
+      ctx.arc(pi.x, pi.y, rad, 0, TWO_PI);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = 'rgba(125, 249, 255, 0.32)';
+    for (i = 0; i < hi.length; i++) {
+      var ph = particles[hi[i]];
+      var radh = ph.r0 * (0.62 + ph.pz * 0.95) * (elapsed >= PHYS_TOTAL_MS && !cv ? breath : 1);
+      if (cv) {
+        radh *= (1 - 0.28 * cv.collapseK) * (1 + 0.14 * cv.burstK) * (0.82 + 0.18 * (1 - cv.dissK));
+      }
+      var twh = 0.52 + 0.46 * alignEase;
+      var alph =
+        fade *
+        twh *
+        (cv
+          ? (0.62 + 0.32 * cv.burstK) * (1 - 0.92 * Math.pow(cv.dissK, 0.6))
+          : elapsed >= PHYS_TOTAL_MS
+            ? 0.66 + 0.1 * Math.sin(ph.phase * 0.07 + post * 0.00115)
+            : 0.62 + 0.2 * Math.sin(ph.phase + elapsed * 0.00125)) *
+        ph.glow;
+      alph = clamp(alph, 0, 1);
+      ctx.globalAlpha = alph;
+      ctx.fillStyle = 'rgba(245, 255, 255, 0.95)';
+      ctx.beginPath();
+      ctx.arc(ph.x, ph.y, radh, 0, TWO_PI);
+      ctx.fill();
+    }
     ctx.restore();
 
     raf = requestAnimationFrame(drawFrame);
@@ -1124,23 +1317,34 @@
 
   function drawStaticGrid() {
     resize();
+    var si = 0;
+    for (si = 0; si < NMax; si++) {
+      particles[si].spawned = true;
+      particles[si].bornAt = 0;
+    }
     ctx.fillStyle = '#050507';
     ctx.fillRect(0, 0, W, H);
-    var bk = buildBuckets(function (p) {
-      return p.tx;
-    }, function (p) {
-      return p.ty;
-    });
-    drawNetwork(bk, 1, 1, true);
+    var bk = buildBuckets(
+      function (p) {
+        return p.tx;
+      },
+      function (p) {
+        return p.ty;
+      },
+      1e9,
+    );
+    drawNetwork(bk, 1, 1, true, 1e9, 1, 1);
     ctx.save();
     ctx.shadowBlur = 4;
     ctx.shadowColor = 'rgba(125, 249, 255, 0.32)';
-    for (var i = 0; i < N; i++) {
+    var i = 0;
+    for (i = 0; i < NMax; i++) {
       var p = particles[i];
-      ctx.globalAlpha = 0.76;
-      ctx.fillStyle = 'rgba(210, 255, 255, 0.88)';
+      var rad = p.r0 * (0.58 + p.pz * 0.82);
+      ctx.globalAlpha = 0.72 * p.glow;
+      ctx.fillStyle = 'rgba(210, 255, 255, 0.9)';
       ctx.beginPath();
-      ctx.arc(p.tx, p.ty, p.r, 0, TWO_PI);
+      ctx.arc(p.tx, p.ty, rad, 0, TWO_PI);
       ctx.fill();
     }
     ctx.restore();
@@ -1164,9 +1368,19 @@
       window.removeEventListener('portfolio:dataLoaderStart', kick);
       start();
     }
-    if (window.__portfolioDataLoaderGateOpen) start();
-    else window.addEventListener('portfolio:dataLoaderStart', kick, { passive: true });
+    window.addEventListener('portfolio:dataLoaderStart', kick, { passive: true });
   }
+  window.addEventListener(
+    'portfolio:loaderCrescendo',
+    function (e) {
+      var d = e && e.detail && e.detail.durationMs;
+      if (typeof d === 'number' && d >= 280 && d <= 640) CRESC_TOTAL = d * 0.001;
+      else CRESC_TOTAL = 0.5;
+      crescendoT0 = performance.now();
+      initCrescendoDirs();
+    },
+    { passive: true },
+  );
   armStartAfterIntro();
 })();
 </script>
@@ -2099,16 +2313,17 @@
 <script>
 /* ── INTRO PLEIN ÉCRAN (≈6,5 s) — puis phase loader « data materialization » (événement dédié) ── */
 (function () {
-  function signalDataLoaderPhase() {
+  /** Intro terminée : main.js enchaîne window « load » + délai puis phase data (pas ici). */
+  function signalIntroCompleteForLoader() {
     try {
-      window.__portfolioDataLoaderGateOpen = true;
-      window.dispatchEvent(new CustomEvent('portfolio:dataLoaderStart', { bubbles: true }));
+      window.__portfolioIntroLoaderQueued = true;
+      window.dispatchEvent(new CustomEvent('portfolio:introComplete', { bubbles: true }));
     } catch (e) {}
   }
 
   const intro = document.getElementById('site-intro');
   if (!intro) {
-    signalDataLoaderPhase();
+    signalIntroCompleteForLoader();
     return;
   }
   var introSeenKey = 'portfolioIntroSeen';
@@ -2126,7 +2341,7 @@
   } catch (e) {}
   if (introSeen) {
     intro.remove();
-    signalDataLoaderPhase();
+    signalIntroCompleteForLoader();
     return;
   }
   var reduce = false;
@@ -2136,7 +2351,7 @@
   var animForce = document.documentElement.classList.contains('portfolio-anim-force');
   if (!animForce || reduce) {
     intro.remove();
-    signalDataLoaderPhase();
+    signalIntroCompleteForLoader();
     return;
   }
 
@@ -2178,7 +2393,7 @@
     } catch (e) {}
     intro.remove();
     unlock();
-    signalDataLoaderPhase();
+    signalIntroCompleteForLoader();
     main?.removeAttribute('aria-hidden');
     header?.removeAttribute('aria-hidden');
     try {
@@ -2411,6 +2626,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.js?v=36" defer></script>
+<script src="main.min.js?v=41" defer></script>
 </body>
 </html>

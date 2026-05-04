@@ -428,6 +428,16 @@ window.addEventListener('resize', () => {
   const app = document.getElementById('app');
   const dataCanvas = document.getElementById('dataCanvas');
   const loaderText = document.querySelector('#loader .loader-text');
+  const loaderFlash = document.querySelector('#loader .loader-crescendo');
+
+  /** Blocs qui « matérialisent » après le loader (nav + sections racine du main, sans scripts). */
+  function getRevealTargets() {
+    const header = document.querySelector('header.site-nav');
+    const main = document.getElementById('app');
+    if (!main) return header ? [header] : [];
+    const kids = Array.from(main.children).filter((n) => n.nodeType === 1 && n.tagName !== 'SCRIPT');
+    return header ? [header, ...kids] : kids;
+  }
 
   const animOn = document.documentElement.classList.contains('portfolio-anim-force');
   let reduce = false;
@@ -437,12 +447,19 @@ window.addEventListener('resize', () => {
 
   function clearAppVisualState() {
     if (!app) return;
+    const targets = getRevealTargets();
     if (typeof gsap !== 'undefined') {
       gsap.set(app, { clearProps: 'opacity,filter,scale' });
+      if (targets.length) gsap.set(targets, { clearProps: 'opacity,filter,y' });
     } else {
       app.style.removeProperty('opacity');
       app.style.removeProperty('filter');
       app.style.removeProperty('transform');
+      targets.forEach((el) => {
+        el.style.removeProperty('opacity');
+        el.style.removeProperty('filter');
+        el.style.removeProperty('transform');
+      });
     }
   }
 
@@ -507,20 +524,27 @@ window.addEventListener('resize', () => {
     }
     materializationRan = true;
 
+    const revealTargets = getRevealTargets();
     if (app) {
-      if (animOn) {
-        gsap.set(app, {
+      gsap.set(app, { opacity: 1, scale: 1, transformOrigin: '50% 0%', clearProps: 'filter' });
+      if (animOn && revealTargets.length) {
+        gsap.set(revealTargets, {
           opacity: 0,
-          filter: 'blur(20px)',
-          scale: 1.02,
-          transformOrigin: '50% 50%',
+          filter: 'blur(16px)',
+          y: 20,
+          force3D: true,
+          transformOrigin: '50% 0%',
         });
+      } else if (!animOn && revealTargets.length) {
+        gsap.set(revealTargets, { opacity: 0, y: 18, force3D: true, transformOrigin: '50% 0%' });
+        gsap.set(app, { opacity: 0 });
       } else {
         gsap.set(app, { opacity: 0, transformOrigin: '50% 50%' });
       }
     }
 
     const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
       onComplete: () => {
         removeLoaderNode();
         clearAppVisualState();
@@ -528,62 +552,138 @@ window.addEventListener('resize', () => {
       },
     });
 
-    /* 0–3s : particules + réseau (après l’intro d’amorçage) */
+    /* Timings alignés canvas (CRESC_MS) → crescendo → fondu canvas → révélation (léger chevauchement, sans blur plein écran). */
     const phaseHold = { _: 0 };
-    tl.to(phaseHold, { _: 1, duration: 3, ease: 'none' }, 0);
+    const CRESC_START = 2.66;
+    const CRESC_MS = 500;
+    const CRESC_END = CRESC_START + CRESC_MS * 0.001;
+    const CANVAS_STOP = CRESC_END + 0.18;
+    const REVEAL_T = 3.96;
+    const revealEase = 'power2.out';
+
+    tl.to(phaseHold, { _: 1, duration: 3.82, ease: 'none' }, 0);
+
+    tl.add(() => {
+      try {
+        window.dispatchEvent(
+          new CustomEvent('portfolio:loaderCrescendo', {
+            bubbles: true,
+            detail: { durationMs: CRESC_MS },
+          }),
+        );
+      } catch (_) {}
+    }, CRESC_START);
+
+    if (loaderFlash && typeof gsap !== 'undefined') {
+      tl.fromTo(
+        loaderFlash,
+        { opacity: 0 },
+        { opacity: 0.14, duration: 0.1, ease: 'sine.out' },
+        CRESC_START + 0.26,
+      );
+      tl.to(loaderFlash, { opacity: 0, duration: 0.42, ease: 'power2.inOut' }, CRESC_START + 0.32);
+    }
 
     if (dataCanvas) {
-      tl.fromTo(
-        dataCanvas,
-        { opacity: 0.42 },
-        { opacity: 0, duration: 1.05, ease: 'power2.inOut' },
-        3,
-      );
+      tl.to(dataCanvas, { opacity: 0.52, duration: 0.36, ease: 'sine.inOut' }, CRESC_START - 0.02);
+      tl.to(dataCanvas, { opacity: 0.76, duration: 0.14, ease: 'power2.out' }, CRESC_START + 0.28);
+      tl.to(dataCanvas, { opacity: 0, duration: 0.98, ease: 'power2.inOut' }, CRESC_START + 0.38);
     }
 
     tl.add(() => {
       try {
         window.__portfolioLoaderStopCanvas = true;
       } catch (_) {}
-    }, 3.12);
+    }, CANVAS_STOP);
 
     if (loaderText) {
-      tl.to(loaderText, { opacity: 0, duration: 0.72, ease: 'power3.out' }, 3.08);
+      tl.to(loaderText, { opacity: 0, duration: 0.56, ease: 'power2.out' }, CRESC_START + 0.08);
     }
 
-    if (app) {
+    if (app && revealTargets.length) {
       if (animOn) {
         tl.to(
-          app,
+          revealTargets,
           {
             opacity: 1,
             filter: 'blur(0px)',
-            scale: 1,
-            duration: 1.12,
-            ease: 'power3.out',
+            y: 0,
+            duration: 1.04,
+            stagger: { amount: 0.48, from: 'start' },
+            ease: revealEase,
           },
-          3.52,
+          REVEAL_T,
         );
       } else {
-        tl.to(app, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out' }, 3.52);
+        tl.set(app, { opacity: 1 }, REVEAL_T);
+        tl.to(
+          revealTargets,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.88,
+            stagger: { amount: 0.44, from: 'start' },
+            ease: 'power2.out',
+          },
+          REVEAL_T,
+        );
       }
+    } else if (app) {
+      tl.to(
+        app,
+        {
+          opacity: 1,
+          filter: animOn ? 'blur(0px)' : 'none',
+          scale: 1,
+          duration: animOn ? 1.02 : 0.82,
+          ease: revealEase,
+        },
+        REVEAL_T,
+      );
     }
 
     if (loader) {
-      tl.to(loader, { opacity: 0, duration: 0.68, ease: 'power3.inOut' }, 4.05);
+      tl.set(loader, { pointerEvents: 'none' }, 3.74);
+      tl.to(loader, { opacity: 0, duration: 0.78, ease: 'power2.inOut' }, 3.82);
     }
   }
 
-  function armLoaderAfterIntro() {
-    function onGate() {
-      window.removeEventListener('portfolio:dataLoaderStart', onGate);
-      runMaterializationTimeline();
-    }
-    if (window.__portfolioDataLoaderGateOpen) runMaterializationTimeline();
-    else window.addEventListener('portfolio:dataLoaderStart', onGate, { passive: true });
+  const POST_LOAD_DELAY_MS = 400;
+  let loadPhaseScheduled = false;
+
+  function beginDataMaterializationAndTimeline() {
+    window.__portfolioDataLoaderGateOpen = true;
+    try {
+      window.dispatchEvent(new CustomEvent('portfolio:dataLoaderStart', { bubbles: true }));
+    } catch (_) {}
+    runMaterializationTimeline();
   }
 
-  armLoaderAfterIntro();
+  /** Après intro : attendre window « load » (assets prêts), puis court délai, puis particules + GSAP. */
+  function scheduleAfterWindowLoadAndDelay() {
+    if (loadPhaseScheduled) return;
+    loadPhaseScheduled = true;
+
+    const runAfterLoad = () => {
+      setTimeout(beginDataMaterializationAndTimeline, POST_LOAD_DELAY_MS);
+    };
+
+    if (document.readyState === 'complete') {
+      runAfterLoad();
+    } else {
+      window.addEventListener('load', runAfterLoad, { once: true, passive: true });
+    }
+  }
+
+  function armIntroThenLoadThenAnimate() {
+    if (window.__portfolioIntroLoaderQueued) {
+      scheduleAfterWindowLoadAndDelay();
+      return;
+    }
+    window.addEventListener('portfolio:introComplete', scheduleAfterWindowLoadAndDelay, { once: true, passive: true });
+  }
+
+  armIntroThenLoadThenAnimate();
 })();
 
 /* Three.js (CDN) — scène minimale + sphère (désactivé si pas d’anim ou reduced-motion) */

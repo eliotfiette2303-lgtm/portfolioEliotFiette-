@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-eliot-fiette",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Portfolio static site — run npm run build before deploy to refresh minified assets.",
+  "scripts": {
+    "build": "node scripts/minify.mjs"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "terser": "^5.37.0"
+  }
+}
