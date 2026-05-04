@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.min.css?v=55"/>
+  <link rel="stylesheet" href="style.min.css?v=56"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -141,33 +141,10 @@
     70% { opacity: 0.85; transform: scale(1.04) translate(-1.5%, 1.5%); }
   }
 
-  .hero-orbit {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: min(140vw, 1400px);
-    height: min(140vw, 1400px);
-    margin: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(59, 130, 246, 0.14);
-    z-index: 1;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    animation: heroOrbitSpin 28s linear infinite;
-    box-shadow: inset 0 0 80px rgba(59, 130, 246, 0.04);
-  }
-
+  /* Anciens anneaux « boule » bleus retirés — fond hero déjà porté par ::after + particules discrètes */
+  .hero-orbit,
   .hero-orbit::before {
-    content: '';
-    position: absolute;
-    inset: 14%;
-    border-radius: 50%;
-    border: 1px solid rgba(139, 92, 246, 0.12);
-  }
-
-  @keyframes heroOrbitSpin {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    display: none !important;
   }
 
   #particleCanvas {
@@ -2845,7 +2822,7 @@
     signalIntroCompleteForLoader();
     return;
   }
-  var introSeenKey = 'portfolioIntroSeen';
+  var introSeenKey = 'portfolioIntroSeenV3';
   try {
     var navIntro = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
     if (navIntro && navIntro.type === 'reload') {
@@ -3060,7 +3037,7 @@
     cv.width  = cv.offsetWidth;
     cv.height = cv.offsetHeight;
     pts = [];
-    const n = window.innerWidth < 768 ? 0 : Math.min(Math.floor(cv.width * cv.height / 9000), 80);
+    const n = window.innerWidth < 768 ? 0 : Math.min(Math.floor(cv.width * cv.height / 14000), 48);
     for(let i=0;i<n;i++) pts.push({
       x: Math.random()*cv.width,
       y: Math.random()*cv.height,
@@ -3084,14 +3061,14 @@
       }
       ctx.beginPath();
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(59,130,246,${p.a})`;
+      ctx.fillStyle=`rgba(96,165,250,${p.a * 0.55})`;
       ctx.fill();
       for(let j=i+1;j<pts.length;j++){
         const q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d2=dx*dx+dy*dy;
         if(d2<14400){
           ctx.beginPath();
           ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
-          ctx.strokeStyle=`rgba(59,130,246,${.12*(1-d2/14400)})`;
+          ctx.strokeStyle=`rgba(96,165,250,${.07*(1-d2/14400)})`;
           ctx.lineWidth=.5; ctx.stroke();
         }
       }
@@ -3145,6 +3122,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.min.js?v=48" defer></script>
+<script src="main.min.js?v=49" defer></script>
 </body>
 </html>

@@ -60,6 +60,11 @@ if (skillBars.length) {
     'main .single-section .proj-detail',
     'main #entreprise .exp-pair',
     'main .veille-intro',
+    'main #veille.veille-dashboard .veille-dash__head',
+    'main #veille.veille-dashboard .veille-dash__kpis',
+    'main #veille.veille-dashboard .veille-dash__toolbar',
+    'main #veille.veille-dashboard .veille-dash__filter-block',
+    'main #veille.veille-dashboard .veille-dash__grid',
     'main .theme-banner',
     'main .veille-card',
     'main .sources-section',
@@ -423,7 +428,8 @@ window.addEventListener('resize', () => {
 
 /* GSAP — transition loader → site (indépendant du toggle « animations du site » ; une fois par onglet) */
 (() => {
-  const SESSION_KEY = 'portfolioLoaderRevealV2';
+  /** Incrémenter après déploiement majeur pour que tout le monde recharge loader + timeline GSAP. */
+  const SESSION_KEY = 'portfolioLoaderRevealV3';
   const loader = document.getElementById('loader');
   const app = document.getElementById('app');
   const dataCanvas = document.getElementById('dataCanvas');
