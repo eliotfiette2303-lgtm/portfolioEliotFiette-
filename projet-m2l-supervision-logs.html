@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <script>
+  (function () {
+    try {
+      if (localStorage.getItem('portfolioAnim') !== '0') {
+        document.documentElement.classList.add('portfolio-anim-force');
+      }
+    } catch (e) {
+      try {
+        document.documentElement.classList.add('portfolio-anim-force');
+      } catch (e2) {}
+    }
+  })();
+  </script>
+  <script>
+  (function () {
+    window.__SITE_ROOT__ = '';
+    if (location.protocol === 'file:') return;
+    var host = location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return;
+    if (!host.endsWith('github.io')) return;
+    var parts = location.pathname.split('/').filter(Boolean);
+    var seg = parts[0];
+    if (!seg || /\.html$/i.test(seg)) return;
+    window.__SITE_ROOT__ = '/' + seg + '/';
+    var base = document.createElement('base');
+    base.href = location.origin + window.__SITE_ROOT__;
+    document.head.appendChild(base);
+  })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projet M2L : Supervision &amp; logs — Eliot Fiette</title>
+  <link rel="stylesheet" href="style.css?v=47"/>
+  <style>
+  .project-page .expertise-header { margin-bottom: 2.25rem; }
+  .project-page .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .project-page .section-title {
+    font-family: var(--display);
+    font-size: clamp(1.35rem, 3.2vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    max-width: 52rem;
+  }
+  .project-page .section-desc {
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.8;
+    margin: 0;
+    max-width: 52rem;
+  }
+  .project-page .project-meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+  }
+  .project-page .project-back {
+    margin-bottom: 1.75rem;
+  }
+  .project-page .download-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  </style>
+</head>
+<body>
+<header class="site-nav">
+  <div class="nav-top">
+    <a href="index.html#hero" class="nav-logo">Eliot Fiette</a>
+  </div>
+  <div class="nav-tabs-strip" role="navigation" aria-label="Navigation principale">
+    <ul class="nav-tabs">
+      <li><a href="index.html#hero">Accueil</a></li>
+      <li><a href="index.html#parcours">Parcours</a></li>
+      <li><a href="index.html#competences">Compétences</a></li>
+      <li><a href="index.html#projets" class="active">Projets</a></li>
+      <li><a href="index.html#ecole">École</a></li>
+      <li><a href="index.html#entreprise">Entreprise</a></li>
+      <li><a href="index.html#veille">Veille</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section id="ecole" class="single-section project-page" aria-labelledby="projet-m2l-title">
+    <div class="container">
+      <p class="project-back">
+        <a href="projets.html" class="btn btn-outline">Retour aux réalisations scolaires</a>
+      </p>
+
+      <div class="expertise-header">
+        <div class="section-eyebrow">Projet scolaire · BTS SIO</div>
+        <h1 class="section-title" id="projet-m2l-title">Projet M2L - Supervision &amp; Gestion des logs</h1>
+        <p class="section-desc">BTS SIO SISR - IPSSI Marne-La-Vallée | Septembre 2025 - Juin 2026</p>
+      </div>
+
+      <div class="proj-detail">
+        <p class="proj-body" style="margin-bottom:0">
+          Dans le cadre de mon BTS SIO option SISR à l'IPSSI, j'ai réalisé deux projets techniques pour la Maison des Ligues de Lorraine (M2L), une organisation disposant d'une infrastructure hétérogène composée de serveurs, machines virtuelles et équipements réseau.
+        </p>
+      </div>
+
+      <div class="proj-detail">
+        <div class="proj-num">Réalisation n°1</div>
+        <div class="proj-title">Mise en place d'une solution de supervision réseau Zabbix</div>
+        <div class="proj-section-title">Description</div>
+        <p class="proj-body">
+          Déploiement d'une solution de supervision complète Zabbix sur l'infrastructure M2L afin de surveiller la disponibilité des équipements, mesurer les performances et générer des alertes en temps réel.
+        </p>
+        <div class="proj-section-title">Tâches réalisées</div>
+        <ul class="obj-list">
+          <li>Installation de Zabbix Server 7.x sur VM Debian 12 (avec MariaDB + Apache/PHP) hébergée sur Proxmox</li>
+          <li>Supervision de la VM OPNsense via SNMP (disponibilité, trafic réseau, interfaces VLAN)</li>
+          <li>Supervision du serveur Windows Server 2022 via agent Zabbix (CPU, RAM, disques)</li>
+          <li>Création de dashboards : Vue générale, Réseau, Serveurs</li>
+          <li>Configuration des alertes e-mail (seuils CPU, indisponibilité hôte)</li>
+          <li>Tests de validation : simulation de pannes et vérification des alertes</li>
+        </ul>
+        <div class="proj-section-title">Technologies</div>
+        <div class="proj-tags">
+          <span class="tag tag-brown">Zabbix 7.x</span>
+          <span class="tag tag-green">Proxmox</span>
+          <span class="tag tag-orange">Debian 12</span>
+          <span class="tag tag-brown">MariaDB</span>
+          <span class="tag tag-green">OPNsense</span>
+          <span class="tag tag-orange">Windows Server 2022</span>
+          <span class="tag tag-brown">SNMP</span>
+        </div>
+      </div>
+
+      <div class="proj-detail">
+        <div class="proj-num">Réalisation n°2</div>
+        <div class="proj-title">Mise en place d'une solution de gestion des logs Graylog</div>
+        <div class="proj-section-title">Description</div>
+        <p class="proj-body">
+          Déploiement d'une solution centralisée de gestion des logs Graylog sur l'infrastructure M2L afin d'assurer le maintien en conditions opérationnelles et détecter les incidents de sécurité en temps réel.
+        </p>
+        <div class="proj-section-title">Tâches réalisées</div>
+        <ul class="obj-list">
+          <li>Installation de Graylog Server 5.x sur VM Debian 12 (avec MongoDB + OpenSearch) hébergée sur Proxmox</li>
+          <li>Création d'un input Syslog UDP 514 et configuration de la VM OPNsense pour envoyer ses logs vers Graylog</li>
+          <li>Création de dashboards : Vue générale, Sécurité (connexions bloquées, top IPs), VLANs</li>
+          <li>Configuration des alertes e-mail sur connexions bloquées</li>
+          <li>Tests de validation : génération de trafic bloqué et vérification des alertes</li>
+        </ul>
+        <div class="proj-section-title">Technologies</div>
+        <div class="proj-tags">
+          <span class="tag tag-brown">Graylog 5.x</span>
+          <span class="tag tag-green">Proxmox</span>
+          <span class="tag tag-orange">Debian 12</span>
+          <span class="tag tag-brown">MongoDB</span>
+          <span class="tag tag-green">OpenSearch</span>
+          <span class="tag tag-orange">OPNsense</span>
+          <span class="tag tag-brown">Syslog</span>
+        </div>
+      </div>
+
+      <div class="proj-detail">
+        <div class="proj-section-title">Téléchargements</div>
+        <div class="download-actions">
+          <a id="m2l-zabbix-pdf" href="E6_ZABBIX_FIETTE_Eliot.pdf" class="btn btn-primary" download="E6_ZABBIX_FIETTE_Eliot.pdf">Télécharger la fiche Zabbix (PDF)</a>
+          <a id="m2l-graylog-pdf" href="9_-_ANNEXEVII-_EPREUVE_E6_PRATIQUE_SISR_2_Eliot_Fiette.pdf" class="btn btn-primary" download="9_-_ANNEXEVII-_EPREUVE_E6_PRATIQUE_SISR_2_Eliot_Fiette.pdf">Télécharger la fiche Graylog (PDF)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  var r = typeof window.__SITE_ROOT__ === 'string' ? window.__SITE_ROOT__ : '';
+  var zabbixFile = 'E6_ZABBIX_FIETTE_Eliot.pdf';
+  var graylogFile = '9_-_ANNEXEVII-_EPREUVE_E6_PRATIQUE_SISR_2_Eliot_Fiette.pdf';
+  var zabbixUrl = r ? r.replace(/\/?$/, '/') + zabbixFile : zabbixFile;
+  var graylogUrl = r ? r.replace(/\/?$/, '/') + graylogFile : graylogFile;
+  var z = document.getElementById('m2l-zabbix-pdf');
+  var g = document.getElementById('m2l-graylog-pdf');
+  if (z) z.setAttribute('href', zabbixUrl);
+  if (g) g.setAttribute('href', graylogUrl);
+})();
+</script>
+
+<footer>
+  <span>© 2026 Eliot Fiette</span>
+  <span>Administrateur Systèmes &amp; Réseaux</span>
+  <span class="footer-anim" id="footerAnimWrap">
+    <button type="button" class="footer-anim-btn" id="footerAnimToggle" aria-pressed="true">Désactiver les animations du site</button>
+  </span>
+</footer>
+<script>
+(function () {
+  var wrap = document.getElementById('footerAnimWrap');
+  var btn = document.getElementById('footerAnimToggle');
+  if (!wrap || !btn) return;
+  function syncToggle() {
+    var on = document.documentElement.classList.contains('portfolio-anim-force');
+    btn.textContent = on
+      ? 'Désactiver les animations du site'
+      : 'Activer les animations du site';
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('footer-anim-btn--ghost', !on);
+  }
+  syncToggle();
+  btn.addEventListener('click', function () {
+    try {
+      if (document.documentElement.classList.contains('portfolio-anim-force')) {
+        localStorage.setItem('portfolioAnim', '0');
+      } else {
+        localStorage.removeItem('portfolioAnim');
+      }
+    } catch (e) {}
+    location.reload();
+  });
+})();
+</script>
+<script src="main.js?v=27"></script>
+</body>
+</html>

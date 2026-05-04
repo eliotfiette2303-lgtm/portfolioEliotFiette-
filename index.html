@@ -1018,7 +1018,7 @@
         <div class="proj-link">Voir le projet →</div>
       </a>
 
-      <a href="#ecole" class="proj-featured-card">
+      <a href="projet-m2l-supervision-logs.html" class="proj-featured-card" data-projet-m2l="1">
         <div class="proj-number">02</div>
         <div class="proj-meta">Projet École — BTS SIO</div>
         <div class="proj-name">Projet M2L</div>
@@ -1174,6 +1174,9 @@
               <span class="tag tag-green">Linux</span>
               <span class="tag tag-orange">Packet Tracer</span>
             </div>
+          <p style="margin-top:1.35rem;margin-bottom:0">
+            <a href="projet-m2l-supervision-logs.html" class="btn btn-outline" data-projet-m2l="1">Fiche détaillée : supervision &amp; gestion des logs →</a>
+          </p>
           </div>
         </div>
 
@@ -1501,10 +1504,15 @@
 <script>
 (function () {
   var r = typeof window.__SITE_ROOT__ === 'string' ? window.__SITE_ROOT__ : '';
-  var file = 'projet-gsb-visiteurs-reseau.html';
-  var u = r ? r.replace(/\/?$/, '/') + file : file;
+  var gsbFile = 'projet-gsb-visiteurs-reseau.html';
+  var gsbUrl = r ? r.replace(/\/?$/, '/') + gsbFile : gsbFile;
+  var m2lFile = 'projet-m2l-supervision-logs.html';
+  var m2lUrl = r ? r.replace(/\/?$/, '/') + m2lFile : m2lFile;
   document.querySelectorAll('a[data-projet-gsb="1"]').forEach(function (a) {
-    a.setAttribute('href', u);
+    a.setAttribute('href', gsbUrl);
+  });
+  document.querySelectorAll('a[data-projet-m2l="1"]').forEach(function (a) {
+    a.setAttribute('href', m2lUrl);
   });
 })();
 </script>
