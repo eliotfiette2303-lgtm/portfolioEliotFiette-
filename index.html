@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=50"/>
+  <link rel="stylesheet" href="style.css?v=51"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -1617,10 +1617,12 @@
     main?.removeAttribute('aria-hidden');
     header?.removeAttribute('aria-hidden');
     try {
-      html.classList.add('portfolio-main-warp-in');
-      setTimeout(function () {
-        html.classList.remove('portfolio-main-warp-in');
-      }, 1100);
+      requestAnimationFrame(function () {
+        html.classList.add('portfolio-main-warp-in');
+        setTimeout(function () {
+          html.classList.remove('portfolio-main-warp-in');
+        }, 560);
+      });
     } catch (e) {}
   }
 

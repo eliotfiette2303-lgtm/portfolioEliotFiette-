@@ -913,6 +913,7 @@ html.site-intro-lock body {
 }
 
 .site-intro--exit-simple {
+  will-change: opacity, transform, filter;
   animation: siteIntroSimpleFadeOut 0.62s ease forwards;
 }
 
@@ -2148,14 +2149,14 @@ html.site-intro-lock body {
 /* Arrivée du site après disparition de l’intro */
 html.portfolio-main-warp-in main,
 html.portfolio-main-warp-in header.site-nav {
-  animation: portfolioMainWarpIn 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: portfolioMainWarpIn 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes portfolioMainWarpIn {
   from {
-    opacity: 0.72;
-    transform: scale(1.04) translateY(12px);
-    filter: blur(12px) brightness(1.35);
+    opacity: 0.84;
+    transform: translateY(8px) scale(1.006);
+    filter: blur(3px) brightness(1.07);
   }
   to {
     opacity: 1;
@@ -2201,7 +2202,7 @@ html.portfolio-main-warp-in header.site-nav {
 
   html.portfolio-anim-force.portfolio-main-warp-in main,
   html.portfolio-anim-force.portfolio-main-warp-in header.site-nav {
-    animation: portfolioMainWarpInReduced 0.45s ease both;
+    animation: portfolioMainWarpInReduced 0.3s ease both;
   }
 }
 
