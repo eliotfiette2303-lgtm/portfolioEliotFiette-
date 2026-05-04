@@ -429,7 +429,7 @@ window.addEventListener('resize', () => {
 /* GSAP — transition loader → site (indépendant du toggle « animations du site » ; une fois par onglet) */
 (() => {
   /** Incrémenter après déploiement majeur pour que tout le monde recharge loader + timeline GSAP. */
-  const SESSION_KEY = 'portfolioLoaderRevealV3';
+  const SESSION_KEY = 'portfolioLoaderRevealV4';
   const loader = document.getElementById('loader');
   const app = document.getElementById('app');
   const dataCanvas = document.getElementById('dataCanvas');

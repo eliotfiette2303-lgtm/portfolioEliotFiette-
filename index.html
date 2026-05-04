@@ -77,7 +77,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
-  <link rel="stylesheet" href="style.min.css?v=56"/>
+  <link rel="stylesheet" href="style.min.css?v=57"/>
   <style>
   /* ── LAYOUT ── */
   .container { max-width: 1100px; margin: 0 auto; }
@@ -126,32 +126,41 @@
     content: '';
     position: absolute;
     inset: -18%;
+    opacity: 0.55;
     background:
-      radial-gradient(ellipse 85% 65% at 18% 42%, rgba(59, 130, 246, 0.2) 0%, transparent 52%),
-      radial-gradient(ellipse 70% 55% at 88% 58%, rgba(139, 92, 246, 0.14) 0%, transparent 50%),
-      radial-gradient(ellipse 55% 45% at 50% 105%, rgba(59, 130, 246, 0.1) 0%, transparent 42%);
+      radial-gradient(ellipse 85% 65% at 18% 42%, rgba(59, 130, 246, 0.09) 0%, transparent 52%),
+      radial-gradient(ellipse 70% 55% at 88% 58%, rgba(139, 92, 246, 0.07) 0%, transparent 50%),
+      radial-gradient(ellipse 55% 45% at 50% 105%, rgba(59, 130, 246, 0.045) 0%, transparent 42%);
     z-index: 0;
     pointer-events: none;
     animation: heroAuraDrift 14s ease-in-out infinite;
   }
 
   @keyframes heroAuraDrift {
-    0%, 100% { opacity: 0.72; transform: scale(1) translate(0, 0); }
-    40% { opacity: 1; transform: scale(1.08) translate(2%, -1.5%); }
-    70% { opacity: 0.85; transform: scale(1.04) translate(-1.5%, 1.5%); }
+    0%, 100% { opacity: 0.58; transform: scale(1) translate(0, 0); }
+    40% { opacity: 0.78; transform: scale(1.04) translate(2%, -1.5%); }
+    70% { opacity: 0.68; transform: scale(1.02) translate(-1.5%, 1.5%); }
   }
 
-  /* Anciens anneaux « boule » bleus retirés — fond hero déjà porté par ::after + particules discrètes */
+  /* Anciens anneaux hero retirés */
   .hero-orbit,
   .hero-orbit::before {
     display: none !important;
   }
 
+  /* Intro plein écran : anneaux bleus animés (style.css) = principale « boule » — masqués ici */
+  .site-intro__rings {
+    display: none !important;
+  }
+  .site-intro__aurora {
+    opacity: 0.38 !important;
+    filter: saturate(0.75) !important;
+  }
+
+  /* Réseau de points bleus désactivé — évite l’effet « nébuleuse / boule » au hero */
   #particleCanvas {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
+    display: none !important;
+    pointer-events: none;
   }
 
   .hero-scan {
@@ -1067,12 +1076,12 @@
   var ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   if (!ctx) return;
 
-  /* RGB alignés sur style.css : --bg #080c14, --accent / --accent2 / --accent3, --text */
+  /* Loader : tons « braises » bleu/violet + argent (moins sphère bleue uniforme) */
   var C_BG_TRAIL = '8, 12, 20';
-  var C_ACC = '59, 130, 246';
-  var C_ACC2 = '96, 165, 250';
-  var C_ACC3 = '147, 197, 253';
-  var C_HI = '225, 231, 245';
+  var C_ACC = '129, 140, 248';
+  var C_ACC2 = '167, 139, 250';
+  var C_ACC3 = '186, 230, 253';
+  var C_HI = '241, 245, 249';
 
   var dpr = 1;
   var W = 0;
@@ -2822,7 +2831,7 @@
     signalIntroCompleteForLoader();
     return;
   }
-  var introSeenKey = 'portfolioIntroSeenV3';
+  var introSeenKey = 'portfolioIntroSeenV4';
   try {
     var navIntro = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
     if (navIntro && navIntro.type === 'reload') {
@@ -2993,8 +3002,8 @@
   }
   setTimeout(nextBoot, 420);
 
-  var totalMs = 6200;
-  var loadDuration = 5600;
+  var totalMs = 4800;
+  var loadDuration = 4300;
 
   function easeOutQuart(x) {
     return 1 - Math.pow(1 - x, 4);
@@ -3023,6 +3032,9 @@
 (function(){
   const cv = document.getElementById('particleCanvas');
   if(!cv) return;
+  try {
+    if (window.getComputedStyle(cv).display === 'none') return;
+  } catch (e) {}
   const ctx = cv.getContext('2d');
   var reduced = false;
   try {
@@ -3122,6 +3134,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.min.js?v=49" defer></script>
+<script src="main.min.js?v=51" defer></script>
 </body>
 </html>
