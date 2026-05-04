@@ -855,6 +855,19 @@ html.portfolio-anim-force .wow-el.wow-in {
   transition-timing-function: cubic-bezier(0.34, 1.35, 0.55, 1), cubic-bezier(0.34, 1.35, 0.55, 1), ease;
 }
 
+/* ══ Interrupteur global : animations OFF (quand portfolio-anim-force absent) ══ */
+html:not(.portfolio-anim-force),
+html:not(.portfolio-anim-force) body {
+  scroll-behavior: auto !important;
+}
+
+html:not(.portfolio-anim-force) *,
+html:not(.portfolio-anim-force) *::before,
+html:not(.portfolio-anim-force) *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
 @keyframes navHeaderFade {
   from {
     opacity: 0;

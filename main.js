@@ -49,9 +49,8 @@ if (skillBars.length) {
 
 /* ── WOW : révélations au scroll (sections, cartes, blocs) ── */
 (() => {
-  const reduce =
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-    !document.documentElement.classList.contains('portfolio-anim-force');
+  const animForce = document.documentElement.classList.contains('portfolio-anim-force');
+  const reduce = !animForce || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sel = [
     'main .expertise-header',
     'main .expertise-card',
@@ -156,8 +155,8 @@ window.addEventListener('resize', () => {
   function prefersReducedScroll() {
     try {
       return (
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-        !document.documentElement.classList.contains('portfolio-anim-force')
+        !document.documentElement.classList.contains('portfolio-anim-force') ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
       );
     } catch (_) {
       return false;
