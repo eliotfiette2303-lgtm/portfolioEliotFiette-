@@ -792,12 +792,13 @@
   var BKEY_MUL = 10007;
   var NUM_WAVES = 20;
   var WAVE_STEP_MS = 34;
-  var WAVE_JITTER_MS = 20;
+  var WAVE_JITTER_MS = 14;
   var bucketStore = {};
   var activeKeys = [];
   var TWO_PI = 6.283185307179586;
   var crescendoT0 = 0;
-  var CRESC_TOTAL = 0.5;
+  var CRESC_TOTAL = 0.56;
+  var smoothDtNorm = 1;
 
   function clamp(n, a, b) {
     return n < a ? a : n > b ? b : n;
@@ -805,6 +806,11 @@
 
   function smoothstep(edge0, edge1, x) {
     var t = clamp((x - edge0) / Math.max(1e-6, edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function smootherstep(edge0, edge1, x) {
+    var t = smoothstep(edge0, edge1, x);
     return t * t * (3 - 2 * t);
   }
 
@@ -935,6 +941,7 @@
     if (raf) cancelAnimationFrame(raf);
     raf = 0;
     lastFrameT = 0;
+    smoothDtNorm = 1;
     window.removeEventListener('resize', onResize);
   }
 
@@ -1074,13 +1081,13 @@
 
     if (elapsed < CHAOS_MS) {
       var u = elapsed / CHAOS_MS;
-      var ue = u * u * (3 - 2 * u);
+      var ue = smootherstep(0, 1, u);
       wander = 0.5 * (1 - ue * 0.8);
       attract = 0.00028 + ue * ue * 0.00072;
       damp = 0.988;
     } else {
       var v = clamp((elapsed - CHAOS_MS) / STRUCT_MS, 0, 1);
-      var ve = v * v * (3 - 2 * v);
+      var ve = smootherstep(0, 1, v);
       var accel = Math.sin(Math.PI * clamp(v / 0.52, 0, 1)) * (1 - smoothstep(0.56, 0.94, v));
       var accelMul = 1 + 2.05 * accel;
       vmaxMul = 1 + 0.42 * accel;
@@ -1107,9 +1114,10 @@
       p.vx += dx * guided;
       p.vy += dy * guided;
 
-      var wob = wander * 0.026 * (0.82 + (1 - p.pz) * 0.28);
-      p.vx += Math.sin(p.phase + tSec * (1.35 + p.pz * 0.4)) * wob;
-      p.vy += Math.cos(p.phase * 1.09 + tSec * (1.12 + p.pz * 0.35)) * wob;
+      var env = elapsed < CHAOS_MS ? 1 : 1 - smootherstep(CHAOS_MS, CHAOS_MS + STRUCT_MS * 0.55, elapsed);
+      var wob = wander * 0.026 * (0.82 + (1 - p.pz) * 0.28) * (0.72 + 0.28 * env);
+      p.vx += Math.sin(p.phase + tSec * (1.32 + p.pz * 0.38)) * wob;
+      p.vy += Math.cos(p.phase * 1.09 + tSec * (1.1 + p.pz * 0.33)) * wob;
 
       p.vx *= damp;
       p.vy *= damp;
@@ -1157,12 +1165,11 @@
   }
 
   function crescShape(age) {
-    var u = clamp(age / CRESC_TOTAL, 0, 1.12);
-    var collapseK = smoothstep(0, 0.52, u);
-    collapseK *= collapseK * (1.04 - 0.04 * collapseK);
-    var burstK = smoothstep(0.36, 0.5, u) * (1 - smoothstep(0.48, 0.7, u));
-    var dissK = smoothstep(0.56, 1, u);
-    var linkFade = 1 - smoothstep(0.42, 0.94, u);
+    var u = clamp(age / CRESC_TOTAL, 0, 1.08);
+    var collapseK = smootherstep(0, 0.54, u);
+    var burstK = smootherstep(0.34, 0.52, u) * (1 - smootherstep(0.5, 0.72, u));
+    var dissK = smootherstep(0.54, 1, u);
+    var linkFade = 1 - smootherstep(0.4, 0.94, u);
     return { u: u, collapseK: collapseK, burstK: burstK, dissK: dissK, linkFade: linkFade };
   }
 
@@ -1210,20 +1217,23 @@
     if (!t0) {
       t0 = now;
       lastFrameT = now;
+      smoothDtNorm = 1;
     }
     var rawDt = now - lastFrameT;
     lastFrameT = now;
-    if (rawDt > 72) rawDt = 72;
-    var dtNorm = clamp(rawDt / 16.6667, 0.78, 1.22);
+    if (rawDt > 64) rawDt = 64;
+    var targetNorm = clamp(rawDt / 16.6667, 0.81, 1.19);
+    smoothDtNorm += (targetNorm - smoothDtNorm) * 0.28;
+    var dtNorm = smoothDtNorm;
 
     var elapsed = now - t0;
     var cAge = crescendoT0 > 0 ? (now - crescendoT0) * 0.001 : -1;
     var cv = cAge >= 0 ? crescShape(cAge) : null;
 
     var alignProg = clamp(elapsed / (PHYS_TOTAL_MS + 300), 0, 1);
-    var alignEase = alignProg * alignProg * (3 - 2 * alignProg);
+    var alignEase = smootherstep(0, 1, alignProg);
     if (cv) alignEase = alignEase * (1 - 0.55 * cv.dissK);
-    var fade = clamp(elapsed / FADE_MS, 0, 1);
+    var fade = smootherstep(0, FADE_MS, elapsed);
     var post = Math.max(0, elapsed - PHYS_TOTAL_MS);
     var breath = 1 + 0.024 * Math.sin(post * 0.00135 + 0.2);
     var linkPulse = elapsed >= PHYS_TOTAL_MS && !cv ? 1 + 0.012 * Math.sin(post * 0.001) : 1;
@@ -1374,8 +1384,8 @@
     'portfolio:loaderCrescendo',
     function (e) {
       var d = e && e.detail && e.detail.durationMs;
-      if (typeof d === 'number' && d >= 280 && d <= 640) CRESC_TOTAL = d * 0.001;
-      else CRESC_TOTAL = 0.5;
+      if (typeof d === 'number' && d >= 280 && d <= 680) CRESC_TOTAL = d * 0.001;
+      else CRESC_TOTAL = 0.56;
       crescendoT0 = performance.now();
       initCrescendoDirs();
     },
@@ -2626,6 +2636,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.min.js?v=41" defer></script>
+<script src="main.min.js?v=42" defer></script>
 </body>
 </html>
