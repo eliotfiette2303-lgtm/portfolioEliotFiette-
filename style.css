@@ -2362,6 +2362,34 @@ html.portfolio-main-warp-in header.site-nav {
   transition: filter 0.25s ease;
 }
 
+.tech-logo-link--wordmark .tech-logo-wordmark {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #c8d4f0;
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 128px;
+  transition: color 0.25s ease, transform 0.22s ease;
+}
+
+.tech-logo-link--wordmark:hover .tech-logo-wordmark,
+.tech-logo-link--wordmark:focus-visible .tech-logo-wordmark {
+  color: var(--text);
+}
+
+.tech-logo-link--wordmark .tech-logo-wordmark--zabbix {
+  color: #cc2936;
+  letter-spacing: 0.06em;
+}
+
+.tech-logo-link--wordmark:hover .tech-logo-wordmark--zabbix,
+.tech-logo-link--wordmark:focus-visible .tech-logo-wordmark--zabbix {
+  color: #e94545;
+}
+
 .tech-logo-link:hover img,
 .tech-logo-link:focus-visible img {
   filter: none;
@@ -2385,6 +2413,12 @@ html.portfolio-main-warp-in header.site-nav {
 
   .tech-logo-link img {
     height: 28px;
+    max-width: 96px;
+  }
+
+  .tech-logo-link--wordmark .tech-logo-wordmark {
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
     max-width: 96px;
   }
 }
