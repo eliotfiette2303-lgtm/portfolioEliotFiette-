@@ -174,9 +174,25 @@
           Une solution complète pour équiper les visiteurs médicaux et une infrastructure réseau robuste, sécurisée et adaptée aux besoins de GSB, démontrant ma capacité à mener des projets techniques complexes. Ce projet a renforcé mes compétences en gestion d'infrastructure et en analyse des besoins utilisateurs, tout en mettant en avant mon aptitude à proposer des solutions innovantes et sécurisées.
         </p>
       </div>
+
+      <div class="proj-detail">
+        <div class="proj-section-title">Livrable compressé</div>
+        <p class="proj-body" style="margin-bottom:1.1rem">
+          Téléchargez l’archive <strong>GSB.zip</strong> (contenu du projet, documents et ressources associés).
+        </p>
+        <a id="gsb-zip-dl" href="GSB.zip" class="btn btn-primary" download="GSB.zip">Télécharger GSB.zip</a>
+      </div>
     </div>
   </section>
 </main>
+<script>
+(function () {
+  var r = typeof window.__SITE_ROOT__ === 'string' ? window.__SITE_ROOT__ : '';
+  var u = r ? r.replace(/\/?$/, '/') + 'GSB.zip' : 'GSB.zip';
+  var a = document.getElementById('gsb-zip-dl');
+  if (a) a.setAttribute('href', u);
+})();
+</script>
 
 <footer>
   <span>© 2026 Eliot Fiette</span>
