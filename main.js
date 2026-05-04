@@ -93,10 +93,28 @@ if (skillBars.length) {
         obs.unobserve(en.target);
       });
     },
-    { threshold: 0.06, rootMargin: '0px 0px -10% 0px' },
+    /* rootMargin négatif : zones proches du bord bas du viewport ne déclenchaient pas (ex. #competences au chargement) */
+    { threshold: 0.02, rootMargin: '0px 0px 8% 0px' },
   );
 
   nodes.forEach((el) => obs.observe(el));
+
+  function revealWowsAlreadyOnScreen() {
+    const vh = window.innerHeight || 0;
+    nodes.forEach((el) => {
+      if (el.classList.contains('wow-in')) return;
+      const r = el.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vh * 0.995) {
+        el.classList.add('wow-in');
+        obs.unobserve(el);
+      }
+    });
+  }
+
+  requestAnimationFrame(revealWowsAlreadyOnScreen);
+  setTimeout(revealWowsAlreadyOnScreen, 350);
+  setTimeout(revealWowsAlreadyOnScreen, 1200);
+  window.addEventListener('hashchange', () => setTimeout(revealWowsAlreadyOnScreen, 80), { passive: true });
 })();
 
 /* ── CLOSE MOBILE MENU ON RESIZE ── */
