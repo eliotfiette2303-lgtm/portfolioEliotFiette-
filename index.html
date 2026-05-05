@@ -723,9 +723,36 @@
   #veille.veille-dashboard .veille-dash__container {
     max-width: 1180px;
     margin: 0 auto;
+    position: relative;
+  }
+  #veille.veille-dashboard .veille-dash__container::before {
+    content: '';
+    position: absolute;
+    inset: -30px -20px auto;
+    height: 220px;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 40% 60% at 16% 22%, rgba(59, 130, 246, 0.2), transparent 65%),
+      radial-gradient(ellipse 45% 62% at 84% 8%, rgba(99, 102, 241, 0.15), transparent 62%);
+    filter: blur(16px);
+    opacity: 0.85;
+  }
+  #veille.veille-dashboard .veille-dash__container > * {
+    position: relative;
+    z-index: 1;
   }
   #veille.veille-dashboard .veille-dash__head {
     margin-bottom: 2rem;
+    padding: 1.25rem 1.3rem 1.15rem;
+    border: 1px solid rgba(96, 165, 250, 0.18);
+    border-radius: 14px;
+    background:
+      linear-gradient(165deg, rgba(11, 20, 38, 0.9) 0%, rgba(7, 13, 25, 0.82) 100%),
+      radial-gradient(ellipse 120% 140% at 18% 6%, rgba(59, 130, 246, 0.14), transparent 55%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 18px 46px rgba(0, 0, 0, 0.3);
   }
   #veille.veille-dashboard .veille-dash__title {
     font-family: var(--display);
@@ -781,7 +808,7 @@
     display: flex;
     align-items: flex-start;
     gap: 0.85rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.16s ease, background 0.2s;
     width: 100%;
     text-align: left;
     font: inherit;
@@ -793,6 +820,8 @@
   #veille.veille-dashboard .veille-dash__kpi:hover {
     border-color: var(--border2);
     box-shadow: var(--glow);
+    transform: translateY(-2px);
+    background: linear-gradient(165deg, rgba(18, 30, 56, 0.9) 0%, rgba(10, 17, 32, 0.86) 100%);
   }
   #veille.veille-dashboard .veille-dash__kpi.is-active {
     border-color: rgba(96, 165, 250, 0.58);
@@ -846,7 +875,11 @@
     flex-wrap: wrap;
     gap: 0.65rem;
     align-items: center;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
+    padding: 0.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(96, 165, 250, 0.18);
+    background: linear-gradient(180deg, rgba(10, 16, 31, 0.86) 0%, rgba(7, 12, 24, 0.82) 100%);
   }
   #veille.veille-dashboard .veille-dash__search {
     flex: 1;
@@ -857,12 +890,14 @@
     color: var(--text);
     background: rgba(13, 22, 42, 0.65);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: 10px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
   }
   #veille.veille-dashboard .veille-dash__search:focus {
     border-color: var(--border2);
+    background: rgba(16, 27, 51, 0.78);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
   }
   #veille.veille-dashboard .veille-dash__toolbar .btn {
     white-space: nowrap;
@@ -874,9 +909,9 @@
     align-items: center;
     margin-bottom: 1.2rem;
     padding: 0.65rem 0.85rem;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid rgba(59, 130, 246, 0.2);
-    background: rgba(8, 14, 26, 0.5);
+    background: linear-gradient(180deg, rgba(8, 14, 26, 0.62) 0%, rgba(6, 11, 22, 0.56) 100%);
     font-family: var(--mono);
     font-size: 0.64rem;
     letter-spacing: 0.05em;
@@ -912,11 +947,12 @@
     background: transparent;
     color: var(--text2);
     cursor: pointer;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.12s ease;
   }
   #veille.veille-dashboard .veille-dash__chip:hover {
     color: var(--text);
     border-color: var(--border2);
+    transform: translateY(-1px);
   }
   #veille.veille-dashboard .veille-dash__chip.is-active {
     color: var(--accent2);
@@ -941,14 +977,14 @@
   #veille.veille-dashboard .veille-dash__card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: var(--radius2);
+    border-radius: 14px;
     padding: 1.25rem 1.35rem;
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
     cursor: pointer;
     text-align: left;
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.18s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.18s, background 0.2s;
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -964,13 +1000,14 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent), rgba(139, 92, 246, 0.8));
+    background: linear-gradient(90deg, rgba(96, 165, 250, 0.95), rgba(139, 92, 246, 0.82));
     opacity: 0.85;
   }
   #veille.veille-dashboard .veille-dash__card:hover {
     border-color: var(--border2);
     box-shadow: var(--glow);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    background: linear-gradient(170deg, rgba(14, 23, 44, 0.96) 0%, rgba(9, 15, 30, 0.92) 100%);
   }
   #veille.veille-dashboard .veille-dash__card:focus-visible {
     outline: 2px solid var(--accent);
@@ -1036,7 +1073,7 @@
   }
   #veille.veille-dashboard .veille-dash__card-title {
     font-family: var(--display);
-    font-size: 1.02rem;
+    font-size: 1.07rem;
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.35;
@@ -1062,7 +1099,7 @@
     margin: 0;
     flex: 1;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -1085,8 +1122,9 @@
   }
   #veille.veille-dashboard .veille-dash__card-cta span {
     font-size: 0.78rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--accent2);
+    letter-spacing: 0.02em;
   }
   #veille.veille-dashboard .veille-dash__empty {
     grid-column: 1 / -1;
