@@ -782,10 +782,26 @@
     align-items: flex-start;
     gap: 0.85rem;
     transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
   }
   #veille.veille-dashboard .veille-dash__kpi:hover {
     border-color: var(--border2);
     box-shadow: var(--glow);
+  }
+  #veille.veille-dashboard .veille-dash__kpi.is-active {
+    border-color: rgba(96, 165, 250, 0.58);
+    box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.28), var(--glow);
+    background: linear-gradient(170deg, rgba(14, 24, 46, 0.92) 0%, rgba(8, 14, 28, 0.9) 100%);
+  }
+  #veille.veille-dashboard .veille-dash__kpi:focus-visible {
+    outline: 2px solid var(--accent2);
+    outline-offset: 2px;
   }
   #veille.veille-dashboard .veille-dash__kpi-icon {
     width: 40px;
@@ -850,6 +866,25 @@
   }
   #veille.veille-dashboard .veille-dash__toolbar .btn {
     white-space: nowrap;
+  }
+  #veille.veille-dashboard .veille-dash__status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.9rem;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: rgba(8, 14, 26, 0.5);
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    color: var(--text2);
+  }
+  #veille.veille-dashboard .veille-dash__status strong {
+    color: var(--accent2);
+    font-weight: 600;
   }
   #veille.veille-dashboard .veille-dash__filter-block {
     margin-bottom: 1.35rem;
@@ -1062,6 +1097,11 @@
     border: 1px dashed var(--border);
     border-radius: var(--radius2);
     background: rgba(13, 22, 42, 0.35);
+  }
+  #veille.veille-dashboard .veille-dash__more-wrap {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
   }
   </style>
 </head>
@@ -2317,34 +2357,34 @@
     </header>
 
     <div class="veille-dash__kpis" role="region" aria-label="Indicateurs de veille" id="veille-kpis">
-      <div class="veille-dash__kpi">
+      <button type="button" class="veille-dash__kpi" data-kpi-filter="all" aria-pressed="true">
         <div class="veille-dash__kpi-icon" aria-hidden="true">📚</div>
         <div>
           <div class="veille-dash__kpi-val" id="veille-kpi-total">0</div>
           <div class="veille-dash__kpi-label">Articles totaux</div>
         </div>
-      </div>
-      <div class="veille-dash__kpi">
+      </button>
+      <button type="button" class="veille-dash__kpi" data-kpi-filter="recent" aria-pressed="false">
         <div class="veille-dash__kpi-icon veille-dash__kpi-icon--mint" aria-hidden="true">🕐</div>
         <div>
           <div class="veille-dash__kpi-val" id="veille-kpi-recent">0</div>
           <div class="veille-dash__kpi-label">Articles récents (&lt;7j)</div>
         </div>
-      </div>
-      <div class="veille-dash__kpi">
+      </button>
+      <button type="button" class="veille-dash__kpi" data-kpi-filter="high" aria-pressed="false">
         <div class="veille-dash__kpi-icon veille-dash__kpi-icon--rose" aria-hidden="true">⚠️</div>
         <div>
           <div class="veille-dash__kpi-val" id="veille-kpi-high">0</div>
           <div class="veille-dash__kpi-label">Criticité élevée</div>
         </div>
-      </div>
-      <div class="veille-dash__kpi">
+      </button>
+      <button type="button" class="veille-dash__kpi" data-kpi-filter="sources" aria-pressed="false">
         <div class="veille-dash__kpi-icon veille-dash__kpi-icon--amber" aria-hidden="true">🔗</div>
         <div>
           <div class="veille-dash__kpi-val" id="veille-kpi-sources">0</div>
           <div class="veille-dash__kpi-label">Sources actives</div>
         </div>
-      </div>
+      </button>
     </div>
 
     <div class="veille-dash__toolbar">
@@ -2359,6 +2399,7 @@
       <button type="button" class="btn btn-outline" id="veille-btn-sort" aria-pressed="true">Plus récents</button>
       <button type="button" class="btn btn-outline" id="veille-btn-refresh">Actualiser</button>
     </div>
+    <div class="veille-dash__status" id="veille-status" role="status" aria-live="polite"></div>
 
     <div class="veille-dash__filter-block">
       <span class="veille-dash__filter-label">Catégories</span>
@@ -2383,6 +2424,9 @@
     </div>
 
     <div class="veille-dash__grid" id="veille-articles-root"></div>
+    <div class="veille-dash__more-wrap">
+      <button type="button" class="btn btn-outline" id="veille-btn-more" hidden>Afficher plus</button>
+    </div>
   </div>
 </section>
 <script>
@@ -2452,7 +2496,7 @@
   function parseRss(doc, srcCfg) {
     var items = Array.prototype.slice.call(doc.querySelectorAll('item'));
     var out = [];
-    items.slice(0, 12).forEach(function (item, idx) {
+    items.slice(0, 20).forEach(function (item, idx) {
       var title = textOrEmpty(item.querySelector('title'));
       var link = textOrEmpty(item.querySelector('link'));
       var desc = stripHtml(textOrEmpty(item.querySelector('description')));
@@ -2507,6 +2551,11 @@
   function loadArticles(onProgress) {
     REF_NOW = new Date();
     ARTICLES = [];
+    loadStats.loaded = 0;
+    loadStats.total = RSS_SOURCES.length;
+    loadStats.errors = 0;
+    loadStats.lastUpdated = null;
+    updateStatus('Chargement des flux RSS en cours...');
     var root = document.getElementById('veille-articles-root');
     if (root) {
       root.innerHTML =
@@ -2534,10 +2583,18 @@
           })
           .catch(function () {
             // Ignore une source lente/indisponible.
+            loadStats.errors += 1;
           })
           .finally(function () {
             pending -= 1;
-            if (pending <= 0) resolve(ARTICLES);
+            loadStats.loaded = loadStats.total - pending;
+            if (pending <= 0) {
+              loadStats.lastUpdated = new Date();
+              updateStatus();
+              resolve(ARTICLES);
+            } else {
+              updateStatus();
+            }
           });
       });
     });
@@ -2557,6 +2614,15 @@
     src: 'all',
     q: '',
     sortDesc: true,
+    kpiFilter: 'all',
+    visibleCount: 18,
+  };
+
+  var loadStats = {
+    loaded: 0,
+    total: RSS_SOURCES.length,
+    errors: 0,
+    lastUpdated: null,
   };
 
   function norm(s) {
@@ -2566,11 +2632,49 @@
   function matchesFilters(a) {
     if (state.cat !== 'all' && a.category !== state.cat) return false;
     if (state.src !== 'all' && a.sourceKey !== state.src) return false;
+    if (state.kpiFilter === 'recent' && !isRecent(a)) return false;
+    if (state.kpiFilter === 'high' && a.criticite !== 'high') return false;
     if (state.q) {
       var n = norm(state.q);
       if (!norm(a.title).includes(n) && !norm(a.summary).includes(n)) return false;
     }
     return true;
+  }
+
+  function updateKpiButtons() {
+    var row = document.getElementById('veille-kpis');
+    if (!row) return;
+    row.querySelectorAll('[data-kpi-filter]').forEach(function (btn) {
+      var on = btn.getAttribute('data-kpi-filter') === state.kpiFilter;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function updateStatus(text) {
+    var el = document.getElementById('veille-status');
+    if (!el) return;
+    if (text) {
+      el.innerHTML = text;
+      return;
+    }
+    var ts = loadStats.lastUpdated
+      ? loadStats.lastUpdated.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      : '--:--';
+    el.innerHTML =
+      '<span><strong>' +
+      String(loadStats.loaded) +
+      '/' +
+      String(loadStats.total) +
+      '</strong> sources chargées</span>' +
+      '<span>·</span>' +
+      '<span>' +
+      String(loadStats.errors) +
+      ' source(s) indisponible(s)</span>' +
+      '<span>·</span>' +
+      '<span>Dernière mise à jour: <strong>' +
+      ts +
+      '</strong></span>';
   }
 
   function getFiltered() {
@@ -2612,17 +2716,21 @@
 
   function render() {
     var root = document.getElementById('veille-articles-root');
+    var btnMore = document.getElementById('veille-btn-more');
     if (!root) return;
     var list = getFiltered();
+    var shown = list.slice(0, state.visibleCount);
     updateKpis(list);
+    updateKpiButtons();
 
-    if (!list.length) {
+    if (!shown.length) {
+      if (btnMore) btnMore.hidden = true;
       root.innerHTML =
         '<p class="veille-dash__empty" role="status">Aucun article ne correspond aux filtres sélectionnés.</p>';
       return;
     }
 
-    var html = list
+    var html = shown
       .map(function (a) {
         var shieldClass =
           a.criticite === 'high' ? 'veille-dash__shield--high' : 'veille-dash__shield--mid';
@@ -2674,6 +2782,13 @@
       })
       .join('');
     root.innerHTML = html;
+    if (btnMore) {
+      var remaining = list.length - shown.length;
+      btnMore.hidden = remaining <= 0;
+      if (remaining > 0) {
+        btnMore.textContent = 'Afficher ' + String(Math.min(remaining, 12)) + ' article(s) de plus';
+      }
+    }
 
     root.querySelectorAll('.veille-dash__card').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -2694,8 +2809,10 @@
     var search = document.getElementById('veille-search-input');
     var btnSort = document.getElementById('veille-btn-sort');
     var btnRef = document.getElementById('veille-btn-refresh');
+    var btnMore = document.getElementById('veille-btn-more');
     var catRow = document.getElementById('veille-filters-cat');
     var srcRow = document.getElementById('veille-filters-src');
+    var kpiRow = document.getElementById('veille-kpis');
 
     if (search) {
       search.addEventListener('input', function () {
@@ -2706,8 +2823,9 @@
 
     if (btnSort) {
       btnSort.addEventListener('click', function () {
-        state.sortDesc = true;
-        btnSort.setAttribute('aria-pressed', 'true');
+        state.sortDesc = !state.sortDesc;
+        btnSort.textContent = state.sortDesc ? 'Plus récents' : 'Plus anciens';
+        btnSort.setAttribute('aria-pressed', state.sortDesc ? 'true' : 'false');
         render();
       });
     }
@@ -2717,9 +2835,12 @@
       state.src = 'all';
       state.q = '';
       state.sortDesc = true;
+      state.kpiFilter = 'all';
+      state.visibleCount = 18;
       if (search) search.value = '';
       setActiveChips(catRow, 'veille-cat', 'all');
       setActiveChips(srcRow, 'veille-src', 'all');
+      updateKpiButtons();
     }
 
     if (btnRef) {
@@ -2736,6 +2857,8 @@
         var t = e.target.closest('[data-veille-cat]');
         if (!t) return;
         state.cat = t.getAttribute('data-veille-cat');
+        state.kpiFilter = 'all';
+        state.visibleCount = 18;
         setActiveChips(catRow, 'veille-cat', state.cat);
         render();
       });
@@ -2746,7 +2869,30 @@
         var t = e.target.closest('[data-veille-src]');
         if (!t) return;
         state.src = t.getAttribute('data-veille-src');
+        state.kpiFilter = 'all';
+        state.visibleCount = 18;
         setActiveChips(srcRow, 'veille-src', state.src);
+        render();
+      });
+    }
+
+    if (kpiRow) {
+      kpiRow.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-kpi-filter]');
+        if (!t) return;
+        state.kpiFilter = t.getAttribute('data-kpi-filter') || 'all';
+        if (state.kpiFilter === 'sources') {
+          state.src = 'all';
+          setActiveChips(srcRow, 'veille-src', 'all');
+        }
+        state.visibleCount = 18;
+        render();
+      });
+    }
+
+    if (btnMore) {
+      btnMore.addEventListener('click', function () {
+        state.visibleCount += 12;
         render();
       });
     }
