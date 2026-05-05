@@ -77,6 +77,9 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eliot Fiette — Portfolio</title>
+  <link rel="canonical" href="https://eliotfiette2303-lgtm.github.io/portfolioEliotFiette-/index.html"/>
+  <meta property="og:url" content="https://eliotfiette2303-lgtm.github.io/portfolioEliotFiette-/index.html"/>
+  <meta name="twitter:url" content="https://eliotfiette2303-lgtm.github.io/portfolioEliotFiette-/index.html"/>
   <link rel="stylesheet" href="style.min.css?v=57"/>
   <style>
   /* ── LAYOUT ── */
@@ -2385,95 +2388,128 @@
 <script>
 (function () {
   'use strict';
-  var REF_NOW = new Date('2026-05-04T12:00:00');
+  var REF_NOW = new Date();
   var MS_DAY = 864e5;
 
-  var ARTICLES = [
+  var ARTICLES = [];
+
+  // Flux RSS réels par source (via proxy CORS public).
+  var RSS_SOURCES = [
     {
-      id: 'v1',
-      title: "Alerte : nouvelle campagne de ransomware ciblant les collectivités",
-      source: 'ANSSI',
-      sourceKey: 'anssi',
-      dateISO: '2026-05-03',
-      dateLabel: '3 mai 2026',
-      criticite: 'high',
-      category: 'ransomware',
-      tags: ['ransomware', 'infrastructure', 'VPN'],
-      summary:
-        "L'ANSSI met en garde contre une vague d'attaques par ransomware visant les collectivités territoriales et les établissements de santé.",
-      url: 'https://www.cert.ssi.gouv.fr/',
+      key: 'anssi',
+      label: 'ANSSI',
+      rssUrl: 'http://www.ssi.gouv.fr/actualites/rss/',
     },
     {
-      id: 'v2',
-      title: 'Vulnérabilité critique dans FortiGate : patch de sécurité urgent',
-      source: 'CERT-FR',
-      sourceKey: 'cert-fr',
-      dateISO: '2026-05-02',
-      dateLabel: '2 mai 2026',
-      criticite: 'high',
-      category: 'faille',
-      tags: ['faille de sécurité', 'zero-day', 'pare-feu'],
-      summary:
-        'Une faille zero-day découverte dans les pare-feu FortiGate permet une exécution de code à distance. Fortinet recommande une mise à jour immédiate.',
-      url: 'https://www.cert.ssi.gouv.fr/',
+      key: 'cert-fr',
+      label: 'CERT-FR',
+      rssUrl: 'https://www.cert.ssi.gouv.fr/feed/',
     },
     {
-      id: 'v3',
-      title: "Phishing par IA : les deepfakes vocaux piègent les entreprises",
-      source: 'ZDNet',
-      sourceKey: 'zdnet',
-      dateISO: '2026-05-01',
-      dateLabel: '1 mai 2026',
-      criticite: 'high',
-      category: 'phishing',
-      tags: ['phishing', 'IA', 'deepfake'],
-      summary:
-        "Des cybercriminels utilisent l'IA pour cloner la voix de dirigeants d'entreprise et ordonner des virements frauduleux.",
-      url: 'https://www.zdnet.fr/',
+      key: 'zdnet',
+      label: 'ZDNet',
+      rssUrl: 'https://www.zdnet.fr/feeds/rss/actualites/',
     },
     {
-      id: 'v4',
-      title: 'Le malware Lumma Stealer se propage via de fausses mises à jour',
-      source: 'Le Monde Informatique',
-      sourceKey: 'lmi',
-      dateISO: '2026-04-30',
-      dateLabel: '30 avril 2026',
-      criticite: 'medium',
-      category: 'malware',
-      tags: ['malware', 'stealer', 'navigateur'],
-      summary:
-        'Un nouveau vecteur de distribution du malware Lumma Stealer a été identifié. Les victimes sont incitées à télécharger une fausse mise à jour de navigateur.',
-      url: 'https://www.lemondeinformatique.fr/',
-    },
-    {
-      id: 'v5',
-      title: 'Rapport ANSSI 2025 : hausse de 30% des incidents cyber en France',
-      source: 'ANSSI',
-      sourceKey: 'anssi',
-      dateISO: '2026-04-29',
-      dateLabel: '29 avril 2026',
-      criticite: 'medium',
-      category: 'ransomware',
-      tags: ['ransomware', 'phishing', 'statistiques'],
-      summary:
-        "Le rapport annuel de l'ANSSI révèle une augmentation significative des cyberattaques en 2024, avec une prédominance des ransomwares.",
-      url: 'https://www.ssi.gouv.fr/',
-    },
-    {
-      id: 'v6',
-      title: 'Docker Hub compromis : des images malveillantes détectées',
-      source: 'ZDNet',
-      sourceKey: 'zdnet',
-      dateISO: '2026-04-26',
-      dateLabel: '26 avril 2026',
-      criticite: 'medium',
-      category: 'malware',
-      tags: ['malware', 'Docker', 'supply chain'],
-      summary:
-        "Des chercheurs en sécurité ont découvert des centaines d'images Docker contenant des cryptomineurs et des backdoors.",
-      url: 'https://www.zdnet.fr/',
+      key: 'lmi',
+      label: 'Le Monde Informatique',
+      rssUrl: 'https://www.lemondeinformatique.fr/flux-rss/thematique/securite/rss.xml',
     },
   ];
+
+  function withCorsProxy(url) {
+    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+  }
+
+  function textOrEmpty(el) {
+    return el ? (el.textContent || '').trim() : '';
+  }
+
+  function stripHtml(html) {
+    if (!html) return '';
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return (tmp.textContent || tmp.innerText || '').trim();
+  }
+
+  function inferCategoryFromText(t) {
+    var s = (t || '').toLowerCase();
+    if (s.includes('ransomware') || s.includes('rançongiciel')) return 'ransomware';
+    if (s.includes('phishing') || s.includes('hameçonnage')) return 'phishing';
+    if (s.includes('vulnérabilit') || s.includes('faille') || s.includes('zero-day')) return 'faille';
+    if (s.includes('malware') || s.includes('stealer') || s.includes('trojan')) return 'malware';
+    return 'faille';
+  }
+
+  function inferCriticiteFromText(t) {
+    var s = (t || '').toLowerCase();
+    if (s.includes('critique') || s.includes('urgence') || s.includes('alerte') || s.includes('ransomware')) {
+      return 'high';
+    }
+    return 'medium';
+  }
+
+  function parseRss(doc, srcCfg) {
+    var items = Array.prototype.slice.call(doc.querySelectorAll('item'));
+    var out = [];
+    items.slice(0, 12).forEach(function (item, idx) {
+      var title = textOrEmpty(item.querySelector('title'));
+      var link = textOrEmpty(item.querySelector('link'));
+      var desc = stripHtml(textOrEmpty(item.querySelector('description')));
+      var pub = textOrEmpty(item.querySelector('pubDate')) || textOrEmpty(item.querySelector('dc\\:date'));
+      var d = pub ? new Date(pub) : new Date();
+      var iso = isNaN(d.getTime()) ? REF_NOW.toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
+      var dateLabel = iso.split('-').reverse().join(' / ');
+      var base = title + ' ' + desc;
+      var category = inferCategoryFromText(base);
+      var criticite = inferCriticiteFromText(base);
+      out.push({
+        id: srcCfg.key + '-' + idx,
+        title: title || srcCfg.label + ' — article',
+        source: srcCfg.label,
+        sourceKey: srcCfg.key,
+        dateISO: iso,
+        dateLabel: dateLabel,
+        criticite: criticite,
+        category: category,
+        tags: [category],
+        summary: desc || 'Article de veille sans résumé détaillé fourni par le flux RSS.',
+        url: link || srcCfg.rssUrl,
+      });
+    });
+    return out;
+  }
+
+  function loadArticles() {
+    REF_NOW = new Date();
+    var root = document.getElementById('veille-articles-root');
+    if (root) {
+      root.innerHTML =
+        '<p class="veille-dash__empty" role="status">Chargement des articles de veille en temps réel…</p>';
+    }
+
+    return Promise.all(
+      RSS_SOURCES.map(function (src) {
+        return fetch(withCorsProxy(src.rssUrl))
+          .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+          })
+          .then(function (txt) {
+            var parser = new window.DOMParser();
+            var doc = parser.parseFromString(txt, 'application/xml');
+            return parseRss(doc, src);
+          })
+          .catch(function () {
+            // En cas d’erreur pour une source, on la saute silencieusement.
+            return [];
+          });
+      }),
+    ).then(function (chunks) {
+      ARTICLES = [].concat.apply([], chunks);
+      return ARTICLES;
+    });
+  }
 
   function daysBetween(a, b) {
     return Math.floor((a.getTime() - b.getTime()) / MS_DAY);
@@ -2644,16 +2680,22 @@
       });
     }
 
+    function resetFilters() {
+      state.cat = 'all';
+      state.src = 'all';
+      state.q = '';
+      state.sortDesc = true;
+      if (search) search.value = '';
+      setActiveChips(catRow, 'veille-cat', 'all');
+      setActiveChips(srcRow, 'veille-src', 'all');
+    }
+
     if (btnRef) {
       btnRef.addEventListener('click', function () {
-        state.cat = 'all';
-        state.src = 'all';
-        state.q = '';
-        state.sortDesc = true;
-        if (search) search.value = '';
-        setActiveChips(catRow, 'veille-cat', 'all');
-        setActiveChips(srcRow, 'veille-src', 'all');
-        render();
+        resetFilters();
+        loadArticles().then(function () {
+          render();
+        });
       });
     }
 
@@ -2677,7 +2719,10 @@
       });
     }
 
-    render();
+    // Chargement initial en direct depuis les flux RSS.
+    loadArticles().then(function () {
+      render();
+    });
   });
 })();
 </script>
@@ -2831,6 +2876,10 @@
     signalIntroCompleteForLoader();
     return;
   }
+  // Désactivation complète : on ne retarde plus l'affichage du site par l'amorçage.
+  intro.remove();
+  signalIntroCompleteForLoader();
+  return;
   var introSeenKey = 'portfolioIntroSeenV4';
   try {
     var navIntro = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
@@ -3134,6 +3183,6 @@
 <!-- GSAP → Three.js → main.js (defer) : exécution après tous les scripts inline du body. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js" defer></script>
-<script src="main.min.js?v=51" defer></script>
+<script src="main.js?v=51" defer></script>
 </body>
 </html>

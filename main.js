@@ -487,6 +487,10 @@ window.addEventListener('resize', () => {
     markSessionDone();
   }
 
+  // Désactive complètement la transition loader → site (pas de fondu, pas de timeline GSAP).
+  finishImmediate();
+  return;
+
   function isPageReload() {
     try {
       const ne = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
@@ -725,6 +729,9 @@ window.addEventListener('resize', () => {
 
 /* Three.js (CDN) — scène minimale + sphère (désactivé si pas d’anim ou reduced-motion) */
 (() => {
+  // Désactivation complète de la sphère 3D en bas à droite.
+  return;
+
   if (typeof THREE === 'undefined') return;
   const animOn = document.documentElement.classList.contains('portfolio-anim-force');
   let reduce = false;
