@@ -2442,7 +2442,7 @@
     {
       key: 'anssi',
       label: 'ANSSI',
-      rssUrl: 'http://www.ssi.gouv.fr/actualites/rss/',
+      rssUrl: 'https://www.ssi.gouv.fr/actualites/rss/',
     },
     {
       key: 'cert-fr',
@@ -2461,8 +2461,67 @@
     },
   ];
 
+  var FALLBACK_ARTICLES = [
+    {
+      id: 'fb-1',
+      title: "Alerte CERT-FR : vulnérabilités critiques sur équipements réseau",
+      source: 'CERT-FR',
+      sourceKey: 'cert-fr',
+      dateISO: '2026-05-05',
+      dateLabel: '05 / 05 / 2026',
+      criticite: 'high',
+      category: 'faille',
+      tags: ['faille', 'réseau', 'patch'],
+      summary: 'Bulletin de secours local affiché si les flux RSS sont temporairement indisponibles.',
+      url: 'https://www.cert.ssi.gouv.fr/',
+    },
+    {
+      id: 'fb-2',
+      title: 'ANSSI : bonnes pratiques de durcissement des infrastructures',
+      source: 'ANSSI',
+      sourceKey: 'anssi',
+      dateISO: '2026-05-04',
+      dateLabel: '04 / 05 / 2026',
+      criticite: 'medium',
+      category: 'faille',
+      tags: ['anssi', 'durcissement', 'infrastructure'],
+      summary: 'Contenu de secours local servant de backup lorsque les API externes répondent lentement.',
+      url: 'https://www.ssi.gouv.fr/',
+    },
+    {
+      id: 'fb-3',
+      title: 'Hausse des campagnes de phishing ciblant les services IT',
+      source: 'ZDNet',
+      sourceKey: 'zdnet',
+      dateISO: '2026-05-03',
+      dateLabel: '03 / 05 / 2026',
+      criticite: 'high',
+      category: 'phishing',
+      tags: ['phishing', 'email', 'soc'],
+      summary: 'Exemple de veille de continuité pour conserver une interface exploitable en toute circonstance.',
+      url: 'https://www.zdnet.fr/',
+    },
+    {
+      id: 'fb-4',
+      title: 'Le Monde Informatique : sécurité supply chain et images compromises',
+      source: 'Le Monde Informatique',
+      sourceKey: 'lmi',
+      dateISO: '2026-05-02',
+      dateLabel: '02 / 05 / 2026',
+      criticite: 'medium',
+      category: 'malware',
+      tags: ['malware', 'supply-chain', 'containers'],
+      summary: 'Cette entrée de secours disparaît dès que les flux live sont à nouveau disponibles.',
+      url: 'https://www.lemondeinformatique.fr/',
+    },
+  ];
+
   function withCorsProxy(url) {
     return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+  }
+
+  function withCorsProxyAlt(url) {
+    return 'https://corsproxy.io/?' + encodeURIComponent(url);
   }
 
   function textOrEmpty(el) {
@@ -2524,6 +2583,37 @@
     return out;
   }
 
+  function parseAtom(doc, srcCfg) {
+    var entries = Array.prototype.slice.call(doc.querySelectorAll('entry'));
+    var out = [];
+    entries.slice(0, 20).forEach(function (entry, idx) {
+      var title = textOrEmpty(entry.querySelector('title'));
+      var linkNode = entry.querySelector('link[rel="alternate"]') || entry.querySelector('link');
+      var link = '';
+      if (linkNode) link = linkNode.getAttribute('href') || textOrEmpty(linkNode);
+      var desc = stripHtml(textOrEmpty(entry.querySelector('summary')) || textOrEmpty(entry.querySelector('content')));
+      var pub = textOrEmpty(entry.querySelector('updated')) || textOrEmpty(entry.querySelector('published'));
+      var d = pub ? new Date(pub) : new Date();
+      var iso = isNaN(d.getTime()) ? REF_NOW.toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
+      var dateLabel = iso.split('-').reverse().join(' / ');
+      var base = title + ' ' + desc;
+      out.push({
+        id: srcCfg.key + '-a-' + idx,
+        title: title || srcCfg.label + ' — article',
+        source: srcCfg.label,
+        sourceKey: srcCfg.key,
+        dateISO: iso,
+        dateLabel: dateLabel,
+        criticite: inferCriticiteFromText(base),
+        category: inferCategoryFromText(base),
+        tags: [inferCategoryFromText(base)],
+        summary: desc || 'Article de veille sans résumé détaillé fourni par le flux.',
+        url: link || srcCfg.rssUrl,
+      });
+    });
+    return out;
+  }
+
   function fetchWithTimeout(url, timeoutMs) {
     return new Promise(function (resolve, reject) {
       var done = false;
@@ -2548,6 +2638,19 @@
     });
   }
 
+  function fetchFeedText(url) {
+    // Plusieurs chemins de récupération pour éviter les blocages CORS/intermittences proxy.
+    return fetchWithTimeout(withCorsProxy(url), 4500).then(function (res) {
+      if (!res.ok) throw new Error('proxy1_http_' + res.status);
+      return res.text();
+    }).catch(function () {
+      return fetchWithTimeout(withCorsProxyAlt(url), 5500).then(function (res) {
+        if (!res.ok) throw new Error('proxy2_http_' + res.status);
+        return res.text();
+      });
+    });
+  }
+
   function loadArticles(onProgress) {
     REF_NOW = new Date();
     ARTICLES = [];
@@ -2565,20 +2668,20 @@
     return new Promise(function (resolve) {
       var pending = RSS_SOURCES.length;
       RSS_SOURCES.forEach(function (src) {
-        fetchWithTimeout(withCorsProxy(src.rssUrl), 4500)
-          .then(function (res) {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            return res.text();
-          })
+        fetchFeedText(src.rssUrl)
           .then(function (txt) {
             var parser = new window.DOMParser();
             var doc = parser.parseFromString(txt, 'application/xml');
-            return parseRss(doc, src);
+            var rows = parseRss(doc, src);
+            if (!rows.length) rows = parseAtom(doc, src);
+            return rows;
           })
           .then(function (rows) {
             if (rows && rows.length) {
               ARTICLES = ARTICLES.concat(rows);
               if (typeof onProgress === 'function') onProgress();
+            } else {
+              loadStats.errors += 1;
             }
           })
           .catch(function () {
@@ -2589,6 +2692,9 @@
             pending -= 1;
             loadStats.loaded = loadStats.total - pending;
             if (pending <= 0) {
+              if (!ARTICLES.length) {
+                ARTICLES = FALLBACK_ARTICLES.slice();
+              }
               loadStats.lastUpdated = new Date();
               updateStatus();
               resolve(ARTICLES);
