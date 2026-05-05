@@ -2678,10 +2678,20 @@
   }
 
   function getFiltered() {
-    return ARTICLES.filter(matchesFilters).sort(function (x, y) {
+    var filtered = ARTICLES.filter(matchesFilters).sort(function (x, y) {
       if (state.sortDesc) return y.dateISO.localeCompare(x.dateISO);
       return x.dateISO.localeCompare(y.dateISO);
     });
+    // Mode "Sources actives": montre un article représentatif par source (le plus récent après tri).
+    if (state.kpiFilter === 'sources') {
+      var seen = {};
+      filtered = filtered.filter(function (a) {
+        if (seen[a.sourceKey]) return false;
+        seen[a.sourceKey] = 1;
+        return true;
+      });
+    }
+    return filtered;
   }
 
   function countDistinctSources(list) {
@@ -2877,16 +2887,23 @@
     }
 
     if (kpiRow) {
-      kpiRow.addEventListener('click', function (e) {
-        var t = e.target.closest('[data-kpi-filter]');
-        if (!t) return;
-        state.kpiFilter = t.getAttribute('data-kpi-filter') || 'all';
-        if (state.kpiFilter === 'sources') {
-          state.src = 'all';
-          setActiveChips(srcRow, 'veille-src', 'all');
-        }
-        state.visibleCount = 18;
-        render();
+      // Binding direct pour garantir le clic sur toutes les zones des cartes KPI.
+      kpiRow.querySelectorAll('[data-kpi-filter]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var nextFilter = btn.getAttribute('data-kpi-filter') || 'all';
+          state.kpiFilter = nextFilter;
+          state.visibleCount = 18;
+          if (nextFilter === 'all') {
+            state.cat = 'all';
+            state.src = 'all';
+            setActiveChips(catRow, 'veille-cat', 'all');
+            setActiveChips(srcRow, 'veille-src', 'all');
+          } else if (nextFilter === 'sources') {
+            state.src = 'all';
+            setActiveChips(srcRow, 'veille-src', 'all');
+          }
+          render();
+        });
       });
     }
 
