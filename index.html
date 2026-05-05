@@ -2273,9 +2273,9 @@
       <article class="exp-pair" id="demenagement-jacquemus">
         <div class="exp-pair__rail" aria-hidden="true"></div>
         <aside class="exp-pair__company">
-          <span class="exp-pair__kicker">SPS Médicale · projet client terrain</span>
-          <h3 class="exp-pair__brand">SPS Medical</h3>
-          <p class="exp-pair__sector">Industrie médicale · qualité &amp; traçabilité</p>
+          <span class="exp-pair__kicker">Jacquemus · projet client terrain</span>
+          <h3 class="exp-pair__brand">Jacquemus</h3>
+          <p class="exp-pair__sector">Mode &amp; retail · cellule client</p>
           <ul class="exp-pair__chips" aria-label="Contexte">
             <li>Cellule client</li>
             <li>Continuité d'activité</li>
@@ -2480,17 +2480,43 @@
     return out;
   }
 
-  function loadArticles() {
+  function fetchWithTimeout(url, timeoutMs) {
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var t = setTimeout(function () {
+        if (done) return;
+        done = true;
+        reject(new Error('timeout'));
+      }, timeoutMs);
+      fetch(url)
+        .then(function (res) {
+          if (done) return;
+          done = true;
+          clearTimeout(t);
+          resolve(res);
+        })
+        .catch(function (err) {
+          if (done) return;
+          done = true;
+          clearTimeout(t);
+          reject(err);
+        });
+    });
+  }
+
+  function loadArticles(onProgress) {
     REF_NOW = new Date();
+    ARTICLES = [];
     var root = document.getElementById('veille-articles-root');
     if (root) {
       root.innerHTML =
         '<p class="veille-dash__empty" role="status">Chargement des articles de veille en temps réel…</p>';
     }
 
-    return Promise.all(
-      RSS_SOURCES.map(function (src) {
-        return fetch(withCorsProxy(src.rssUrl))
+    return new Promise(function (resolve) {
+      var pending = RSS_SOURCES.length;
+      RSS_SOURCES.forEach(function (src) {
+        fetchWithTimeout(withCorsProxy(src.rssUrl), 4500)
           .then(function (res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.text();
@@ -2500,14 +2526,20 @@
             var doc = parser.parseFromString(txt, 'application/xml');
             return parseRss(doc, src);
           })
+          .then(function (rows) {
+            if (rows && rows.length) {
+              ARTICLES = ARTICLES.concat(rows);
+              if (typeof onProgress === 'function') onProgress();
+            }
+          })
           .catch(function () {
-            // En cas d’erreur pour une source, on la saute silencieusement.
-            return [];
+            // Ignore une source lente/indisponible.
+          })
+          .finally(function () {
+            pending -= 1;
+            if (pending <= 0) resolve(ARTICLES);
           });
-      }),
-    ).then(function (chunks) {
-      ARTICLES = [].concat.apply([], chunks);
-      return ARTICLES;
+      });
     });
   }
 
@@ -2693,7 +2725,7 @@
     if (btnRef) {
       btnRef.addEventListener('click', function () {
         resetFilters();
-        loadArticles().then(function () {
+        loadArticles(render).then(function () {
           render();
         });
       });
@@ -2720,7 +2752,7 @@
     }
 
     // Chargement initial en direct depuis les flux RSS.
-    loadArticles().then(function () {
+    loadArticles(render).then(function () {
       render();
     });
   });
@@ -2876,10 +2908,6 @@
     signalIntroCompleteForLoader();
     return;
   }
-  // Désactivation complète : on ne retarde plus l'affichage du site par l'amorçage.
-  intro.remove();
-  signalIntroCompleteForLoader();
-  return;
   var introSeenKey = 'portfolioIntroSeenV4';
   try {
     var navIntro = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
@@ -2950,14 +2978,6 @@
     signalIntroCompleteForLoader();
     main?.removeAttribute('aria-hidden');
     header?.removeAttribute('aria-hidden');
-    try {
-      requestAnimationFrame(function () {
-        html.classList.add('portfolio-main-warp-in');
-        setTimeout(function () {
-          html.classList.remove('portfolio-main-warp-in');
-        }, 560);
-      });
-    } catch (e) {}
   }
 
   lock();
